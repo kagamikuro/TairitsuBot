@@ -1,0 +1,329 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="cqsdk">
+      <UniqueIdentifier>{df0aa887-6b25-4107-a731-0c1763722dde}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="project">
+      <UniqueIdentifier>{db876a08-a6d6-4fe8-af9f-15b91327738a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cqsdk\utils">
+      <UniqueIdentifier>{b77d39c8-6fa3-4f0d-bf8e-f2ec0e9c4ea7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cqsdk\utils\vendor">
+      <UniqueIdentifier>{d925bca0-413f-47ef-938d-7daf921bae40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="project\functionalities">
+      <UniqueIdentifier>{c05abde2-18fe-44f7-81a4-ea8f5042c10a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="project\functionalities\passive_repeat">
+      <UniqueIdentifier>{c3e83b4a-b1e3-4df3-9c49-a32b0dc86d02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="safety_check">
+      <UniqueIdentifier>{a71765bf-7c1a-4741-a3d2-035aeeb72446}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="project\functionalities\othello">
+      <UniqueIdentifier>{b9f3fc50-4183-42d3-b342-a2bf800ebf51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="project\functionalities\pick_random_song">
+      <UniqueIdentifier>{68902bc3-ab0c-4c0b-a0c0-65f36e57b9f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="project\functionalities\uno">
+      <UniqueIdentifier>{3003a99b-a6fe-49cc-a6c2-8c879fa523fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="project\functionalities\othello\player">
+      <UniqueIdentifier>{9e6aefa2-4619-4ded-8f0a-7dc9b8a7edc4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="project\functionalities\pick_random_song\game_data">
+      <UniqueIdentifier>{a9488ad2-31dc-4ac9-8f00-61c9948a73df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="project\processing">
+      <UniqueIdentifier>{b06fe88d-dd38-4dd2-a46c-88e457ad9191}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="project\utility">
+      <UniqueIdentifier>{80d9cf51-9498-4f06-9d6c-c96b99a30b74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="third_party">
+      <UniqueIdentifier>{1b2afae5-23db-4513-bce6-c1c9998c4bcd}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="cqsdk\api.cpp">
+      <Filter>cqsdk</Filter>
+    </ClCompile>
+    <ClCompile Include="cqsdk\app.cpp">
+      <Filter>cqsdk</Filter>
+    </ClCompile>
+    <ClCompile Include="cqsdk\dir.cpp">
+      <Filter>cqsdk</Filter>
+    </ClCompile>
+    <ClCompile Include="cqsdk\dllmain.cpp">
+      <Filter>cqsdk</Filter>
+    </ClCompile>
+    <ClCompile Include="cqsdk\event.cpp">
+      <Filter>cqsdk</Filter>
+    </ClCompile>
+    <ClCompile Include="cqsdk\message.cpp">
+      <Filter>cqsdk</Filter>
+    </ClCompile>
+    <ClCompile Include="cqsdk\utils\base64.cpp">
+      <Filter>cqsdk\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="cqsdk\utils\string.cpp">
+      <Filter>cqsdk\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="cqsdk\utils\vendor\base64.cpp">
+      <Filter>cqsdk\utils\vendor</Filter>
+    </ClCompile>
+    <ClCompile Include="project\main.cpp">
+      <Filter>project</Filter>
+    </ClCompile>
+    <ClCompile Include="project\functionalities\at_replies.cpp">
+      <Filter>project\functionalities</Filter>
+    </ClCompile>
+    <ClCompile Include="project\functionalities\ban_unban_group.cpp">
+      <Filter>project\functionalities</Filter>
+    </ClCompile>
+    <ClCompile Include="project\functionalities\ban_unban_members.cpp">
+      <Filter>project\functionalities</Filter>
+    </ClCompile>
+    <ClCompile Include="project\functionalities\creator_commands.cpp">
+      <Filter>project\functionalities</Filter>
+    </ClCompile>
+    <ClCompile Include="project\functionalities\report_message.cpp">
+      <Filter>project\functionalities</Filter>
+    </ClCompile>
+    <ClCompile Include="project\functionalities\subjective_repeat.cpp">
+      <Filter>project\functionalities</Filter>
+    </ClCompile>
+    <ClCompile Include="project\functionalities\unban_creator.cpp">
+      <Filter>project\functionalities</Filter>
+    </ClCompile>
+    <ClCompile Include="project\functionalities\uno\uno.cpp">
+      <Filter>project\functionalities\uno</Filter>
+    </ClCompile>
+    <ClCompile Include="project\functionalities\uno\uno_game.cpp">
+      <Filter>project\functionalities\uno</Filter>
+    </ClCompile>
+    <ClCompile Include="project\functionalities\pick_random_song\game_data\game_data.cpp">
+      <Filter>project\functionalities\pick_random_song\game_data</Filter>
+    </ClCompile>
+    <ClCompile Include="project\functionalities\pick_random_song\game_data\song_data.cpp">
+      <Filter>project\functionalities\pick_random_song\game_data</Filter>
+    </ClCompile>
+    <ClCompile Include="project\functionalities\pick_random_song\pick_random_song.cpp">
+      <Filter>project\functionalities\pick_random_song</Filter>
+    </ClCompile>
+    <ClCompile Include="project\functionalities\passive_repeat\passive_repeat.cpp">
+      <Filter>project\functionalities\passive_repeat</Filter>
+    </ClCompile>
+    <ClCompile Include="project\functionalities\passive_repeat\repeat_chain.cpp">
+      <Filter>project\functionalities\passive_repeat</Filter>
+    </ClCompile>
+    <ClCompile Include="project\functionalities\othello\player\positional.cpp">
+      <Filter>project\functionalities\othello\player</Filter>
+    </ClCompile>
+    <ClCompile Include="project\functionalities\othello\othello.cpp">
+      <Filter>project\functionalities\othello</Filter>
+    </ClCompile>
+    <ClCompile Include="project\functionalities\othello\play_othello.cpp">
+      <Filter>project\functionalities\othello</Filter>
+    </ClCompile>
+    <ClCompile Include="project\processing\loop_task.cpp">
+      <Filter>project\processing</Filter>
+    </ClCompile>
+    <ClCompile Include="project\processing\message_received.cpp">
+      <Filter>project\processing</Filter>
+    </ClCompile>
+    <ClCompile Include="project\utility\rng.cpp">
+      <Filter>project\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="project\utility\utility.cpp">
+      <Filter>project\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="project\functionalities\othello\player\refined_positional.cpp">
+      <Filter>project\functionalities\othello\player</Filter>
+    </ClCompile>
+    <ClCompile Include="project\functionalities\translate_hikari.cpp">
+      <Filter>project\functionalities</Filter>
+    </ClCompile>
+    <ClCompile Include="project\functionalities\othello\othello_game.cpp">
+      <Filter>project\functionalities\othello</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="cqsdk\api.h">
+      <Filter>cqsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="cqsdk\api_funcs.h">
+      <Filter>cqsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="cqsdk\app.h">
+      <Filter>cqsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="cqsdk\common.h">
+      <Filter>cqsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="cqsdk\cqsdk.h">
+      <Filter>cqsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="cqsdk\def.h">
+      <Filter>cqsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="cqsdk\dir.h">
+      <Filter>cqsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="cqsdk\enums.h">
+      <Filter>cqsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="cqsdk\event.h">
+      <Filter>cqsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="cqsdk\exception.h">
+      <Filter>cqsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="cqsdk\logging.h">
+      <Filter>cqsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="cqsdk\menu.h">
+      <Filter>cqsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="cqsdk\message.h">
+      <Filter>cqsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="cqsdk\target.h">
+      <Filter>cqsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="cqsdk\types.h">
+      <Filter>cqsdk</Filter>
+    </ClInclude>
+    <ClInclude Include="cqsdk\utils\base64.h">
+      <Filter>cqsdk\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="cqsdk\utils\binpack.h">
+      <Filter>cqsdk\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="cqsdk\utils\function.h">
+      <Filter>cqsdk\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="cqsdk\utils\memory.h">
+      <Filter>cqsdk\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="cqsdk\utils\string.h">
+      <Filter>cqsdk\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="cqsdk\utils\vendor\base64.h">
+      <Filter>cqsdk\utils\vendor</Filter>
+    </ClInclude>
+    <ClInclude Include="safety_check\api.h">
+      <Filter>safety_check</Filter>
+    </ClInclude>
+    <ClInclude Include="safety_check\app.h">
+      <Filter>safety_check</Filter>
+    </ClInclude>
+    <ClInclude Include="safety_check\logging.h">
+      <Filter>safety_check</Filter>
+    </ClInclude>
+    <ClInclude Include="safety_check\safe_call.h">
+      <Filter>safety_check</Filter>
+    </ClInclude>
+    <ClInclude Include="project\functionalities\at_replies.h">
+      <Filter>project\functionalities</Filter>
+    </ClInclude>
+    <ClInclude Include="project\functionalities\ban_unban_group.h">
+      <Filter>project\functionalities</Filter>
+    </ClInclude>
+    <ClInclude Include="project\functionalities\ban_unban_members.h">
+      <Filter>project\functionalities</Filter>
+    </ClInclude>
+    <ClInclude Include="project\functionalities\creator_commands.h">
+      <Filter>project\functionalities</Filter>
+    </ClInclude>
+    <ClInclude Include="project\functionalities\functionalities.h">
+      <Filter>project\functionalities</Filter>
+    </ClInclude>
+    <ClInclude Include="project\functionalities\report_message.h">
+      <Filter>project\functionalities</Filter>
+    </ClInclude>
+    <ClInclude Include="project\functionalities\subjective_repeat.h">
+      <Filter>project\functionalities</Filter>
+    </ClInclude>
+    <ClInclude Include="project\functionalities\unban_creator.h">
+      <Filter>project\functionalities</Filter>
+    </ClInclude>
+    <ClInclude Include="project\functionalities\uno\uno.h">
+      <Filter>project\functionalities\uno</Filter>
+    </ClInclude>
+    <ClInclude Include="project\functionalities\uno\uno_card.h">
+      <Filter>project\functionalities\uno</Filter>
+    </ClInclude>
+    <ClInclude Include="project\functionalities\uno\uno_game.h">
+      <Filter>project\functionalities\uno</Filter>
+    </ClInclude>
+    <ClInclude Include="project\functionalities\pick_random_song\game_data\game_data.h">
+      <Filter>project\functionalities\pick_random_song\game_data</Filter>
+    </ClInclude>
+    <ClInclude Include="project\functionalities\pick_random_song\game_data\song_data.h">
+      <Filter>project\functionalities\pick_random_song\game_data</Filter>
+    </ClInclude>
+    <ClInclude Include="project\functionalities\pick_random_song\pick_random_song.h">
+      <Filter>project\functionalities\pick_random_song</Filter>
+    </ClInclude>
+    <ClInclude Include="project\functionalities\passive_repeat\passive_repeat.h">
+      <Filter>project\functionalities\passive_repeat</Filter>
+    </ClInclude>
+    <ClInclude Include="project\functionalities\passive_repeat\repeat_chain.h">
+      <Filter>project\functionalities\passive_repeat</Filter>
+    </ClInclude>
+    <ClInclude Include="project\functionalities\othello\player\player.h">
+      <Filter>project\functionalities\othello\player</Filter>
+    </ClInclude>
+    <ClInclude Include="project\functionalities\othello\player\positional.h">
+      <Filter>project\functionalities\othello\player</Filter>
+    </ClInclude>
+    <ClInclude Include="project\functionalities\othello\othello.h">
+      <Filter>project\functionalities\othello</Filter>
+    </ClInclude>
+    <ClInclude Include="project\functionalities\othello\play_othello.h">
+      <Filter>project\functionalities\othello</Filter>
+    </ClInclude>
+    <ClInclude Include="project\functionalities\othello\players.h">
+      <Filter>project\functionalities\othello</Filter>
+    </ClInclude>
+    <ClInclude Include="project\processing\loop_task.h">
+      <Filter>project\processing</Filter>
+    </ClInclude>
+    <ClInclude Include="project\processing\message_received.h">
+      <Filter>project\processing</Filter>
+    </ClInclude>
+    <ClInclude Include="project\processing\result.h">
+      <Filter>project\processing</Filter>
+    </ClInclude>
+    <ClInclude Include="project\utility\hash_dictionary.h">
+      <Filter>project\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="project\utility\rng.h">
+      <Filter>project\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="project\utility\utility.h">
+      <Filter>project\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="project\functionalities\othello\player\refined_positional.h">
+      <Filter>project\functionalities\othello\player</Filter>
+    </ClInclude>
+    <ClInclude Include="project\functionalities\translate_hikari.h">
+      <Filter>project\functionalities</Filter>
+    </ClInclude>
+    <ClInclude Include="third_party\CImg.h">
+      <Filter>third_party</Filter>
+    </ClInclude>
+    <ClInclude Include="project\functionalities\othello\othello_game.h">
+      <Filter>project\functionalities\othello</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cqsdk\utils\emoji_data.inc">
+      <Filter>cqsdk\utils</Filter>
+    </None>
+  </ItemGroup>
+</Project>

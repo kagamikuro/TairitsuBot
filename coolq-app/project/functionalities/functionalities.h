@@ -1,0 +1,16 @@
+#pragma once
+
+#include "../processing/message_received.h"
+#include "../processing/loop_task.h"
+#include "pick_random_song/pick_random_song.h"
+#include "unban_creator.h"
+#include "report_message.h"
+#include "at_replies.h"
+#include "ban_unban_members.h"
+#include "ban_unban_group.h"
+#include "subjective_repeat.h"
+#include "passive_repeat/passive_repeat.h"
+#include "creator_commands.h"
+#include "uno/uno.h"
+#include "othello/play_othello.h"
+#include "translate_hikari.h"
