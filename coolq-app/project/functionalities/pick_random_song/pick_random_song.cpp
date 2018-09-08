@@ -17,8 +17,10 @@ PickRandomSong::PickRandomSong() :MessageReceived(0, 60, 45)
 
 void PickRandomSong::load_data()
 {
+    utility::private_send_creator(u8"正在载入随机选曲信息");
     games.clear();
     std::ifstream game_names(utility::data_path + "random_pick.txt");
+    std::ostringstream load_info;
     while (game_names.good())
     {
         std::string name;
@@ -43,8 +45,10 @@ void PickRandomSong::load_data()
         }
         song_reader.close();
         games.push_back(data);
-        cqc::logging::debug("Random pick", std::string("Read ") + std::to_string(data.songs.size()) + " song(s) from game " + name);
+        load_info << u8"读取了游戏 " << name << u8" 的 " << data.songs.size() << u8" 首曲目的信息\n";
     }
+    load_info << u8"随机选曲信息读取完毕";
+    utility::private_send_creator(load_info.str());
     game_names.close();
     process_regexs();
 }
@@ -56,8 +60,8 @@ void PickRandomSong::process_regexs()
     {
         std::vector<std::string> escaped_levels;
         // Escape special characters in levels
-        for (const std::pair<std::string, int>& pair : game.level_map)
-            escaped_levels.push_back(std::regex_replace(pair.first, special_characters, R"(\$&)"));
+        for (const auto&[key, value] : game.level_map)
+            escaped_levels.push_back(std::regex_replace(key, special_characters, R"(\$&)"));
         // Sort the strings
         std::sort(escaped_levels.begin(), escaped_levels.end(), [](std::string first, std::string second)
         { return first.length() > second.length(); });
@@ -135,12 +139,12 @@ Result PickRandomSong::process(const cq::Target& current_target, const std::stri
             {
                 if (!element[4].matched)
                 {
-                    if (min_level != "")
+                    if (!min_level.empty())
                     {
                         if (check_updated_timer(current_target) == 1) send_message(current_target, u8"我觉得没必要限定多个难度下限的吧");
                         return Result(true);
                     }
-                    if (max_level != "")
+                    if (!max_level.empty())
                     {
                         if (check_updated_timer(current_target) == 1) send_message(current_target, u8"我觉得没必要限定多个难度上限的吧");
                         return Result(true);
@@ -150,7 +154,7 @@ Result PickRandomSong::process(const cq::Target& current_target, const std::stri
                 }
                 else if (element.str(4) == u8"以上")
                 {
-                    if (min_level != "")
+                    if (!min_level.empty())
                     {
                         if (check_updated_timer(current_target) == 1) send_message(current_target, u8"我觉得没必要限定多个难度下限的吧");
                         return Result(true);
@@ -160,7 +164,7 @@ Result PickRandomSong::process(const cq::Target& current_target, const std::stri
                 }
                 else
                 {
-                    if (max_level != "")
+                    if (!max_level.empty())
                     {
                         if (check_updated_timer(current_target) == 1) send_message(current_target, u8"我觉得没必要限定多个难度上限的吧");
                         return Result(true);

@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+#include <string>
+
 #include "../../safety_check/api.h"
 #include "../../safety_check/logging.h"
 #include "../../cqsdk/event.h"
@@ -7,11 +9,13 @@
 
 namespace utility
 {
+    using namespace std::string_literals;
+
     const int64_t creator_id = 1357008522i64;
     const int64_t self_id = 2718434132i64;
     inline std::string data_path;
-    inline std::string at_self_regex_string = std::string("[ \t]*\\[CQ:at,[ \t]*qq[ \t]*=[ \t]*") + std::to_string(self_id) + "\\][ \t]*";
-    inline std::string group_at(const int64_t user_id) { return std::string(u8"[CQ:at,qq=") + std::to_string(user_id) + u8"]"; }
+    inline std::string at_self_regex_string = "[ \t]*\\[CQ:at,[ \t]*qq[ \t]*=[ \t]*"s + std::to_string(self_id) + "\\][ \t]*";
+    inline std::string group_at(const int64_t user_id) { return u8"[CQ:at,qq="s + std::to_string(user_id) + u8"]"; }
     inline void group_reply(const cq::event::GroupMessageEvent& event, const std::string& message)
     {
         try
@@ -56,6 +60,7 @@ namespace utility
             cqc::logging::warning("Exception caught", e.what());
         }
     }
+    inline void private_send_creator(const std::string& message) { private_send(creator_id, message); }
     inline bool is_admin(const int64_t group_id, const int64_t user_id)
     {
         const cq::GroupRole role = cqc::api::get_group_member_info(group_id, user_id, true).role;

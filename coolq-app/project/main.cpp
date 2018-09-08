@@ -7,13 +7,13 @@
 #include "utility/utility.h"
 #include "functionalities/functionalities.h"
 
-CQ_INITIALIZE("me.cqp.chlorie.tairitsu_bot");
-
 std::vector<std::unique_ptr<MessageReceived>> group_actions;
 std::vector<std::unique_ptr<MessageReceived>> private_actions;
 std::vector<std::unique_ptr<MessageReceived>> message_actions;
 std::vector<std::unique_ptr<LoopTask>> loop_tasks;
 std::unique_ptr<MessageReceived> creator_commands;
+
+CQ_INITIALIZE("me.cqp.chlorie.tairitsu_bot");
 
 void initialize()
 {
@@ -94,7 +94,7 @@ CQ_MAIN
             std::ostringstream result;
             result << u8"深刻なエラーが発生しました……\n我在处理由 " << std::to_string(e.user_id) << u8" 发来的内容是\n"
                 << message << u8"\n的私聊消息的时候出了异常 " << exc.what() << u8"\n助けて……お願い……";
-            utility::private_send(utility::creator_id, result.str());
+            utility::private_send_creator(result.str());
         }
     };
 
@@ -120,7 +120,7 @@ CQ_MAIN
             result << u8"深刻なエラーが発生しました……\n我在处理由群 " << std::to_string(e.group_id) << u8" 中的成员 "
                 << std::to_string(user_id) << " 发来的内容是\n" << message << u8"\n的消息的时候出了异常 " << exc.what()
                 << u8"\n助けて……お願い……";
-            utility::private_send(utility::creator_id, result.str());
+            utility::private_send_creator(result.str());
         }
     };
 }

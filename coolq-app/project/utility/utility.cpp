@@ -46,7 +46,7 @@ namespace utility
         }
         catch (const std::exception& exc)
         {
-            private_send(creator_id, std::string(u8"啊啦，出错了……希望你不要怪我……\n错误是：") + exc.what());
+            private_send_creator(std::string(u8"啊啦，出错了……希望你不要怪我……\n错误是：") + exc.what());
         }
         return false;
     }

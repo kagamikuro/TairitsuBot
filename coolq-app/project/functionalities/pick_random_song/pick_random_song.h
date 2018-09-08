@@ -16,12 +16,12 @@ private:
     static std::regex main_matcher_regex;
     std::vector<boost::xpressive::sregex> constraint_regexs;
     RNG random_number_generator;
+    void process_regexs();
 protected:
     Result process(const cq::Target& current_target, const std::string& message) override;
     bool cooling_down_action(const cq::Target& current_target, int times) override;
 public:
     PickRandomSong();
-    void load_data();
-    void process_regexs();
+    void load_data() override;
     ~PickRandomSong() override = default;
 };

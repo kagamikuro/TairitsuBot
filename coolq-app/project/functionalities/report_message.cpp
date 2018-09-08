@@ -10,9 +10,9 @@ Result ReportMessage::process(const cq::Target& current_target, const std::strin
     const bool result = std::regex_match(message, match, reg);
     if (!result) return Result();
     if (current_target.group_id.has_value())
-        utility::private_send(utility::creator_id, std::to_string(*current_target.user_id) + u8"在群" + std::to_string(*current_target.group_id) + u8"里面说：\n" + match.str(1));
+        utility::private_send_creator(std::to_string(*current_target.user_id) + u8"在群" + std::to_string(*current_target.group_id) + u8"里面说：\n" + match.str(1));
     else
-        utility::private_send(utility::creator_id, std::to_string(*current_target.user_id) + u8"说：\n" + match.str(1));
+        utility::private_send_creator(std::to_string(*current_target.user_id) + u8"说：\n" + match.str(1));
     send_message(current_target, u8"好的，已经告诉他了！");
     return Result(true, true);
 }

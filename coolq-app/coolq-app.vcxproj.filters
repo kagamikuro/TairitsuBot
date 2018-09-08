@@ -320,6 +320,9 @@
     <ClInclude Include="project\functionalities\othello\othello_game.h">
       <Filter>project\functionalities\othello</Filter>
     </ClInclude>
+    <ClInclude Include="globals.h">
+      <Filter>project</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="cqsdk\utils\emoji_data.inc">

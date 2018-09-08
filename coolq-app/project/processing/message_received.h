@@ -33,5 +33,6 @@ public:
     explicit MessageReceived(const int group_member = 0, const int group = 0, const int user = 0) :group_member_timer(499), group_timer(499), user_timer(499), group_member_cool_down(group_member), group_cool_down(group), user_cool_down(user) {}
     void set_active(const bool value) { is_active = value; }
     virtual ~MessageReceived() = default;
+    virtual void load_data() {}
     Result receive(const cq::Target& target, const std::string& message);
 };

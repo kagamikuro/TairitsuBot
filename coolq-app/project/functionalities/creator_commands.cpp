@@ -1,11 +1,12 @@
-﻿#include <vector>
+﻿// ReSharper disable CppMemberFunctionMayBeStatic
+
+#include <vector>
 #include <sstream>
 #include <regex>
 
 #include "creator_commands.h"
+#include "../globals.h"
 #include "../utility/utility.h"
-
-void CreatorCommands::send_message(const std::string& message) const { MessageReceived::send_message(creator, message); }
 
 Result CreatorCommands::list_groups(const std::string& message) const
 {
@@ -14,7 +15,16 @@ Result CreatorCommands::list_groups(const std::string& message) const
     std::ostringstream stream;
     stream << u8"好的！我已加入的所有群如下：";
     for (const cq::Group& group : group_list) stream << '\n' << group.group_name << " (" << group.group_id << ')';
-    send_message(stream.str());
+    utility::private_send_creator(stream.str());
+    return Result(true, true);
+}
+
+Result CreatorCommands::reload_all_data(const std::string& message) const
+{
+    if (message != u8"重载所有数据") return Result();
+    for (const std::unique_ptr<MessageReceived>& task : group_actions) task->load_data();
+    for (const std::unique_ptr<MessageReceived>& task : private_actions) task->load_data();
+    for (const std::unique_ptr<MessageReceived>& task : message_actions) task->load_data();
     return Result(true, true);
 }
 
@@ -22,7 +32,7 @@ Result CreatorCommands::start_monitor(const std::string& message)
 {
     if (message != u8"开始监控") return Result();
     monitor = true;
-    send_message(std::string(u8"好的，开始监控群") + std::to_string(group_context));
+    utility::private_send_creator(std::string(u8"好的，开始监控群") + std::to_string(group_context));
     return Result(true, true);
 }
 
@@ -30,7 +40,7 @@ Result CreatorCommands::end_monitor(const std::string& message)
 {
     if (message != u8"结束监控") return Result();
     monitor = false;
-    send_message(std::string(u8"好的，结束监控群") + std::to_string(group_context));
+    utility::private_send_creator(std::string(u8"好的，结束监控群") + std::to_string(group_context));
     return Result(true, true);
 }
 
@@ -51,10 +61,10 @@ Result CreatorCommands::change_context(const std::string& message)
     if (found)
     {
         group_context = group_id;
-        send_message(std::string(u8"好的，现在已切换至群 ") + group_name + " (" + std::to_string(group_id) + ')');
+        utility::private_send_creator(std::string(u8"好的，现在已切换至群 ") + group_name + " (" + std::to_string(group_id) + ')');
         return Result(true, true);
     }
-    send_message(u8"我没有加过这个群啊……");
+    utility::private_send_creator(u8"我没有加过这个群啊……");
     return Result(true);
 }
 
@@ -66,11 +76,11 @@ Result CreatorCommands::indirectly_send_message(const std::string& message) cons
     if (!result) return Result();
     if (!check_context())
     {
-        send_message(u8"当前的上下文好像不在我加过的群里……");
+        utility::private_send_creator(u8"当前的上下文好像不在我加过的群里……");
         return Result(true);
     }
     utility::group_send(group_context, std::regex_replace(match.str(1), std::regex("@([0-9]+)"), "[CQ:at,qq=$1]"));
-    send_message(u8"处理好了！");
+    utility::private_send_creator(u8"处理好了！");
     return Result(true, true);
 }
 
@@ -80,10 +90,10 @@ Result CreatorCommands::ban_group(const std::string& message) const
     {
         if (utility::ban_whole_group(group_context, true))
         {
-            send_message(u8"处理好了！");
+            utility::private_send_creator(u8"处理好了！");
             return Result(true, true);
         }
-        send_message(u8"抱歉，我好像做不到……");
+        utility::private_send_creator(u8"抱歉，我好像做不到……");
         return Result(true);
     }
     return Result();
@@ -95,10 +105,10 @@ Result CreatorCommands::unban_group(const std::string& message) const
     {
         if (utility::unban_whole_group(group_context, true))
         {
-            send_message(u8"处理好了！");
+            utility::private_send_creator(u8"处理好了！");
             return Result(true, true);
         }
-        send_message(u8"抱歉，我好像做不到……");
+        utility::private_send_creator(u8"抱歉，我好像做不到……");
         return Result(true);
     }
     return Result();
@@ -111,6 +121,8 @@ Result CreatorCommands::process(const cq::Target& current_target, const std::str
         Result result = list_groups(message);
         if (result.matched) return result;
         result = change_context(message);
+        if (result.matched) return result;
+        result = reload_all_data(message);
         if (result.matched) return result;
         result = start_monitor(message);
         if (result.matched) return result;
@@ -128,6 +140,6 @@ Result CreatorCommands::process(const cq::Target& current_target, const std::str
     std::ostringstream stream;
     const cq::GroupMember current_user = cqc::api::get_group_member_info(*current_target.group_id, *current_target.user_id);
     stream << current_user.card << " (" << current_user.nickname << ") ID：" << current_user.user_id << "\n" << message;
-    send_message(stream.str());
+    utility::private_send_creator(stream.str());
     return Result(true, true);
 }

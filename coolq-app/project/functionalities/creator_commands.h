@@ -10,8 +10,8 @@ private:
     int64_t group_context = 0;
     const cq::Target creator{ utility::creator_id };
     bool check_context() const { return group_context != 0i64; }
-    void send_message(const std::string& message) const;
     Result list_groups(const std::string& message) const;
+    Result reload_all_data(const std::string& message) const;
     Result start_monitor(const std::string& message);
     Result end_monitor(const std::string& message);
     Result change_context(const std::string& message);
