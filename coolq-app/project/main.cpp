@@ -29,6 +29,7 @@ void initialize()
     group_actions.push_back(std::make_unique<AtReplies>());
     group_actions.push_back(std::make_unique<BanUnbanMembers>());
     group_actions.push_back(std::make_unique<BanUnbanGroup>());
+    group_actions.push_back(std::make_unique<PassiveUnbanCreator>());
     group_actions.push_back(std::make_unique<PlayOthello>());
     group_actions.push_back(std::make_unique<SubjectiveRepeat>());
     group_actions.push_back(std::make_unique<PassiveRepeat>());

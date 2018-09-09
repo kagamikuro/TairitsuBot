@@ -175,6 +175,7 @@ copy me.cqp.chlorie.tairitsu_bot.json D:\CoolQPro\app\</Command>
     <ClCompile Include="project\functionalities\othello\play_othello.cpp" />
     <ClCompile Include="project\functionalities\passive_repeat\passive_repeat.cpp" />
     <ClCompile Include="project\functionalities\passive_repeat\repeat_chain.cpp" />
+    <ClCompile Include="project\functionalities\passive_unban_creator.cpp" />
     <ClCompile Include="project\functionalities\pick_random_song\game_data\game_data.cpp" />
     <ClCompile Include="project\functionalities\pick_random_song\game_data\song_data.cpp" />
     <ClCompile Include="project\functionalities\pick_random_song\pick_random_song.cpp" />
@@ -227,6 +228,7 @@ copy me.cqp.chlorie.tairitsu_bot.json D:\CoolQPro\app\</Command>
     <ClInclude Include="project\functionalities\othello\play_othello.h" />
     <ClInclude Include="project\functionalities\passive_repeat\passive_repeat.h" />
     <ClInclude Include="project\functionalities\passive_repeat\repeat_chain.h" />
+    <ClInclude Include="project\functionalities\passive_unban_creator.h" />
     <ClInclude Include="project\functionalities\pick_random_song\game_data\game_data.h" />
     <ClInclude Include="project\functionalities\pick_random_song\game_data\song_data.h" />
     <ClInclude Include="project\functionalities\pick_random_song\pick_random_song.h" />

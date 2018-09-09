@@ -22,6 +22,7 @@ Result CreatorCommands::list_groups(const std::string& message) const
 Result CreatorCommands::reload_all_data(const std::string& message) const
 {
     if (message != u8"重载所有数据") return Result();
+    utility::private_send_creator(u8"好的！马上开始重载数据！");
     for (const std::unique_ptr<MessageReceived>& task : group_actions) task->load_data();
     for (const std::unique_ptr<MessageReceived>& task : private_actions) task->load_data();
     for (const std::unique_ptr<MessageReceived>& task : message_actions) task->load_data();

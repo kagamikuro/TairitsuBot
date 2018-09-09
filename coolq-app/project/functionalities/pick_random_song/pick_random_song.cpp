@@ -17,10 +17,8 @@ PickRandomSong::PickRandomSong() :MessageReceived(0, 60, 45)
 
 void PickRandomSong::load_data()
 {
-    utility::private_send_creator(u8"正在载入随机选曲信息");
     games.clear();
     std::ifstream game_names(utility::data_path + "random_pick.txt");
-    std::ostringstream load_info;
     while (game_names.good())
     {
         std::string name;
@@ -45,10 +43,8 @@ void PickRandomSong::load_data()
         }
         song_reader.close();
         games.push_back(data);
-        load_info << u8"读取了游戏 " << name << u8" 的 " << data.songs.size() << u8" 首曲目的信息\n";
     }
-    load_info << u8"随机选曲信息读取完毕";
-    utility::private_send_creator(load_info.str());
+    utility::private_send_creator(u8"随机选曲信息读取好了哦！");
     game_names.close();
     process_regexs();
 }

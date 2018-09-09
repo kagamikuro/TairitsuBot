@@ -150,6 +150,9 @@
     <ClCompile Include="project\functionalities\othello\othello_game.cpp">
       <Filter>project\functionalities\othello</Filter>
     </ClCompile>
+    <ClCompile Include="project\functionalities\passive_unban_creator.cpp">
+      <Filter>project\functionalities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cqsdk\api.h">
@@ -322,6 +325,9 @@
     </ClInclude>
     <ClInclude Include="globals.h">
       <Filter>project</Filter>
+    </ClInclude>
+    <ClInclude Include="project\functionalities\passive_unban_creator.h">
+      <Filter>project\functionalities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

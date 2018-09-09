@@ -12,5 +12,6 @@
 #include "passive_repeat/passive_repeat.h"
 #include "creator_commands.h"
 #include "uno/uno.h"
+#include "passive_unban_creator.h"
 #include "othello/play_othello.h"
 #include "translate_hikari.h"
