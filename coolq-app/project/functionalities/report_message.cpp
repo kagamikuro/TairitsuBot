@@ -16,3 +16,20 @@ Result ReportMessage::process(const cq::Target& current_target, const std::strin
     send_message(current_target, u8"好的，已经告诉他了！");
     return Result(true, true);
 }
+
+Result ReportMessage::process_creator(const std::string& message)
+{
+    if (message == "$activate report")
+    {
+        set_active(true);
+        utility::private_send_creator(u8"就算有人骚扰你也不能怪我哦");
+        return Result(true, true);
+    }
+    if (message == "$deactivate report")
+    {
+        set_active(false);
+        utility::private_send_creator(u8"骚扰信息太多了吗？");
+        return Result(true, true);
+    }
+    return Result();
+}

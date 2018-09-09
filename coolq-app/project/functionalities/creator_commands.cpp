@@ -8,9 +8,53 @@
 #include "../globals.h"
 #include "../utility/utility.h"
 
+Result CreatorCommands::list_commands(const std::string& message) const
+{
+    if (message != "$help" && message != "$list commands") return Result();
+    utility::private_send_creator(u8R"raw(欢迎回来！唉呀，你又忘了命令了吗？那我只好再复述一遍咯：
+$help, $list commands：让我再费口舌说一遍这些话，不过我倒是希望不用重复这些了……
+$list groups：列出我目前加入的所有群的信息
+$list funcs：列出所有可以控制开关状态的功能
+$reload all：重载所有数据
+$start monitor：开始对当前群的监控
+$end monitor：停止对当前群的监控
+$context change [id]：切换当前的上下文至[id]群
+$$[msg]：向当前群发送[msg]消息，诶，总感觉这样怪怪的……
+$ban group：他们都疯了！！碹镑铱鸹！！！
+$unban group：封印解除！！！
+$activate all：激活所有功能
+$deactivate all：关闭所有功能
+
+$add leader [id][name][title]：加入某个不能随便at的成员
+$remove leader [id]：好像有人下岗了？
+$list leader：现在都有哪些人不能随便at呢……
+$clear leader：好了，我们不能搞官僚主义不是吗？
+大概就是这样吧~)raw");
+    return Result(true, true);
+}
+
+Result CreatorCommands::list_funcs(const std::string& message) const
+{
+    if (message != "$list funcs") return Result();
+    utility::private_send_creator(u8R"raw(欢迎回来！唉呀，你又忘了命令了吗？那我只好再复述一遍咯：
+meeting：好像可以让群员注意自己的身份和说话方式（？
+othello：黑白棋对弈……等下，快给我更新算法啦！！！
+repeat：人类的本质是什么？
+pick song：抽一首对立不会打的歌
+uno：又有人没喊UNO是吗？
+at replies：想让我说什么呢
+ban group：都疯了，碹镑铱鸹！！！
+ban member：吸烟有害健康！
+unban creator：不要再欺负盐酸啦~
+report：报告！对立今天生病了！
+ridicule：被嘲讽也是聊天的一环，不爽不要玩
+大概就是这样吧~)raw");
+    return Result(true, true);
+}
+
 Result CreatorCommands::list_groups(const std::string& message) const
 {
-    if (message != u8"列出所有群信息") return Result();
+    if (message != "$list groups") return Result();
     std::vector<cq::Group> group_list = cqc::api::get_group_list();
     std::ostringstream stream;
     stream << u8"好的！我已加入的所有群如下：";
@@ -21,7 +65,8 @@ Result CreatorCommands::list_groups(const std::string& message) const
 
 Result CreatorCommands::reload_all_data(const std::string& message) const
 {
-    if (message != u8"重载所有数据") return Result();
+    if (message != "$reload all") return Result();
+    utility::private_send_creator(u8"好的！马上开始重载数据！");
     for (const std::unique_ptr<MessageReceived>& task : group_actions) task->load_data();
     for (const std::unique_ptr<MessageReceived>& task : private_actions) task->load_data();
     for (const std::unique_ptr<MessageReceived>& task : message_actions) task->load_data();
@@ -30,7 +75,7 @@ Result CreatorCommands::reload_all_data(const std::string& message) const
 
 Result CreatorCommands::start_monitor(const std::string& message)
 {
-    if (message != u8"开始监控") return Result();
+    if (message != "$start monitor") return Result();
     monitor = true;
     utility::private_send_creator(std::string(u8"好的，开始监控群") + std::to_string(group_context));
     return Result(true, true);
@@ -38,7 +83,7 @@ Result CreatorCommands::start_monitor(const std::string& message)
 
 Result CreatorCommands::end_monitor(const std::string& message)
 {
-    if (message != u8"结束监控") return Result();
+    if (message != "$end monitor") return Result();
     monitor = false;
     utility::private_send_creator(std::string(u8"好的，结束监控群") + std::to_string(group_context));
     return Result(true, true);
@@ -46,7 +91,7 @@ Result CreatorCommands::end_monitor(const std::string& message)
 
 Result CreatorCommands::change_context(const std::string& message)
 {
-    if (!std::regex_match(message, std::regex(u8"切换当前群至[0-9]+"))) return Result();
+    if (!std::regex_match(message, std::regex("\\$context change[ \t]*[0-9]+"))) return Result();
     const int64_t group_id = utility::get_first_id_in_string(message);
     std::vector<cq::Group> group_list = cqc::api::get_group_list();
     bool found = false;
@@ -70,7 +115,7 @@ Result CreatorCommands::change_context(const std::string& message)
 
 Result CreatorCommands::indirectly_send_message(const std::string& message) const
 {
-    const std::regex reg(u8"发送([\\s\\S]*)");
+    const std::regex reg("\\$\\$([\\s\\S]*)");
     std::smatch match;
     const bool result = std::regex_match(message, match, reg);
     if (!result) return Result();
@@ -86,55 +131,50 @@ Result CreatorCommands::indirectly_send_message(const std::string& message) cons
 
 Result CreatorCommands::ban_group(const std::string& message) const
 {
-    if (std::regex_match(message, std::regex(u8"[ \t]*碹镑铱鸹[ \t]*(!*！*[ \t]*)*")))
+    if (message != "$ban group") return Result();
+    if (utility::ban_whole_group(group_context, true))
     {
-        if (utility::ban_whole_group(group_context, true))
-        {
-            utility::private_send_creator(u8"处理好了！");
-            return Result(true, true);
-        }
-        utility::private_send_creator(u8"抱歉，我好像做不到……");
-        return Result(true);
+        utility::private_send_creator(u8"处理好了！");
+        return Result(true, true);
     }
-    return Result();
+    utility::private_send_creator(u8"抱歉，我好像做不到……");
+    return Result(true);
 }
 
 Result CreatorCommands::unban_group(const std::string& message) const
 {
-    if (std::regex_match(message, std::regex(u8"[ \t]*封印解除[ \t]*(!*！*[ \t]*)*")))
+    if (message != "$unban group") return Result();
+    if (utility::unban_whole_group(group_context, true))
     {
-        if (utility::unban_whole_group(group_context, true))
-        {
-            utility::private_send_creator(u8"处理好了！");
-            return Result(true, true);
-        }
-        utility::private_send_creator(u8"抱歉，我好像做不到……");
-        return Result(true);
+        utility::private_send_creator(u8"处理好了！");
+        return Result(true, true);
     }
-    return Result();
+    utility::private_send_creator(u8"抱歉，我好像做不到……");
+    return Result(true);
+}
+
+Result CreatorCommands::activate_all(const std::string& message) const
+{
+    if (message != "$activate all") return Result();
+    for (const std::unique_ptr<MessageReceived>& task : group_actions) task->set_active(true);
+    for (const std::unique_ptr<MessageReceived>& task : private_actions) task->set_active(true);
+    for (const std::unique_ptr<MessageReceived>& task : message_actions) task->set_active(true);
+    utility::private_send_creator(u8"所有功能已经启动！");
+    return Result(true, true);
+}
+
+Result CreatorCommands::deactivate_all(const std::string& message) const
+{
+    if (message != "$deactivate all") return Result();
+    for (const std::unique_ptr<MessageReceived>& task : group_actions) task->set_active(false);
+    for (const std::unique_ptr<MessageReceived>& task : private_actions) task->set_active(false);
+    for (const std::unique_ptr<MessageReceived>& task : message_actions) task->set_active(false);
+    utility::private_send_creator(u8"所有功能已被关闭！");
+    return Result(true, true);
 }
 
 Result CreatorCommands::process(const cq::Target& current_target, const std::string& message)
 {
-    if (current_target.user_id.has_value() && *current_target.user_id == utility::creator_id && !current_target.group_id.has_value())
-    {
-        Result result = list_groups(message);
-        if (result.matched) return result;
-        result = change_context(message);
-        if (result.matched) return result;
-        result = reload_all_data(message);
-        if (result.matched) return result;
-        result = start_monitor(message);
-        if (result.matched) return result;
-        result = end_monitor(message);
-        if (result.matched) return result;
-        result = indirectly_send_message(message);
-        if (result.matched) return result;
-        result = ban_group(message);
-        if (result.matched) return result;
-        result = unban_group(message);
-        return result;
-    }
     if (!monitor) return Result();
     if (*current_target.group_id != group_context) return Result();
     std::ostringstream stream;
@@ -142,4 +182,33 @@ Result CreatorCommands::process(const cq::Target& current_target, const std::str
     stream << current_user.card << " (" << current_user.nickname << ") ID：" << current_user.user_id << "\n" << message;
     utility::private_send_creator(stream.str());
     return Result(true, true);
+}
+
+Result CreatorCommands::process_creator(const std::string& message)
+{
+    if (message.empty() || message[0] != '$') return Result();
+    Result result = list_commands(message);
+    if (result.matched) return result;
+    result = list_funcs(message);
+    if (result.matched) return result;
+    result = list_groups(message);
+    if (result.matched) return result;
+    result = change_context(message);
+    if (result.matched) return result;
+    result = reload_all_data(message);
+    if (result.matched) return result;
+    result = start_monitor(message);
+    if (result.matched) return result;
+    result = end_monitor(message);
+    if (result.matched) return result;
+    result = indirectly_send_message(message);
+    if (result.matched) return result;
+    result = ban_group(message);
+    if (result.matched) return result;
+    result = unban_group(message);
+    if (result.matched) return result;
+    result = activate_all(message);
+    if (result.matched) return result;
+    result = deactivate_all(message);
+    return result;
 }

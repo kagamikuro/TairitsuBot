@@ -2,6 +2,7 @@
 
 #include "../processing/message_received.h"
 #include "../processing/loop_task.h"
+#include "meeting_at_7th/meeting_at_7th.h"
 #include "pick_random_song/pick_random_song.h"
 #include "unban_creator.h"
 #include "report_message.h"
@@ -12,5 +13,5 @@
 #include "passive_repeat/passive_repeat.h"
 #include "creator_commands.h"
 #include "uno/uno.h"
+#include "passive_unban_creator.h"
 #include "othello/play_othello.h"
-#include "translate_hikari.h"

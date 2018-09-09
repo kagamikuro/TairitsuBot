@@ -25,6 +25,7 @@ protected:
     std::chrono::duration<int> group_cool_down;
     std::chrono::duration<int> user_cool_down;
     virtual Result process(const cq::Target& current_target, const std::string& message) = 0;
+    virtual Result process_creator(const std::string& message) { return Result(); }
     virtual bool cooling_down_action(const cq::Target& target, int times) { return false; }
     void send_message(const cq::Target& current_target, const std::string& message, bool reply = true) const;
     int check_timer(const cq::Target& current_target);

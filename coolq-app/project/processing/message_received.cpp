@@ -164,6 +164,12 @@ int MessageReceived::check_updated_timer(const cq::Target& current_target) { ret
 
 Result MessageReceived::receive(const cq::Target& target, const std::string& message)
 {
+    if (!target.group_id.has_value() && target.user_id.has_value() && *target.user_id == utility::creator_id)
+        if (!message.empty() && message[0] == '$')
+        {
+            const Result result = process_creator(message);
+            if (result.matched) return result;
+        }
     if (!is_active) return Result();
     const Result result = process(target, message);
     if (!result.matched) return result;

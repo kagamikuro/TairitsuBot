@@ -19,6 +19,7 @@ private:
     void process_regexs();
 protected:
     Result process(const cq::Target& current_target, const std::string& message) override;
+    Result process_creator(const std::string& message) override;
     bool cooling_down_action(const cq::Target& current_target, int times) override;
 public:
     PickRandomSong();

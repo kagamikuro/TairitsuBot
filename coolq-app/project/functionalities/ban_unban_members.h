@@ -9,6 +9,7 @@ private:
     Result check_unban(const cq::Target& current_target, const std::string& message) const;
 protected:
     Result process(const cq::Target& current_target, const std::string& message) override;
+    Result process_creator(const std::string& message) override;
 public:
     BanUnbanMembers() = default;
     ~BanUnbanMembers() override = default;

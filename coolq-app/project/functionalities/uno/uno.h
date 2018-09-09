@@ -37,6 +37,7 @@ private:
     Result check_play(const cq::Target& current_target, const std::string& message);
 protected:
     Result process(const cq::Target& current_target, const std::string& message) override;
+    Result process_creator(const std::string& message) override;
 public:
     Uno() :players(499), playing(499) {}
     ~Uno() override = default;

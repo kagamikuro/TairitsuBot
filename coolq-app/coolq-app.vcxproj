@@ -168,6 +168,7 @@ copy me.cqp.chlorie.tairitsu_bot.json D:\CoolQPro\app\</Command>
     <ClCompile Include="project\functionalities\ban_unban_group.cpp" />
     <ClCompile Include="project\functionalities\ban_unban_members.cpp" />
     <ClCompile Include="project\functionalities\creator_commands.cpp" />
+    <ClCompile Include="project\functionalities\meeting_at_7th\meeting_at_7th.cpp" />
     <ClCompile Include="project\functionalities\othello\othello.cpp" />
     <ClCompile Include="project\functionalities\othello\othello_game.cpp" />
     <ClCompile Include="project\functionalities\othello\player\positional.cpp" />
@@ -175,12 +176,12 @@ copy me.cqp.chlorie.tairitsu_bot.json D:\CoolQPro\app\</Command>
     <ClCompile Include="project\functionalities\othello\play_othello.cpp" />
     <ClCompile Include="project\functionalities\passive_repeat\passive_repeat.cpp" />
     <ClCompile Include="project\functionalities\passive_repeat\repeat_chain.cpp" />
+    <ClCompile Include="project\functionalities\passive_unban_creator.cpp" />
     <ClCompile Include="project\functionalities\pick_random_song\game_data\game_data.cpp" />
     <ClCompile Include="project\functionalities\pick_random_song\game_data\song_data.cpp" />
     <ClCompile Include="project\functionalities\pick_random_song\pick_random_song.cpp" />
     <ClCompile Include="project\functionalities\report_message.cpp" />
     <ClCompile Include="project\functionalities\subjective_repeat.cpp" />
-    <ClCompile Include="project\functionalities\translate_hikari.cpp" />
     <ClCompile Include="project\functionalities\unban_creator.cpp" />
     <ClCompile Include="project\functionalities\uno\uno.cpp" />
     <ClCompile Include="project\functionalities\uno\uno_game.cpp" />
@@ -218,6 +219,8 @@ copy me.cqp.chlorie.tairitsu_bot.json D:\CoolQPro\app\</Command>
     <ClInclude Include="project\functionalities\ban_unban_members.h" />
     <ClInclude Include="project\functionalities\creator_commands.h" />
     <ClInclude Include="project\functionalities\functionalities.h" />
+    <ClInclude Include="project\functionalities\meeting_at_7th\leader_data.h" />
+    <ClInclude Include="project\functionalities\meeting_at_7th\meeting_at_7th.h" />
     <ClInclude Include="project\functionalities\othello\othello.h" />
     <ClInclude Include="project\functionalities\othello\othello_game.h" />
     <ClInclude Include="project\functionalities\othello\players.h" />
@@ -227,6 +230,7 @@ copy me.cqp.chlorie.tairitsu_bot.json D:\CoolQPro\app\</Command>
     <ClInclude Include="project\functionalities\othello\play_othello.h" />
     <ClInclude Include="project\functionalities\passive_repeat\passive_repeat.h" />
     <ClInclude Include="project\functionalities\passive_repeat\repeat_chain.h" />
+    <ClInclude Include="project\functionalities\passive_unban_creator.h" />
     <ClInclude Include="project\functionalities\pick_random_song\game_data\game_data.h" />
     <ClInclude Include="project\functionalities\pick_random_song\game_data\song_data.h" />
     <ClInclude Include="project\functionalities\pick_random_song\pick_random_song.h" />
@@ -236,7 +240,6 @@ copy me.cqp.chlorie.tairitsu_bot.json D:\CoolQPro\app\</Command>
     <ClInclude Include="project\functionalities\uno\uno.h" />
     <ClInclude Include="project\functionalities\uno\uno_card.h" />
     <ClInclude Include="project\functionalities\uno\uno_game.h" />
-    <ClInclude Include="project\functionalities\translate_hikari.h" />
     <ClInclude Include="project\processing\loop_task.h" />
     <ClInclude Include="project\processing\message_received.h" />
     <ClInclude Include="project\processing\result.h" />

@@ -48,8 +48,26 @@ Result BanUnbanMembers::check_unban(const cq::Target& current_target, const std:
 
 Result BanUnbanMembers::process(const cq::Target& current_target, const std::string& message)
 {
+    if (!current_target.group_id.has_value()) return Result();
     Result result = check_ban(current_target, message);
     if (result.matched) return result;
     result = check_unban(current_target, message);
     return result;
+}
+
+Result BanUnbanMembers::process_creator(const std::string& message)
+{
+    if (message == "$activate ban member")
+    {
+        set_active(true);
+        utility::private_send_creator(u8"吃我超长烟啦！");
+        return Result(true, true);
+    }
+    if (message == "$deactivate ban member")
+    {
+        set_active(false);
+        utility::private_send_creator(u8"诶，你说公共场所不能吸烟？抱歉抱歉……");
+        return Result(true, true);
+    }
+    return Result();
 }

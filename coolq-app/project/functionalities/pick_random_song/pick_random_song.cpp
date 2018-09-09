@@ -17,10 +17,8 @@ PickRandomSong::PickRandomSong() :MessageReceived(0, 60, 45)
 
 void PickRandomSong::load_data()
 {
-    utility::private_send_creator(u8"正在载入随机选曲信息");
     games.clear();
     std::ifstream game_names(utility::data_path + "random_pick.txt");
-    std::ostringstream load_info;
     while (game_names.good())
     {
         std::string name;
@@ -45,10 +43,8 @@ void PickRandomSong::load_data()
         }
         song_reader.close();
         games.push_back(data);
-        load_info << u8"读取了游戏 " << name << u8" 的 " << data.songs.size() << u8" 首曲目的信息\n";
     }
-    load_info << u8"随机选曲信息读取完毕";
-    utility::private_send_creator(load_info.str());
+    utility::private_send_creator(u8"随机选曲信息读取好了哦！");
     game_names.close();
     process_regexs();
 }
@@ -188,6 +184,23 @@ Result PickRandomSong::process(const cq::Target& current_target, const std::stri
     }
     if (check_updated_timer(current_target) == 1) send_message(current_target, u8"我的曲库里没有" + pattern_match.str(1) + u8"这个游戏呢……");
     return Result(true);
+}
+
+Result PickRandomSong::process_creator(const std::string& message)
+{
+    if (message == "$activate pick song")
+    {
+        set_active(true);
+        utility::private_send_creator(u8"好吧，不过抽到奇怪的歌可不要怪我~");
+        return Result(true, true);
+    }
+    if (message == "$deactivate pick song")
+    {
+        set_active(false);
+        utility::private_send_creator(u8"又有人在刷屏抽歌了吗？要不先冷静一下吧。");
+        return Result(true, true);
+    }
+    return Result();
 }
 
 bool PickRandomSong::cooling_down_action(const cq::Target& current_target, const int times)

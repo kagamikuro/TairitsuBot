@@ -10,6 +10,7 @@ private:
     HashDictionary<RepeatChain> repeat_chains;
 protected:
     Result process(const cq::Target& current_target, const std::string& message) override;
+    Result process_creator(const std::string& message) override;
 public:
     PassiveRepeat() :repeat_chains(499) {}
     ~PassiveRepeat() override = default;

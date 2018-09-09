@@ -455,3 +455,20 @@ Result Uno::process(const cq::Target& current_target, const std::string& message
     if (result.matched) return result;
     return result;
 }
+
+Result Uno::process_creator(const std::string& message)
+{
+    if (message == "$activate uno")
+    {
+        set_active(true);
+        utility::private_send_creator(u8"所以，有人要打UNO吗？");
+        return Result(true, true);
+    }
+    if (message == "$deactivate uno")
+    {
+        set_active(false);
+        utility::private_send_creator(u8"没什么人玩不起来啊……");
+        return Result(true, true);
+    }
+    return Result();
+}

@@ -19,6 +19,7 @@ private:
     Result check_self_win(const cq::Target& current_target, const std::string& message) const;
 protected:
     Result process(const cq::Target& current_target, const std::string& message) override;
+    Result process_creator(const std::string& message) override;
 public:
     PlayOthello() :is_black(499) { player = std::make_unique<OthelloAI::RefinedPositional>(); }
     ~PlayOthello() { player.reset(); }

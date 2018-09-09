@@ -46,6 +46,9 @@
     <Filter Include="third_party">
       <UniqueIdentifier>{1b2afae5-23db-4513-bce6-c1c9998c4bcd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="project\functionalities\meeting_at_7th">
+      <UniqueIdentifier>{6883783e-031d-49e2-b370-a2e66fbf3c7b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cqsdk\api.cpp">
@@ -144,11 +147,14 @@
     <ClCompile Include="project\functionalities\othello\player\refined_positional.cpp">
       <Filter>project\functionalities\othello\player</Filter>
     </ClCompile>
-    <ClCompile Include="project\functionalities\translate_hikari.cpp">
-      <Filter>project\functionalities</Filter>
-    </ClCompile>
     <ClCompile Include="project\functionalities\othello\othello_game.cpp">
       <Filter>project\functionalities\othello</Filter>
+    </ClCompile>
+    <ClCompile Include="project\functionalities\passive_unban_creator.cpp">
+      <Filter>project\functionalities</Filter>
+    </ClCompile>
+    <ClCompile Include="project\functionalities\meeting_at_7th\meeting_at_7th.cpp">
+      <Filter>project\functionalities\meeting_at_7th</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -311,9 +317,6 @@
     <ClInclude Include="project\functionalities\othello\player\refined_positional.h">
       <Filter>project\functionalities\othello\player</Filter>
     </ClInclude>
-    <ClInclude Include="project\functionalities\translate_hikari.h">
-      <Filter>project\functionalities</Filter>
-    </ClInclude>
     <ClInclude Include="third_party\CImg.h">
       <Filter>third_party</Filter>
     </ClInclude>
@@ -322,6 +325,15 @@
     </ClInclude>
     <ClInclude Include="globals.h">
       <Filter>project</Filter>
+    </ClInclude>
+    <ClInclude Include="project\functionalities\passive_unban_creator.h">
+      <Filter>project\functionalities</Filter>
+    </ClInclude>
+    <ClInclude Include="project\functionalities\meeting_at_7th\meeting_at_7th.h">
+      <Filter>project\functionalities\meeting_at_7th</Filter>
+    </ClInclude>
+    <ClInclude Include="project\functionalities\meeting_at_7th\leader_data.h">
+      <Filter>project\functionalities\meeting_at_7th</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

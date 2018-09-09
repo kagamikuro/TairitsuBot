@@ -29,9 +29,11 @@ void initialize()
     group_actions.push_back(std::make_unique<AtReplies>());
     group_actions.push_back(std::make_unique<BanUnbanMembers>());
     group_actions.push_back(std::make_unique<BanUnbanGroup>());
+    group_actions.push_back(std::make_unique<PassiveUnbanCreator>());
     group_actions.push_back(std::make_unique<PlayOthello>());
     group_actions.push_back(std::make_unique<SubjectiveRepeat>());
     group_actions.push_back(std::make_unique<PassiveRepeat>());
+    group_actions.push_back(std::make_unique<MeetingAt7th>());
     loop_tasks.push_back(std::make_unique<UnbanCreator>());
 }
 
@@ -81,7 +83,13 @@ CQ_MAIN
         const std::string message = std::to_string(e.message);
         try
         {
-            if (e.user_id == utility::creator_id && creator_commands->receive(target, message).matched) return;
+            if (e.user_id == utility::creator_id)
+            {
+                if (creator_commands->receive(target, message).matched) return;
+                for (const std::unique_ptr<MessageReceived>& task : group_actions)
+                    if (task->receive(target, message).matched)
+                        return;
+            }
             for (const std::unique_ptr<MessageReceived>& task : private_actions)
                 if (task->receive(target, message).matched)
                     return;

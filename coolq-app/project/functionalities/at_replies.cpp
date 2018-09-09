@@ -1,4 +1,4 @@
-#include <fstream>
+﻿#include <fstream>
 #include <regex>
 
 #include "at_replies.h"
@@ -23,9 +23,27 @@ void AtReplies::load_data()
 
 Result AtReplies::process(const cq::Target& current_target, const std::string& message)
 {
+    if (!current_target.group_id.has_value()) return Result();
     const bool result = std::regex_match(message, std::regex(std::string("[ \t]*\\[CQ:at,[ \t]*qq[ \t]*=[ \t]*") + std::to_string(utility::self_id) + "\\][ \t]*"));
     if (!result) return Result();
     if (reply_strings.empty()) return Result(true);
     send_message(current_target, reply_strings[random_number_generator.get_next()]);
     return Result(true, true);
+}
+
+Result AtReplies::process_creator(const std::string& message)
+{
+    if (message == "$activate at replies")
+    {
+        set_active(true);
+        utility::private_send_creator(u8"好的，有求必应，有问必答！嘿嘿☆");
+        return Result(true, true);
+    }
+    if (message == "$deactivate at replies")
+    {
+        set_active(false);
+        utility::private_send_creator(u8"虽然不理人不太好，但是既然你说了不要让我跟别人说话那我也只能从命了……");
+        return Result(true, true);
+    }
+    return Result();
 }

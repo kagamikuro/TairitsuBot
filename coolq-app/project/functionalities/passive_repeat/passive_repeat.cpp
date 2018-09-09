@@ -3,6 +3,7 @@
 
 Result PassiveRepeat::process(const cq::Target& current_target, const std::string& message)
 {
+    if (!current_target.group_id.has_value()) return Result();
     const int64_t group_id = *current_target.group_id;
     if (!repeat_chains.contains(group_id)) repeat_chains.insert(group_id, RepeatChain());
     const int64_t user_id = *current_target.user_id;
@@ -35,4 +36,21 @@ Result PassiveRepeat::process(const cq::Target& current_target, const std::strin
         break;
     }
     return Result(repeated, repeated);
+}
+
+Result PassiveRepeat::process_creator(const std::string& message)
+{
+    if (message == "$activate repeat")
+    {
+        set_active(true);
+        utility::private_send_creator(u8"开启复读功能可以让我更像人类吗？");
+        return Result(true, true);
+    }
+    if (message == "$deactivate repeat")
+    {
+        set_active(false);
+        utility::private_send_creator(u8"果然还是不要一直重复比较好吧……");
+        return Result(true, true);
+    }
+    return Result();
 }

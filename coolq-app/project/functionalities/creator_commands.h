@@ -10,6 +10,8 @@ private:
     int64_t group_context = 0;
     const cq::Target creator{ utility::creator_id };
     bool check_context() const { return group_context != 0i64; }
+    Result list_commands(const std::string& message) const;
+    Result list_funcs(const std::string& message) const;
     Result list_groups(const std::string& message) const;
     Result reload_all_data(const std::string& message) const;
     Result start_monitor(const std::string& message);
@@ -18,8 +20,11 @@ private:
     Result indirectly_send_message(const std::string& message) const;
     Result ban_group(const std::string& message) const;
     Result unban_group(const std::string& message) const;
+    Result activate_all(const std::string& message) const;
+    Result deactivate_all(const std::string& message) const;
 protected:
     Result process(const cq::Target& current_target, const std::string& message) override;
+    Result process_creator(const std::string& message) override;
 public:
     CreatorCommands() = default;
     ~CreatorCommands() override = default;
