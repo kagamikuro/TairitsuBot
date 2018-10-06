@@ -33,7 +33,7 @@ void initialize()
     group_actions.push_back(std::make_unique<PlayOthello>());
     group_actions.push_back(std::make_unique<SubjectiveRepeat>());
     group_actions.push_back(std::make_unique<PassiveRepeat>());
-    group_actions.push_back(std::make_unique<MeetingAt7th>());
+    group_actions.push_back(std::make_unique<MeetingOn7th>());
     loop_tasks.push_back(std::make_unique<UnbanCreator>());
 }
 

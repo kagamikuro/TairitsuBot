@@ -46,7 +46,7 @@
     <Filter Include="third_party">
       <UniqueIdentifier>{1b2afae5-23db-4513-bce6-c1c9998c4bcd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="project\functionalities\meeting_at_7th">
+    <Filter Include="project\functionalities\meeting_on_7th">
       <UniqueIdentifier>{6883783e-031d-49e2-b370-a2e66fbf3c7b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -153,8 +153,8 @@
     <ClCompile Include="project\functionalities\passive_unban_creator.cpp">
       <Filter>project\functionalities</Filter>
     </ClCompile>
-    <ClCompile Include="project\functionalities\meeting_at_7th\meeting_at_7th.cpp">
-      <Filter>project\functionalities\meeting_at_7th</Filter>
+    <ClCompile Include="project\functionalities\meeting_on_7th\meeting_on_7th.cpp">
+      <Filter>project\functionalities\meeting_on_7th</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -329,11 +329,11 @@
     <ClInclude Include="project\functionalities\passive_unban_creator.h">
       <Filter>project\functionalities</Filter>
     </ClInclude>
-    <ClInclude Include="project\functionalities\meeting_at_7th\meeting_at_7th.h">
-      <Filter>project\functionalities\meeting_at_7th</Filter>
+    <ClInclude Include="project\functionalities\meeting_on_7th\leader_data.h">
+      <Filter>project\functionalities\meeting_on_7th</Filter>
     </ClInclude>
-    <ClInclude Include="project\functionalities\meeting_at_7th\leader_data.h">
-      <Filter>project\functionalities\meeting_at_7th</Filter>
+    <ClInclude Include="project\functionalities\meeting_on_7th\meeting_on_7th.h">
+      <Filter>project\functionalities\meeting_on_7th</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

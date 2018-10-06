@@ -3,10 +3,10 @@
 #include <thread>
 #include <chrono>
 
-#include "meeting_at_7th.h"
+#include "meeting_on_7th.h"
 #include "../../utility/utility.h"
 
-void MeetingAt7th::list_leaders() const
+void MeetingOn7th::list_leaders() const
 {
     std::ostringstream stream;
     stream << u8"现在记录的leader们有：\n";
@@ -16,13 +16,13 @@ void MeetingAt7th::list_leaders() const
     utility::private_send_creator(stream.str());
 }
 
-void MeetingAt7th::clear_leaders()
+void MeetingOn7th::clear_leaders()
 {
     leaders.clear();
     utility::private_send_creator(u8"好了不玩了……");
 }
 
-void MeetingAt7th::remove_leader(const int64_t user_id)
+void MeetingOn7th::remove_leader(const int64_t user_id)
 {
     const size_t size = leaders.size();
     for (size_t i = 0; i < size; i++)
@@ -35,7 +35,7 @@ void MeetingAt7th::remove_leader(const int64_t user_id)
     utility::private_send_creator(u8"我没在名单上找到这个人啊……");
 }
 
-Result MeetingAt7th::process(const cq::Target& current_target, const std::string& message)
+Result MeetingOn7th::process(const cq::Target& current_target, const std::string& message)
 {
     if (!current_target.group_id.has_value()) return Result();
     std::smatch match;
@@ -62,7 +62,7 @@ Result MeetingAt7th::process(const cq::Target& current_target, const std::string
     return Result();
 }
 
-Result MeetingAt7th::process_creator(const std::string& message)
+Result MeetingOn7th::process_creator(const std::string& message)
 {
     if (message == "$activate meeting")
     {

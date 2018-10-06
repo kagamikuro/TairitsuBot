@@ -168,7 +168,7 @@ copy me.cqp.chlorie.tairitsu_bot.json D:\CoolQPro\app\</Command>
     <ClCompile Include="project\functionalities\ban_unban_group.cpp" />
     <ClCompile Include="project\functionalities\ban_unban_members.cpp" />
     <ClCompile Include="project\functionalities\creator_commands.cpp" />
-    <ClCompile Include="project\functionalities\meeting_at_7th\meeting_at_7th.cpp" />
+    <ClCompile Include="project\functionalities\meeting_on_7th\meeting_on_7th.cpp" />
     <ClCompile Include="project\functionalities\othello\othello.cpp" />
     <ClCompile Include="project\functionalities\othello\othello_game.cpp" />
     <ClCompile Include="project\functionalities\othello\player\positional.cpp" />
@@ -219,8 +219,8 @@ copy me.cqp.chlorie.tairitsu_bot.json D:\CoolQPro\app\</Command>
     <ClInclude Include="project\functionalities\ban_unban_members.h" />
     <ClInclude Include="project\functionalities\creator_commands.h" />
     <ClInclude Include="project\functionalities\functionalities.h" />
-    <ClInclude Include="project\functionalities\meeting_at_7th\leader_data.h" />
-    <ClInclude Include="project\functionalities\meeting_at_7th\meeting_at_7th.h" />
+    <ClInclude Include="project\functionalities\meeting_on_7th\leader_data.h" />
+    <ClInclude Include="project\functionalities\meeting_on_7th\meeting_on_7th.h" />
     <ClInclude Include="project\functionalities\othello\othello.h" />
     <ClInclude Include="project\functionalities\othello\othello_game.h" />
     <ClInclude Include="project\functionalities\othello\players.h" />
