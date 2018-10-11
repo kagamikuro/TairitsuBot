@@ -31,6 +31,7 @@ void initialize()
     group_actions.push_back(std::make_unique<BanUnbanGroup>());
     group_actions.push_back(std::make_unique<PassiveUnbanCreator>());
     group_actions.push_back(std::make_unique<PlayOthello>());
+    group_actions.push_back(std::make_unique<OthelloGame>());
     group_actions.push_back(std::make_unique<SubjectiveRepeat>());
     group_actions.push_back(std::make_unique<PassiveRepeat>());
     group_actions.push_back(std::make_unique<MeetingOn7th>());
@@ -73,8 +74,8 @@ CQ_MAIN
 
     cq::event::on_group_request = [](const cq::event::GroupRequestEvent& e)
     {
-        if (e.sub_type == cq::request::SubType::GROUP_INVITE)
-            cqc::api::set_group_add_request(e.flag, e.sub_type, cq::request::Operation::APPROVE, u8"");
+        if (e.sub_type == cq::request::SubType::GroupInvite)
+            cqc::api::set_group_add_request(e.flag, e.sub_type, cq::request::Operation::Approve, u8"");
     };
 
     cq::event::on_private_msg = [](const cq::event::PrivateMessageEvent& e)

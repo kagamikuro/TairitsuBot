@@ -156,6 +156,9 @@
     <ClCompile Include="project\functionalities\meeting_on_7th\meeting_on_7th.cpp">
       <Filter>project\functionalities\meeting_on_7th</Filter>
     </ClCompile>
+    <ClCompile Include="project\functionalities\othello\othello_board.cpp">
+      <Filter>project\functionalities\othello</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cqsdk\api.h">
@@ -334,6 +337,9 @@
     </ClInclude>
     <ClInclude Include="project\functionalities\meeting_on_7th\meeting_on_7th.h">
       <Filter>project\functionalities\meeting_on_7th</Filter>
+    </ClInclude>
+    <ClInclude Include="project\functionalities\othello\othello_board.h">
+      <Filter>project\functionalities\othello</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

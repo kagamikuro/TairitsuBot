@@ -3,71 +3,71 @@
 namespace cq {
     namespace event {
         enum Operation {
-            IGNORE = 0,
-            BLOCK = 1,
+            Ignore = 0,
+            Block = 1,
         };
 
         enum Type {
-            MESSAGE,
-            NOTICE,
-            REQUEST,
+            Message,
+            Notice,
+            Request,
         };
     } // namespace event
 
     namespace message {
         enum Type {
-            PRIVATE,
-            GROUP,
-            DISCUSS,
+            Private,
+            Group,
+            Discuss,
         };
 
         enum SubType {
-            SUBTYPE_DEFAULT = 1,
+            SubtypeDefault = 1,
 
-            PRIVATE_FRIEND = 11,
-            PRIVATE_OTHER = 1,
-            PRIVATE_GROUP = 2,
-            PRIVATE_DISCUSS = 3,
+            PrivateFriend = 11,
+            PrivateOther = 1,
+            PrivateGroup = 2,
+            PrivateDiscuss = 3,
         };
     } // namespace message
 
     namespace notice {
         enum Type {
-            GROUP_UPLOAD,
-            GROUP_ADMIN,
-            GROUP_MEMBER_DECREASE,
-            GROUP_MEMBER_INCREASE,
-            FRIEND_ADD,
+            GroupUpload,
+            GroupAdmin,
+            GroupMemberDecrease,
+            GroupMemberIncrease,
+            FriendAdd,
         };
 
         enum SubType {
-            SUBTYPE_DEFAULT = 1,
+            SubtypeDefault = 1,
 
-            GROUP_ADMIN_UNSET = 1,
-            GROUP_ADMIN_SET = 2,
-            GROUP_MEMBER_DECREASE_LEAVE = 1,
-            GROUP_MEMBER_DECREASE_KICK = 2,
-            GROUP_MEMBER_INCREASE_APPROVE = 1,
-            GROUP_MEMBER_INCREASE_INVITE = 2,
+            GroupAdminUnset = 1,
+            GroupAdminSet = 2,
+            GroupMemberDecreaseLeave = 1,
+            GroupMemberDecreaseKick = 2,
+            GroupMemberIncreaseApprove = 1,
+            GroupMemberIncreaseInvite = 2,
         };
     } // namespace notice
 
     namespace request {
         enum Operation {
-            APPROVE = 1,
-            REJECT = 2,
+            Approve = 1,
+            Reject = 2,
         };
 
         enum Type {
-            FRIEND,
-            GROUP,
+            Friend,
+            Group,
         };
 
         enum SubType {
-            SUBTYPE_DEFAULT = 1,
+            SubtypeDefault = 1,
 
-            GROUP_ADD = 1,
-            GROUP_INVITE = 2,
+            GroupAdd = 1,
+            GroupInvite = 2,
         };
     } // namespace request
 } // namespace cq

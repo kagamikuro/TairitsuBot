@@ -14,6 +14,7 @@ namespace utility
     const int64_t creator_id = 1357008522i64;
     const int64_t self_id = 2718434132i64;
     inline std::string data_path;
+    inline std::string image_path("data/image/");
     inline std::string at_self_regex_string = "[ \t]*\\[CQ:at,[ \t]*qq[ \t]*=[ \t]*"s + std::to_string(self_id) + "\\][ \t]*";
     inline std::string group_at(const int64_t user_id) { return u8"[CQ:at,qq="s + std::to_string(user_id) + u8"]"; }
     inline void group_reply(const cq::event::GroupMessageEvent& event, const std::string& message)

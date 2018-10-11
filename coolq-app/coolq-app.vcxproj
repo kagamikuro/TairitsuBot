@@ -113,6 +113,7 @@ copy me.cqp.chlorie.tairitsu_bot.json D:\CoolQPro\app\</Command>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -148,6 +149,7 @@ copy me.cqp.chlorie.tairitsu_bot.json D:\CoolQPro\app\</Command>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -170,6 +172,7 @@ copy me.cqp.chlorie.tairitsu_bot.json D:\CoolQPro\app\</Command>
     <ClCompile Include="project\functionalities\creator_commands.cpp" />
     <ClCompile Include="project\functionalities\meeting_on_7th\meeting_on_7th.cpp" />
     <ClCompile Include="project\functionalities\othello\othello.cpp" />
+    <ClCompile Include="project\functionalities\othello\othello_board.cpp" />
     <ClCompile Include="project\functionalities\othello\othello_game.cpp" />
     <ClCompile Include="project\functionalities\othello\player\positional.cpp" />
     <ClCompile Include="project\functionalities\othello\player\refined_positional.cpp" />
@@ -222,6 +225,7 @@ copy me.cqp.chlorie.tairitsu_bot.json D:\CoolQPro\app\</Command>
     <ClInclude Include="project\functionalities\meeting_on_7th\leader_data.h" />
     <ClInclude Include="project\functionalities\meeting_on_7th\meeting_on_7th.h" />
     <ClInclude Include="project\functionalities\othello\othello.h" />
+    <ClInclude Include="project\functionalities\othello\othello_board.h" />
     <ClInclude Include="project\functionalities\othello\othello_game.h" />
     <ClInclude Include="project\functionalities\othello\players.h" />
     <ClInclude Include="project\functionalities\othello\player\player.h" />

@@ -43,9 +43,9 @@ Othello::Result Othello::get_result() const
 
 Othello::Othello(): state{ }, playable{ }, black(true)
 {
-    state[3][3] = state[4][4] = Spot::Black;
-    state[3][4] = state[4][3] = Spot::White;
-    playable[2][4] = playable[3][5] = playable[4][2] = playable[5][3] = true;
+    state[3][3] = state[4][4] = Spot::White;
+    state[3][4] = state[4][3] = Spot::Black;
+    playable[2][3] = playable[4][5] = playable[3][2] = playable[5][4] = true;
 }
 
 int Othello::compute_playable_spot()

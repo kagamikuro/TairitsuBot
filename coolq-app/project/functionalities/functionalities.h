@@ -15,3 +15,4 @@
 #include "uno/uno.h"
 #include "passive_unban_creator.h"
 #include "othello/play_othello.h"
+#include "othello/othello_game.h"

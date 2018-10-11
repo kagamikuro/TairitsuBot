@@ -12,8 +12,8 @@ namespace cq::event {
         Type type;
         Target target;
 
-        mutable Operation operation = IGNORE;
-        void block() const { operation = BLOCK; }
+        mutable Operation operation = Ignore;
+        void block() const { operation = Block; }
     };
 
     struct MessageEvent : Event {
@@ -57,15 +57,15 @@ namespace cq::event {
 
     struct PrivateMessageEvent final : MessageEvent, UserIdMixin {
         PrivateMessageEvent() {
-            type = MESSAGE;
-            message_type = message::PRIVATE;
+            type = Message;
+            message_type = message::Private;
         }
     };
 
     struct GroupMessageEvent final : MessageEvent, UserIdMixin, GroupIdMixin {
         GroupMessageEvent() {
-            type = MESSAGE;
-            message_type = message::GROUP;
+            type = Message;
+            message_type = message::Group;
         }
 
         Anonymous anonymous;
@@ -75,15 +75,15 @@ namespace cq::event {
 
     struct DiscussMessageEvent final : MessageEvent, UserIdMixin, DiscussIdMixin {
         DiscussMessageEvent() {
-            type = MESSAGE;
-            message_type = message::DISCUSS;
+            type = Message;
+            message_type = message::Discuss;
         }
     };
 
     struct GroupUploadEvent final : NoticeEvent, UserIdMixin, GroupIdMixin {
         GroupUploadEvent() {
-            type = NOTICE;
-            notice_type = notice::GROUP_UPLOAD;
+            type = Notice;
+            notice_type = notice::GroupUpload;
         }
 
         File file;
@@ -91,43 +91,43 @@ namespace cq::event {
 
     struct GroupAdminEvent final : NoticeEvent, UserIdMixin, GroupIdMixin {
         GroupAdminEvent() {
-            type = NOTICE;
-            notice_type = notice::GROUP_ADMIN;
+            type = Notice;
+            notice_type = notice::GroupAdmin;
         }
     };
 
     struct GroupMemberDecreaseEvent final : NoticeEvent, UserIdMixin, GroupIdMixin, OperatorIdMixin {
         GroupMemberDecreaseEvent() {
-            type = NOTICE;
-            notice_type = notice::GROUP_MEMBER_DECREASE;
+            type = Notice;
+            notice_type = notice::GroupMemberDecrease;
         }
     };
 
     struct GroupMemberIncreaseEvent final : NoticeEvent, UserIdMixin, GroupIdMixin, OperatorIdMixin {
         GroupMemberIncreaseEvent() {
-            type = NOTICE;
-            notice_type = notice::GROUP_MEMBER_INCREASE;
+            type = Notice;
+            notice_type = notice::GroupMemberIncrease;
         }
     };
 
     struct FriendAddEvent final : NoticeEvent, UserIdMixin {
         FriendAddEvent() {
-            type = NOTICE;
-            notice_type = notice::FRIEND_ADD;
+            type = Notice;
+            notice_type = notice::FriendAdd;
         }
     };
 
     struct FriendRequestEvent final : RequestEvent, UserIdMixin {
         FriendRequestEvent() {
-            type = REQUEST;
-            request_type = request::FRIEND;
+            type = Request;
+            request_type = request::Friend;
         }
     };
 
     struct GroupRequestEvent final : RequestEvent, UserIdMixin, GroupIdMixin {
         GroupRequestEvent() {
-            type = REQUEST;
-            request_type = request::GROUP;
+            type = Request;
+            request_type = request::Group;
         }
     };
 

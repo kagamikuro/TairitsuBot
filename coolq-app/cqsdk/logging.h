@@ -4,14 +4,14 @@
 
 namespace cq::logging {
     enum Level {
-        DEBUG = 0,
-        INFO = 10,
-        INFOSUCCESS = 11,
-        INFORECV = 12,
-        INFOSEND = 13,
-        WARNING = 20,
-        ERROR = 30,
-        FATAL = 40,
+        Debug = 0,
+        Info = 10,
+        Infosuccess = 11,
+        InfoRecv = 12,
+        InfoSend = 13,
+        Warning = 20,
+        Error = 30,
+        Fatal = 40,
     };
 
     inline int32_t log(const Level level, const std::string &tag, const std::string &msg) {
@@ -19,19 +19,19 @@ namespace cq::logging {
             app::auth_code, level, utils::string_to_coolq(tag).c_str(), utils::string_to_coolq(msg).c_str());
     }
 
-    inline void debug(const std::string &tag, const std::string &msg) { log(DEBUG, tag, msg); }
+    inline void debug(const std::string &tag, const std::string &msg) { log(Debug, tag, msg); }
 
-    inline void info(const std::string &tag, const std::string &msg) { log(INFO, tag, msg); }
+    inline void info(const std::string &tag, const std::string &msg) { log(Info, tag, msg); }
 
-    inline void info_success(const std::string &tag, const std::string &msg) { log(INFOSUCCESS, tag, msg); }
+    inline void info_success(const std::string &tag, const std::string &msg) { log(Infosuccess, tag, msg); }
 
-    inline void info_recv(const std::string &tag, const std::string &msg) { log(INFORECV, tag, msg); }
+    inline void info_recv(const std::string &tag, const std::string &msg) { log(InfoRecv, tag, msg); }
 
-    inline void info_send(const std::string &tag, const std::string &msg) { log(INFOSEND, tag, msg); }
+    inline void info_send(const std::string &tag, const std::string &msg) { log(InfoSend, tag, msg); }
 
-    inline void warning(const std::string &tag, const std::string &msg) { log(WARNING, tag, msg); }
+    inline void warning(const std::string &tag, const std::string &msg) { log(Warning, tag, msg); }
 
-    inline void error(const std::string &tag, const std::string &msg) { log(ERROR, tag, msg); }
+    inline void error(const std::string &tag, const std::string &msg) { log(Error, tag, msg); }
 
-    inline void fatal(const std::string &tag, const std::string &msg) { log(FATAL, tag, msg); }
+    inline void fatal(const std::string &tag, const std::string &msg) { log(Fatal, tag, msg); }
 } // namespace cq::logging
