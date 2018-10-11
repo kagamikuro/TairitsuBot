@@ -159,6 +159,9 @@
     <ClCompile Include="project\functionalities\othello\othello_board.cpp">
       <Filter>project\functionalities\othello</Filter>
     </ClCompile>
+    <ClCompile Include="project\functionalities\othello\player\codename_tairitsu.cpp">
+      <Filter>project\functionalities\othello\player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cqsdk\api.h">
@@ -340,6 +343,9 @@
     </ClInclude>
     <ClInclude Include="project\functionalities\othello\othello_board.h">
       <Filter>project\functionalities\othello</Filter>
+    </ClInclude>
+    <ClInclude Include="project\functionalities\othello\player\codename_tairitsu.h">
+      <Filter>project\functionalities\othello\player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -21,6 +21,6 @@ protected:
     Result process(const cq::Target& current_target, const std::string& message) override;
     Result process_creator(const std::string& message) override;
 public:
-    PlayOthello() :is_black(499) { player = std::make_unique<OthelloAI::RefinedPositional>(); }
+    PlayOthello() :is_black(499) { player = std::make_unique<OthelloAI::CodenameTairitsu>(); }
     ~PlayOthello() { player.reset(); }
 };

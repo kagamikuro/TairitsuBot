@@ -3,3 +3,4 @@
 #include "player/player.h"
 #include "player/positional.h"
 #include "player/refined_positional.h"
+#include "player/codename_tairitsu.h"
