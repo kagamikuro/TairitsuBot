@@ -8,8 +8,12 @@ private:
     std::mt19937 generator;
     std::uniform_int_distribution<> distribution;
 public:
-    RNG();
-    void set_size(int size);
-    int get_next();
-    int get_random_integer(int size);
+    RNG() :generator(std::random_device()()) {}
+    void set_size(const int size) { distribution = std::uniform_int_distribution<>(0, size - 1); }
+    int get_next() { return distribution(generator); }
+    int get_random_integer(const int size)
+    {
+        set_size(size);
+        return get_next();
+    }
 };

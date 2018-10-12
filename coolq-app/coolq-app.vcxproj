@@ -171,12 +171,10 @@ copy me.cqp.chlorie.tairitsu_bot.json D:\CoolQPro\app\</Command>
     <ClCompile Include="project\functionalities\ban_unban_members.cpp" />
     <ClCompile Include="project\functionalities\creator_commands.cpp" />
     <ClCompile Include="project\functionalities\meeting_on_7th\meeting_on_7th.cpp" />
+    <ClCompile Include="project\functionalities\othello\codename_tairitsu.cpp" />
     <ClCompile Include="project\functionalities\othello\othello.cpp" />
     <ClCompile Include="project\functionalities\othello\othello_board.cpp" />
     <ClCompile Include="project\functionalities\othello\othello_game.cpp" />
-    <ClCompile Include="project\functionalities\othello\player\codename_tairitsu.cpp" />
-    <ClCompile Include="project\functionalities\othello\player\positional.cpp" />
-    <ClCompile Include="project\functionalities\othello\player\refined_positional.cpp" />
     <ClCompile Include="project\functionalities\othello\play_othello.cpp" />
     <ClCompile Include="project\functionalities\passive_repeat\passive_repeat.cpp" />
     <ClCompile Include="project\functionalities\passive_repeat\repeat_chain.cpp" />
@@ -192,7 +190,6 @@ copy me.cqp.chlorie.tairitsu_bot.json D:\CoolQPro\app\</Command>
     <ClCompile Include="project\main.cpp" />
     <ClCompile Include="project\processing\loop_task.cpp" />
     <ClCompile Include="project\processing\message_received.cpp" />
-    <ClCompile Include="project\utility\rng.cpp" />
     <ClCompile Include="project\utility\utility.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -225,14 +222,10 @@ copy me.cqp.chlorie.tairitsu_bot.json D:\CoolQPro\app\</Command>
     <ClInclude Include="project\functionalities\functionalities.h" />
     <ClInclude Include="project\functionalities\meeting_on_7th\leader_data.h" />
     <ClInclude Include="project\functionalities\meeting_on_7th\meeting_on_7th.h" />
+    <ClInclude Include="project\functionalities\othello\codename_tairitsu.h" />
     <ClInclude Include="project\functionalities\othello\othello.h" />
     <ClInclude Include="project\functionalities\othello\othello_board.h" />
     <ClInclude Include="project\functionalities\othello\othello_game.h" />
-    <ClInclude Include="project\functionalities\othello\players.h" />
-    <ClInclude Include="project\functionalities\othello\player\codename_tairitsu.h" />
-    <ClInclude Include="project\functionalities\othello\player\player.h" />
-    <ClInclude Include="project\functionalities\othello\player\positional.h" />
-    <ClInclude Include="project\functionalities\othello\player\refined_positional.h" />
     <ClInclude Include="project\functionalities\othello\play_othello.h" />
     <ClInclude Include="project\functionalities\passive_repeat\passive_repeat.h" />
     <ClInclude Include="project\functionalities\passive_repeat\repeat_chain.h" />
@@ -249,7 +242,6 @@ copy me.cqp.chlorie.tairitsu_bot.json D:\CoolQPro\app\</Command>
     <ClInclude Include="project\processing\loop_task.h" />
     <ClInclude Include="project\processing\message_received.h" />
     <ClInclude Include="project\processing\result.h" />
-    <ClInclude Include="project\utility\hash_dictionary.h" />
     <ClInclude Include="project\utility\rng.h" />
     <ClInclude Include="project\utility\utility.h" />
     <ClInclude Include="safety_check\api.h" />

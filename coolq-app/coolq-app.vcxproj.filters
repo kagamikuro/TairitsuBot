@@ -31,9 +31,6 @@
     <Filter Include="project\functionalities\uno">
       <UniqueIdentifier>{3003a99b-a6fe-49cc-a6c2-8c879fa523fe}</UniqueIdentifier>
     </Filter>
-    <Filter Include="project\functionalities\othello\player">
-      <UniqueIdentifier>{9e6aefa2-4619-4ded-8f0a-7dc9b8a7edc4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="project\functionalities\pick_random_song\game_data">
       <UniqueIdentifier>{a9488ad2-31dc-4ac9-8f00-61c9948a73df}</UniqueIdentifier>
     </Filter>
@@ -123,9 +120,6 @@
     <ClCompile Include="project\functionalities\passive_repeat\repeat_chain.cpp">
       <Filter>project\functionalities\passive_repeat</Filter>
     </ClCompile>
-    <ClCompile Include="project\functionalities\othello\player\positional.cpp">
-      <Filter>project\functionalities\othello\player</Filter>
-    </ClCompile>
     <ClCompile Include="project\functionalities\othello\othello.cpp">
       <Filter>project\functionalities\othello</Filter>
     </ClCompile>
@@ -138,14 +132,8 @@
     <ClCompile Include="project\processing\message_received.cpp">
       <Filter>project\processing</Filter>
     </ClCompile>
-    <ClCompile Include="project\utility\rng.cpp">
-      <Filter>project\utility</Filter>
-    </ClCompile>
     <ClCompile Include="project\utility\utility.cpp">
       <Filter>project\utility</Filter>
-    </ClCompile>
-    <ClCompile Include="project\functionalities\othello\player\refined_positional.cpp">
-      <Filter>project\functionalities\othello\player</Filter>
     </ClCompile>
     <ClCompile Include="project\functionalities\othello\othello_game.cpp">
       <Filter>project\functionalities\othello</Filter>
@@ -159,8 +147,8 @@
     <ClCompile Include="project\functionalities\othello\othello_board.cpp">
       <Filter>project\functionalities\othello</Filter>
     </ClCompile>
-    <ClCompile Include="project\functionalities\othello\player\codename_tairitsu.cpp">
-      <Filter>project\functionalities\othello\player</Filter>
+    <ClCompile Include="project\functionalities\othello\codename_tairitsu.cpp">
+      <Filter>project\functionalities\othello</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -287,19 +275,10 @@
     <ClInclude Include="project\functionalities\passive_repeat\repeat_chain.h">
       <Filter>project\functionalities\passive_repeat</Filter>
     </ClInclude>
-    <ClInclude Include="project\functionalities\othello\player\player.h">
-      <Filter>project\functionalities\othello\player</Filter>
-    </ClInclude>
-    <ClInclude Include="project\functionalities\othello\player\positional.h">
-      <Filter>project\functionalities\othello\player</Filter>
-    </ClInclude>
     <ClInclude Include="project\functionalities\othello\othello.h">
       <Filter>project\functionalities\othello</Filter>
     </ClInclude>
     <ClInclude Include="project\functionalities\othello\play_othello.h">
-      <Filter>project\functionalities\othello</Filter>
-    </ClInclude>
-    <ClInclude Include="project\functionalities\othello\players.h">
       <Filter>project\functionalities\othello</Filter>
     </ClInclude>
     <ClInclude Include="project\processing\loop_task.h">
@@ -311,17 +290,11 @@
     <ClInclude Include="project\processing\result.h">
       <Filter>project\processing</Filter>
     </ClInclude>
-    <ClInclude Include="project\utility\hash_dictionary.h">
-      <Filter>project\utility</Filter>
-    </ClInclude>
     <ClInclude Include="project\utility\rng.h">
       <Filter>project\utility</Filter>
     </ClInclude>
     <ClInclude Include="project\utility\utility.h">
       <Filter>project\utility</Filter>
-    </ClInclude>
-    <ClInclude Include="project\functionalities\othello\player\refined_positional.h">
-      <Filter>project\functionalities\othello\player</Filter>
     </ClInclude>
     <ClInclude Include="third_party\CImg.h">
       <Filter>third_party</Filter>
@@ -344,8 +317,8 @@
     <ClInclude Include="project\functionalities\othello\othello_board.h">
       <Filter>project\functionalities\othello</Filter>
     </ClInclude>
-    <ClInclude Include="project\functionalities\othello\player\codename_tairitsu.h">
-      <Filter>project\functionalities\othello\player</Filter>
+    <ClInclude Include="project\functionalities\othello\codename_tairitsu.h">
+      <Filter>project\functionalities\othello</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

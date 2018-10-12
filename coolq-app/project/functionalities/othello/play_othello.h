@@ -1,17 +1,15 @@
 #pragma once
 
-#include <memory>
-
 #include "../../processing/message_received.h"
 #include "../../utility/hash_dictionary.h"
-#include "players.h"
+#include "codename_tairitsu.h"
 
 class PlayOthello final : public MessageReceived
 {
 private:
     const int64_t marigold_id = 3304584594i64;
     HashDictionary<bool> is_black;
-    std::unique_ptr<OthelloAI::Player> player;
+    CodenameTairitsu player;
     void extract_state_and_play(const cq::Target& current_target, const std::string& message);
     Result check_invitation(const cq::Target& current_target, const std::string& message) const;
     Result check_starting(const cq::Target& current_target, const std::string& message);
@@ -21,6 +19,6 @@ protected:
     Result process(const cq::Target& current_target, const std::string& message) override;
     Result process_creator(const std::string& message) override;
 public:
-    PlayOthello() :is_black(499) { player = std::make_unique<OthelloAI::CodenameTairitsu>(); }
-    ~PlayOthello() { player.reset(); }
+    PlayOthello() :is_black(499) {}
+    ~PlayOthello() = default;
 };

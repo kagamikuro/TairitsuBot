@@ -12,7 +12,8 @@ private:
 public:
     HashDictionary() = default;
     explicit HashDictionary(int size) :size(size) { data = std::vector<std::vector<std::pair<int64_t, T>>>(size); }
-    void insert(int64_t id, T value) { data[id % size].push_back(std::pair<int64_t, T>(id, value)); }
+    void insert(int64_t id, const T& value) { data[id % size].emplace_back(id, value); }
+    void insert(int64_t id, T&& value) { data[id % size].emplace_back(id, std::move(value)); }
     bool contains(const int64_t id)
     {
         const int count = data[id % size].size();
