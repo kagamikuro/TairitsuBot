@@ -1,18 +1,14 @@
 #pragma once
 
-#include <array>
-
-template<typename T> using Array = std::array<std::array<T, 8>, 8>;
+#include <cstdint>
+#include <intrin.h>
 
 class Othello final
 {
+    friend class CodenameTairitsu;
 public:
-    enum class Spot : short
-    {
-        White = -1,
-        Blank = 0,
-        Black = 1
-    };
+    using BitBoard = uint64_t;
+    struct State { BitBoard black, white; };
     enum class Result : short
     {
         WhiteWin = -1,
@@ -21,36 +17,33 @@ public:
         Draw = 2
     };
 private:
-    Array<Spot> state;
-    Array<bool> playable;
+    State state;
+    BitBoard playable;
     bool black;
     static bool in_bound(const int row, const int column) { return row >= 0 && row < 8 && column >= 0 && column < 8; }
-    bool test_reverse(bool current_black, int row, int column, int row_step, int column_step, bool perform);
-    bool test_playable(int row, int column);
+    static int count_bits(const BitBoard bits) { return __popcnt(uint32_t(bits)) + __popcnt(uint32_t(bits >> 32)); }
     Result get_result() const;
-public:
-    Othello();
-    bool is_black() const { return black; }
-    int compute_playable_spot();
-    const Array<Spot>& get_state() const { return state; }
-    const Array<bool>& get_playable_spots() const { return playable; }
-    void set_state(const Array<Spot>& new_state, const bool new_black)
+    void compute_playable_spots();
+    void reverse(int row, int column);
+    void force_set_state(const State new_state, const BitBoard new_playable, const bool new_black)
     {
         state = new_state;
         black = new_black;
-        compute_playable_spot();
+        playable = new_playable;
     }
-    int get_black_count() const
+public:
+    Othello() : state{ 0x0000000810000000Ui64, 0x0000001008000000Ui64 }, playable(0x0000102004080000Ui64), black(true) {}
+    bool is_black() const { return black; }
+    const State& get_state() const { return state; }
+    BitBoard get_playable_spots() const { return playable; }
+    void set_state(const State& new_state, const bool new_black)
     {
-        int result = 0;
-        for (int i = 0; i < 8; i++) for (int j = 0; j < 8; j++) if (state[i][j] == Spot::Black) result++;
-        return result;
+        state = new_state;
+        black = new_black;
+        compute_playable_spots();
     }
-    int get_white_count() const
-    {
-        int result = 0;
-        for (int i = 0; i < 8; i++) for (int j = 0; j < 8; j++) if (state[i][j] == Spot::White) result++;
-        return result;
-    }
+    int get_black_count() const { return count_bits(state.black); }
+    int get_white_count() const { return count_bits(state.white); }
+    int get_playable_spot_count() const { return count_bits(playable); }
     Result play(int row, int column);
 };

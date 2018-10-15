@@ -1,11 +1,15 @@
 #pragma once
 
-#include "othello.h"
+#include <array>
+
 #include "../../utility/rng.h"
+#include "othello.h"
 
 class CodenameTairitsu final
 {
-    using State = Array<Othello::Spot>;
+    template<typename T> using Array = std::array<std::array<T, 8>, 8>;
+    using BitBoard = Othello::BitBoard;
+    using State = Othello::State;
     struct ActionReward
     {
         int action;
@@ -33,24 +37,21 @@ private:
         { 50, -25,  20,  -3,  -3,  20, -25,  50}
     } };
     RNG random;
-    // Counting work
-    static int self_disk(const State& state, Othello::Spot self);
-    static int opponent_disk(const State& state, Othello::Spot self);
-    static int count_total(const State& state);
-    // No need to care about mobility in the beginning
-    static bool is_beginning(const State& state);
-    // If most of the spots are taken, start to search exhaustively
-    static bool is_end_game(const State& state) { return count_total(state) >= 52; }
-    static int stable_disks(const State& state, Othello::Spot self);
-    static int balanced_edge_reward(const State& state, Othello::Spot self);
-    int immobility_punish(const State& state, Othello::Spot self);
-    int weighted_points(const State& state, Othello::Spot self);
-    int weighted_reward(const State& before, const State& after, const Othello::Spot self)
+    static bool is_occupied(const State& state, const int row, const int column)
     {
-        return weighted_points(after, self) - weighted_points(before, self);
+        return bit_test(state.black, row, column) || bit_test(state.white, row, column);
     }
-    ActionReward weighted_search(const State& state, bool black, int depth = 1);
-    EndGameTriplet exhaustive_search(const State& state, bool black);
+    static bool bit_test(const BitBoard bits, const int row, const int column) { return bits << (row * 8 + column) >> 63; }
+    static int count_bits(const BitBoard bits) { return __popcnt(uint32_t(bits)) + __popcnt(uint32_t(bits >> 32)); }
+    static int count_total(const State& state) { return count_bits(state.black) + count_bits(state.white); }
+    static bool is_beginning(const State& state); // No need to care about mobility in the beginning
+    static bool is_end_game(const State& state) { return count_total(state) >= 52; }
+    static int stable_disks(const State& state, bool black);
+    static int balanced_edge_reward(BitBoard self);
+    int immobility_punish(const State& state, bool black);
+    int weighted_points(const State& state, bool black);
+    ActionReward weighted_search(const State& state, BitBoard playable, bool black, int depth = 1);
+    EndGameTriplet exhaustive_search(const State& state, BitBoard playable, bool black);
 public:
     CodenameTairitsu() = default;
     int take_action(const State& state, bool black);

@@ -3,174 +3,118 @@
 
 #include "codename_tairitsu.h"
 
-int CodenameTairitsu::self_disk(const State& state, const Othello::Spot self)
-{
-    int result = 0;
-    for (int i = 0; i < 8; i++)
-        for (int j = 0; j < 8; j++)
-            result += state[i][j] == self;
-    return result;
-}
-
-int CodenameTairitsu::opponent_disk(const State& state, const Othello::Spot self)
-{
-    const Othello::Spot opponent = self == Othello::Spot::Black ? Othello::Spot::White : Othello::Spot::Black;
-    int result = 0;
-    for (int i = 0; i < 8; i++)
-        for (int j = 0; j < 8; j++)
-            result += state[i][j] == opponent;
-    return result;
-}
-
-int CodenameTairitsu::count_total(const State& state)
-{
-    int result = 0;
-    for (int i = 0; i < 8; i++)
-        for (int j = 0; j < 8; j++)
-            result += state[i][j] != Othello::Spot::Blank;
-    return result;
-}
-
 bool CodenameTairitsu::is_beginning(const State& state)
 {
-    for (int i = 0; i < 8; i++) // Edge occupied
-    {
-        if (state[0][i] != Othello::Spot::Blank) return false;
-        if (state[7][i] != Othello::Spot::Blank) return false;
-        if (state[i][0] != Othello::Spot::Blank) return false;
-        if (state[i][7] != Othello::Spot::Blank) return false;
-    }
-    for (int i = 3; i <= 6; i++) // "Sweet 16"
-        for (int j = 3; j <= 6; j++)
-            if (state[i][j] == Othello::Spot::Blank)
-                return true;
-    return false;
+    const BitBoard occupied = state.black | state.white;
+    if (!(occupied & 0xff818181818181ffUi64)) return false; // Edge occupied
+    return (occupied & 0x00003c3c3c3c0000Ui64) != 0x00003c3c3c3c0000Ui64; // "Sweet 16"
 }
 
-int CodenameTairitsu::stable_disks(const State& state, const Othello::Spot self)
+int CodenameTairitsu::stable_disks(const State& state, const bool black)
 {
-    Array<bool> top_left = { {} };
-    if (state[0][0] == self)
+    const BitBoard top_mask = 0xff00000000000000Ui64;
+    const BitBoard left_mask = 0x8080808080808080Ui64;
+    const BitBoard bottom_mask = 0x00000000000000ffUi64;
+    const BitBoard right_mask = 0x0101010101010101Ui64;
+    const BitBoard invert_left_mask = 0x7f7f7f7f7f7f7f7fUi64;
+    const BitBoard invert_right_mask = 0xfefefefefefefefeUi64;
+    const BitBoard self = black ? state.black : state.white;
+    const BitBoard occupied = state.black | state.white;
+    const BitBoard corners = self & 0x8100000000000081Ui64; // Corners occupied by [self]
+    BitBoard stable = corners; // Stable disks
+    BitBoard initial_up = corners;
+    BitBoard initial_down = corners;
+    BitBoard initial_left = corners;
+    BitBoard initial_right = corners;
+    for (int i = 0; i < 6; i++)
     {
-        top_left[0][0] = true;
-        for (int i = 1; i < 8; i++) top_left[i][0] = (state[i][0] == self && top_left[i - 1][0]);
-        for (int i = 1; i < 8; i++) top_left[0][i] = (state[0][i] == self && top_left[0][i - 1]);
-        for (int i = 1; i < 8; i++)
-            for (int j = 1; j < 8; j++)
-                if (state[i][j] == self && top_left[i - 1][j - 1])
-                    top_left[i][j] = true;
-                else
-                    break;
+        initial_up |= initial_up << 8 & self;
+        initial_down |= initial_down >> 8 & self;
+        initial_left |= (initial_left & invert_left_mask) << 1 & self;
+        initial_right |= (initial_right & invert_right_mask) >> 1 & self;
     }
-    Array<bool> top_right = { {} };
-    if (state[0][7] == self)
+    stable |= (initial_up | initial_down | initial_left | initial_right); // Corners and sides
+    BitBoard northwest = stable, southeast = stable;
+    BitBoard north = stable, south = stable;
+    BitBoard northeast = stable, southwest = stable;
+    BitBoard west = stable, east = stable;
+    for (int i = 0; i < 6; i++)
     {
-        top_right[0][7] = true;
-        for (int i = 1; i < 8; i++) top_right[i][7] = (state[i][7] == self && top_right[i - 1][7]);
-        for (int i = 6; i >= 0; i--) top_right[0][i] = (state[0][i] == self && top_right[0][i + 1]);
-        for (int i = 1; i < 8; i++)
-            for (int j = 6; j >= 0; j--)
-                if (state[i][j] == self && top_right[i - 1][j + 1])
-                    top_right[i][j] = true;
-                else
-                    break;
+        northwest |= (northwest & invert_left_mask) << 9 & self;
+        southeast |= (southeast & invert_right_mask) >> 9 & self;
+        north |= north << 8 & self;
+        south |= south >> 8 & self;
+        northeast |= (northeast & invert_right_mask) << 7 & self;
+        southwest |= (southwest & invert_left_mask) >> 9 & self;
+        west |= (west & invert_left_mask) << 1 & self;
+        east |= (east & invert_right_mask) >> 1 & self;
     }
-    Array<bool> bottom_left = { {} };
-    if (state[7][0] == self)
-    {
-        bottom_left[7][0] = true;
-        for (int i = 6; i >= 0; i--) bottom_left[i][7] = (state[i][7] == self && bottom_left[i + 1][7]);
-        for (int i = 1; i < 8; i++) bottom_left[0][i] = (state[0][i] == self && bottom_left[0][i - 1]);
-        for (int i = 6; i >= 0; i--)
-            for (int j = 1; j < 8; j++)
-                if (state[i][j] == self && bottom_left[i + 1][j - 1])
-                    bottom_left[i][j] = true;
-                else
-                    break;
-    }
-    Array<bool> bottom_right = { {} };
-    if (state[7][7] == self)
-    {
-        bottom_right[7][7] = true;
-        for (int i = 6; i >= 0; i--) bottom_right[i][7] = (state[i][7] == self && bottom_right[i + 1][7]);
-        for (int i = 6; i >= 0; i--) bottom_right[0][i] = (state[0][i] == self && bottom_right[0][i + 1]);
-        for (int i = 6; i >= 0; i--)
-            for (int j = 6; j >= 0; j--)
-                if (state[i][j] == self && bottom_right[i + 1][j + 1])
-                    bottom_right[i][j] = true;
-                else
-                    break;
-    }
-    int result = 0;
-    for (int i = 0; i < 8; i++)
-        for (int j = 0; j < 8; j++)
-            result += int(top_left[i][j] || top_right[i][j] || bottom_left[i][j] || bottom_right[i][j]);
-    return result;
+    stable |= (northwest | southeast) & (north | south) & (northeast | southwest) & (west | east);
+    if ((occupied & top_mask) == top_mask) stable |= self & top_mask;
+    if ((occupied & left_mask) == left_mask) stable |= self & left_mask;
+    if ((occupied & bottom_mask) == bottom_mask) stable |= self & bottom_mask;
+    if ((occupied & right_mask) == right_mask) stable |= self & right_mask;
+    return count_bits(stable);
 }
 
-int CodenameTairitsu::balanced_edge_reward(const State& state, const Othello::Spot self)
+int CodenameTairitsu::balanced_edge_reward(const BitBoard self)
 {
     int total = 0;
-    if (state[0][3] == self && state[0][4] == self)
+    if (bit_test(self, 0, 3) && bit_test(self, 0, 4)) // Upper
     {
-        if (state[0][2] != self && state[0][5] != self) // Length-2
+        if (!bit_test(self, 0, 2) && !bit_test(self, 0, 5)) // Length-2
             total += 20;
-        else if (state[0][2] == self && state[0][5] == self)
+        else if (bit_test(self, 0, 2) && bit_test(self, 0, 5))
         {
-            if (state[0][1] != self && state[0][6] != self) // Length-4
+            if (!bit_test(self, 0, 1) && !bit_test(self, 0, 6)) // Length-4
                 total += 30;
-            else if (state[0][1] == self && state[0][6] == self) // Length-6
+            else if (bit_test(self, 0, 1) && bit_test(self, 0, 6)) // Length-6
                 total += 40;
         }
     }
-    if (state[3][0] == self && state[4][0] == self)
+    if (bit_test(self, 3, 0) && bit_test(self, 4, 0)) // Left
     {
-        if (state[2][0] != self && state[5][0] != self) // Length-2
+        if (!bit_test(self, 2, 0) && !bit_test(self, 5, 0)) // Length-2
             total += 20;
-        else if (state[2][0] == self && state[5][0] == self)
+        else if (bit_test(self, 2, 0) && bit_test(self, 5, 0))
         {
-            if (state[1][0] != self && state[6][0] != self) // Length-4
+            if (!bit_test(self, 1, 0) && !bit_test(self, 6, 0)) // Length-4
                 total += 30;
-            else if (state[1][0] == self && state[6][0] == self) // Length-6
+            else if (bit_test(self, 1, 0) && bit_test(self, 6, 0)) // Length-6
                 total += 40;
         }
     }
-    if (state[7][3] == self && state[7][4] == self)
+    if (bit_test(self, 7, 3) && bit_test(self, 7, 4)) // Lower
     {
-        if (state[7][2] != self && state[7][5] != self) // Length-2
+        if (!bit_test(self, 7, 2) && !bit_test(self, 7, 5)) // Length-2
             total += 20;
-        else if (state[7][2] == self && state[7][5] == self)
+        else if (bit_test(self, 7, 2) && bit_test(self, 7, 5))
         {
-            if (state[7][1] != self && state[7][6] != self) // Length-4
+            if (!bit_test(self, 7, 1) && !bit_test(self, 7, 6)) // Length-4
                 total += 30;
-            else if (state[7][1] == self && state[7][6] == self) // Length-6
+            else if (bit_test(self, 7, 1) && bit_test(self, 7, 6)) // Length-6
                 total += 40;
         }
     }
-    if (state[3][7] == self && state[4][7] == self)
+    if (bit_test(self, 3, 7) && bit_test(self, 4, 7)) // Right
     {
-        if (state[2][7] != self && state[5][7] != self) // Length-2
+        if (!bit_test(self, 2, 7) && !bit_test(self, 5, 7)) // Length-2
             total += 20;
-        else if (state[2][7] == self && state[5][7] == self)
+        else if (bit_test(self, 2, 7) && bit_test(self, 5, 7))
         {
-            if (state[1][7] != self && state[6][7] != self) // Length-4
+            if (!bit_test(self, 1, 7) && !bit_test(self, 6, 7)) // Length-4
                 total += 30;
-            else if (state[1][7] == self && state[6][7] == self) // Length-6
+            else if (bit_test(self, 1, 7) && bit_test(self, 6, 7)) // Length-6
                 total += 40;
         }
     }
     return total;
 }
 
-int CodenameTairitsu::immobility_punish(const State& state, const Othello::Spot self)
+int CodenameTairitsu::immobility_punish(const State& state, const bool black)
 {
-    if (is_beginning(state)) return 0;
-    temp_game.set_state(state, self == Othello::Spot::Black);
-    const Array<bool>& playable_spots = temp_game.get_playable_spots();
-    int count = 0;
-    for (int i = 0; i < 8; i++)
-        for (int j = 0; j < 8; j++)
-            count += playable_spots[i][j];
+    temp_game.set_state(state, black);
+    const int count = temp_game.get_playable_spot_count();
     switch (count)
     {
     case 3: return 2;
@@ -181,43 +125,45 @@ int CodenameTairitsu::immobility_punish(const State& state, const Othello::Spot 
     }
 }
 
-int CodenameTairitsu::weighted_points(const State& state, const Othello::Spot self)
+int CodenameTairitsu::weighted_points(const State& state, const bool black)
 {
+    const BitBoard& self = black ? state.black : state.white;
     int result = 0;
     for (int i = 0; i < 8; i++)
         for (int j = 0; j < 8; j++)
-            if (state[i][j] == self)
+            if (bit_test(self, i, j))
                 result += weights[i][j];
-    result += stable_disks(state, self) * 100;
-    result += balanced_edge_reward(state, self);
-    result -= immobility_punish(state, self);
+    result += stable_disks(state, black) * 100;
+    result += balanced_edge_reward(self);
+    if (!is_beginning(state)) result -= immobility_punish(state, black);
     return result;
 }
 
-CodenameTairitsu::ActionReward CodenameTairitsu::weighted_search(const State& state, const bool black, const int depth)
+CodenameTairitsu::ActionReward CodenameTairitsu::weighted_search(const State& state, const BitBoard playable, const bool black, const int depth)
 {
     Othello game;
-    game.set_state(state, black);
-    const Array<bool>& playable_spots = game.get_playable_spots();
+    game.force_set_state(state, playable, black);
     int max_self = -100000000;
     std::vector<int> max_action;
     for (int i = 0; i < 8; i++)
         for (int j = 0; j < 8; j++)
-            if (playable_spots[i][j])
+            if (bit_test(playable, i, j))
             {
                 int self;
-                const Othello::Spot self_spot = black ? Othello::Spot::Black : Othello::Spot::White;
                 const Othello::Result result = game.play(i, j);
                 const State& current_state = game.get_state();
                 if (result == Othello::Result::NotFinished)
                 {
-                    self = weighted_reward(state, current_state, self_spot);
+                    const int before = weighted_points(state, black);
+                    const int after = weighted_points(current_state, black);
+                    self = after - before;
                     if (depth > 1)
                     {
+                        const BitBoard current_playable = game.get_playable_spots();
                         if (game.is_black() == black)
-                            self += weighted_search(current_state, black, depth - 1).reward;
+                            self += weighted_search(current_state, current_playable, black, depth - 1).reward;
                         else
-                            self -= weighted_search(current_state, !black, depth - 1).reward;
+                            self -= weighted_search(current_state, current_playable, !black, depth - 1).reward;
                     }
                 }
                 else if (result == Othello::Result::BlackWin)
@@ -226,7 +172,7 @@ CodenameTairitsu::ActionReward CodenameTairitsu::weighted_search(const State& st
                     self = 1000000 * (black ? -1 : 1);
                 else
                     self = 0;
-                game.set_state(state, black);
+                game.force_set_state(state, playable, black);
                 if (self > max_self)
                 {
                     max_self = self;
@@ -241,42 +187,41 @@ CodenameTairitsu::ActionReward CodenameTairitsu::weighted_search(const State& st
     return { max_action[chosen_action], max_self };
 }
 
-CodenameTairitsu::EndGameTriplet CodenameTairitsu::exhaustive_search(const State& state, const bool black)
+CodenameTairitsu::EndGameTriplet CodenameTairitsu::exhaustive_search(const State& state, const BitBoard playable, const bool black)
 {
     Othello game;
-    game.set_state(state, black);
-    const Array<bool>& playable_spots = game.get_playable_spots();
+    game.force_set_state(state, playable, black);
     int max_self = -1;
     std::vector<std::pair<int, int>> max_data; // (action, opponent)
     for (int i = 0; i < 8; i++)
         for (int j = 0; j < 8; j++)
-            if (playable_spots[i][j])
+            if (bit_test(playable, i, j))
             {
                 int self, opponent;
                 const Othello::Result result = game.play(i, j);
                 const State& current_state = game.get_state();
                 if (result == Othello::Result::NotFinished)
                 {
+                    const BitBoard current_playable = game.get_playable_spots();
                     if (game.is_black() == black)
                     {
-                        const EndGameTriplet next = exhaustive_search(current_state, black);
+                        const EndGameTriplet next = exhaustive_search(current_state, current_playable, black);
                         self = next.self;
                         opponent = next.opponent;
                     }
                     else
                     {
-                        const EndGameTriplet next = exhaustive_search(current_state, !black);
+                        const EndGameTriplet next = exhaustive_search(current_state, current_playable, !black);
                         self = next.opponent;
                         opponent = next.self;
                     }
                 }
                 else
                 {
-                    const Othello::Spot self_spot = black ? Othello::Spot::Black : Othello::Spot::White;
-                    self = self_disk(current_state, self_spot);
-                    opponent = opponent_disk(current_state, self_spot);
+                    self = count_bits(black ? current_state.black : current_state.white);
+                    opponent = count_bits(black ? current_state.white : current_state.black);
                 }
-                game.set_state(state, black);
+                game.force_set_state(state, playable, black);
                 if (self > max_self)
                 {
                     max_self = self;
@@ -293,6 +238,9 @@ CodenameTairitsu::EndGameTriplet CodenameTairitsu::exhaustive_search(const State
 
 int CodenameTairitsu::take_action(const State& state, const bool black)
 {
-    if (!is_end_game(state)) return weighted_search(state, black, 4).action;
-    return exhaustive_search(state, black).action;
+    Othello game;
+    game.set_state(state, black);
+    const BitBoard playable = game.get_playable_spots();
+    if (!is_end_game(state)) return weighted_search(state, playable, black, 4).action;
+    return exhaustive_search(state, playable, black).action;
 }

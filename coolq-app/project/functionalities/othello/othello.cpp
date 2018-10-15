@@ -1,38 +1,5 @@
 #include "othello.h"
 
-bool Othello::test_reverse(const bool current_black, int row, int column, const int row_step, const int column_step, const bool perform)
-{
-    row += row_step; column += column_step;
-    if (!in_bound(row, column)) return false;
-    const Spot self = current_black ? Spot::Black : Spot::White, opponent = current_black ? Spot::White : Spot::Black;
-    if (state[row][column] != opponent) return false;
-    do { row += row_step; column += column_step; } while (in_bound(row, column) && state[row][column] == opponent);
-    if (!in_bound(row, column) || state[row][column] == Spot::Blank) return false;
-    if (perform)
-    {
-        do
-        {
-            state[row][column] = self;
-            row -= row_step;
-            column -= column_step;
-        } while (state[row][column] == opponent);
-    }
-    return true;
-}
-
-bool Othello::test_playable(const int row, const int column)
-{
-    return
-        (test_reverse(black, row, column, -1, -1, false)) ||
-        (test_reverse(black, row, column, -1, 0, false)) ||
-        (test_reverse(black, row, column, -1, 1, false)) ||
-        (test_reverse(black, row, column, 0, -1, false)) ||
-        (test_reverse(black, row, column, 0, 1, false)) ||
-        (test_reverse(black, row, column, 1, -1, false)) ||
-        (test_reverse(black, row, column, 1, 0, false)) ||
-        (test_reverse(black, row, column, 1, 1, false));
-}
-
 Othello::Result Othello::get_result() const
 {
     const int black = get_black_count(), white = get_white_count();
@@ -41,42 +8,85 @@ Othello::Result Othello::get_result() const
     return Result::Draw;
 }
 
-Othello::Othello(): state{ }, playable{ }, black(true)
+void Othello::compute_playable_spots()
 {
-    state[3][3] = state[4][4] = Spot::White;
-    state[3][4] = state[4][3] = Spot::Black;
-    playable[2][3] = playable[4][5] = playable[3][2] = playable[5][4] = true;
+    const BitBoard self = black ? state.black : state.white;
+    const BitBoard opponent = black ? state.white : state.black;
+    const BitBoard empty = ~(self | opponent); // Empty spots
+    // Apply masks to opponent bit board to avoid row wrapping in the left/right shifts
+    const BitBoard center = opponent & 0x007e7e7e7e7e7e00Ui64; // Center 6x6
+    const BitBoard rows = opponent & 0x7e7e7e7e7e7e7e7eUi64; // Middle 6 rows
+    // Initialize the result of the 8 directions, with the first iteration done
+    BitBoard northwest = (self << 9) & center, southeast = (self >> 9) & center;
+    BitBoard north = (self << 8) & opponent, south = (self >> 8) & opponent;
+    BitBoard northeast = (self << 7) & center, southwest = (self >> 7) & center;
+    BitBoard west = (self << 1) & rows, east = (self >> 1) & rows;
+    // You can flip at most 6 opponent disks in one direction
+    for (int i = 1; i < 6; i++)
+    {
+        // Perform some bit magic ^_^
+        northwest = ((northwest << 9) & center) | northwest;
+        southeast = ((southeast >> 9) & center) | southeast;
+        north = ((north << 8) & opponent) | north;
+        south = ((south >> 8) & opponent) | south;
+        northeast = ((northeast << 7) & center) | northeast;
+        southwest = ((southwest >> 7) & center) | southwest;
+        west = ((west << 1) & rows) | west;
+        east = ((east >> 1) & rows) | east;
+    }
+    // Get pseudo result (the spot with ones may not be empty) in each direction
+    northwest <<= 9; southeast >>= 9;
+    north <<= 8; south >>= 8;
+    northeast <<= 7; southwest >>= 7;
+    west <<= 1; east >>= 1;
+    playable = (northwest | southeast | north | south | northeast | southwest | west | east) & empty; // Get the final result
 }
 
-int Othello::compute_playable_spot()
+void Othello::reverse(const int row, const int column)
 {
-    int result = 0;
-    for (int i = 0; i < 8; i++)
-        for (int j = 0; j < 8; j++)
-        {
-            if (state[i][j] != Spot::Blank)
-                playable[i][j] = false;
-            else
-                playable[i][j] = test_playable(i, j);
-            result += playable[i][j];
-        }
-    return result;
+    BitBoard& self = black ? state.black : state.white;
+    BitBoard& opponent = black ? state.white : state.black;
+    const BitBoard new_disk = 0x8000000000000000Ui64 >> (row * 8 + column); // Newly placed disk
+    // Apply masks to opponent bit board to avoid row wrapping in the left/right shifts
+    const BitBoard center = opponent & 0x007e7e7e7e7e7e00Ui64; // Center 6x6
+    const BitBoard rows = opponent & 0x7e7e7e7e7e7e7e7eUi64; // Middle 6 rows
+    // Initialize the result of the 8 directions, with the first iteration done
+    BitBoard northwest = (new_disk << 9) & center, southeast = (new_disk >> 9) & center;
+    BitBoard north = (new_disk << 8) & opponent, south = (new_disk >> 8) & opponent;
+    BitBoard northeast = (new_disk << 7) & center, southwest = (new_disk >> 7) & center;
+    BitBoard west = (new_disk << 1) & rows, east = (new_disk >> 1) & rows;
+    // You can flip at most 6 opponent disks in one direction
+    for (int i = 1; i < 6; i++)
+    {
+        // Perform some bit magic ^_^
+        northwest = ((northwest << 9) & center) | northwest;
+        southeast = ((southeast >> 9) & center) | southeast;
+        north = ((north << 8) & opponent) | north;
+        south = ((south >> 8) & opponent) | south;
+        northeast = ((northeast << 7) & center) | northeast;
+        southwest = ((southwest >> 7) & center) | southwest;
+        west = ((west << 1) & rows) | west;
+        east = ((east >> 1) & rows) | east;
+    }
+    BitBoard flipped = new_disk;
+    if ((northwest << 9) & self) flipped |= northwest;
+    if ((southeast >> 9) & self) flipped |= southeast;
+    if ((north << 8) & self) flipped |= north;
+    if ((south >> 8) & self) flipped |= south;
+    if ((northeast << 7) & self) flipped |= northeast;
+    if ((southwest >> 7) & self) flipped |= southwest;
+    if ((west << 1) & self) flipped |= west;
+    if ((east >> 1) & self) flipped |= east;
+    self |= flipped; opponent &= ~flipped;
 }
 
 Othello::Result Othello::play(const int row, const int column)
 {
-    const Spot self = black ? Spot::Black : Spot::White;
-    state[row][column] = self;
-    test_reverse(black, row, column, -1, -1, true);
-    test_reverse(black, row, column, -1, 0, true);
-    test_reverse(black, row, column, -1, 1, true);
-    test_reverse(black, row, column, 0, -1, true);
-    test_reverse(black, row, column, 0, 1, true);
-    test_reverse(black, row, column, 1, -1, true);
-    test_reverse(black, row, column, 1, 0, true);
-    test_reverse(black, row, column, 1, 1, true);
+    reverse(row, column);
     black = !black;
-    if (compute_playable_spot() == 0) black = !black;
-    if (compute_playable_spot() == 0) return get_result();
+    compute_playable_spots();
+    if (get_playable_spot_count() == 0) black = !black;
+    compute_playable_spots();
+    if (get_playable_spot_count() == 0) return get_result();
     return Result::NotFinished;
 }
