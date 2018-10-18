@@ -11,9 +11,5 @@ public:
     RNG() :generator(std::random_device()()) {}
     void set_size(const int size) { distribution = std::uniform_int_distribution<>(0, size - 1); }
     int get_next() { return distribution(generator); }
-    int get_random_integer(const int size)
-    {
-        set_size(size);
-        return get_next();
-    }
+    int get_random_integer(const int size) { return std::uniform_int_distribution<>(0, size - 1)(generator); }
 };

@@ -8,7 +8,7 @@ Othello::Result Othello::get_result() const
     return Result::Draw;
 }
 
-void Othello::compute_playable_spots()
+Othello::BitBoard Othello::compute_playable_spots(const State& state, const bool black)
 {
     const BitBoard self = black ? state.black : state.white;
     const BitBoard opponent = black ? state.white : state.black;
@@ -39,7 +39,7 @@ void Othello::compute_playable_spots()
     north <<= 8; south >>= 8;
     northeast <<= 7; southwest >>= 7;
     west <<= 1; east >>= 1;
-    playable = (northwest | southeast | north | south | northeast | southwest | west | east) & empty; // Get the final result
+    return (northwest | southeast | north | south | northeast | southwest | west | east) & empty; // Get the final result
 }
 
 void Othello::reverse(const int row, const int column)
@@ -84,9 +84,9 @@ Othello::Result Othello::play(const int row, const int column)
 {
     reverse(row, column);
     black = !black;
-    compute_playable_spots();
-    if (get_playable_spot_count() == 0) black = !black;
-    compute_playable_spots();
-    if (get_playable_spot_count() == 0) return get_result();
+    refresh_playable_spots();
+    if (!playable) black = !black;
+    refresh_playable_spots();
+    if (!playable) return get_result();
     return Result::NotFinished;
 }

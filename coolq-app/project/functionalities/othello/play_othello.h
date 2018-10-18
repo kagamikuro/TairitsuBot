@@ -2,14 +2,12 @@
 
 #include "../../processing/message_received.h"
 #include "../../utility/hash_dictionary.h"
-#include "codename_tairitsu.h"
 
 class PlayOthello final : public MessageReceived
 {
 private:
     const int64_t marigold_id = 3304584594i64;
     HashDictionary<bool> is_black;
-    CodenameTairitsu player;
     void extract_state_and_play(const cq::Target& current_target, const std::string& message);
     Result check_invitation(const cq::Target& current_target, const std::string& message) const;
     Result check_starting(const cq::Target& current_target, const std::string& message);
