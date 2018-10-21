@@ -11,7 +11,7 @@ namespace utility
 {
     using namespace std::string_literals;
 
-    const int64_t creator_id = 1357008522i64;
+    const int64_t developer_id = 1357008522i64;
     const int64_t self_id = 2718434132i64;
     inline std::string data_path;
     inline std::string image_path("data/image/");
@@ -61,7 +61,7 @@ namespace utility
             cqc::logging::warning("Exception caught", e.what());
         }
     }
-    inline void private_send_creator(const std::string& message) { private_send(creator_id, message); }
+    inline void private_send_creator(const std::string& message) { private_send(developer_id, message); }
     inline bool is_admin(const int64_t group_id, const int64_t user_id)
     {
         const cq::GroupRole role = cqc::api::get_group_member_info(group_id, user_id, true).role;
@@ -69,6 +69,8 @@ namespace utility
     }
     int64_t get_first_id_in_string(const std::string& string);
     bool ban_group_member(int64_t group_id, int64_t user_id, int duration = 60, bool verbose = true, const std::string& custom_message = u8"享受Track Lost的乐趣吧（笑）");
-    bool ban_whole_group(int64_t group_id, bool verbose = true, const std::string& custom_message = u8"剐内镑 Tairitsu 虚启疤碹镑铱鸹");
-    bool unban_whole_group(int64_t group_id, bool verbose = true, const std::string& custom_message = u8"剐内镑 Tairitsu 镳氲疤碹镑铱鸹");
+    bool ban_whole_group(int64_t group_id, bool verbose = true,
+        const std::string& custom_message = u8"剐内镑 Tairitsu 虚启疤碹镑铱鸹");
+    bool unban_whole_group(int64_t group_id, bool verbose = true,
+        const std::string& custom_message = u8"剐内镑 Tairitsu 镳氲疤碹镑铱鸹");
 }

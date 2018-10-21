@@ -2,13 +2,16 @@
 
 #include <vector>
 #include <string>
+#include <regex>
 
 #include "../processing/message_received.h"
+#include "../utility/utility.h"
 #include "../utility/rng.h"
 
 class AtReplies final : public MessageReceived
 {
 private:
+    const std::regex at_self_regex{ utility::at_self_regex_string };
     std::vector<std::string> reply_strings;
     RNG random_number_generator;
 protected:

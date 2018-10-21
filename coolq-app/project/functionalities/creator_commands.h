@@ -1,14 +1,18 @@
 #pragma once
 
+#include <regex>
+
 #include "../processing/message_received.h"
 #include "../utility/utility.h"
 
 class CreatorCommands final : public MessageReceived
 {
 private:
+    const std::regex context_change_regex{ "\\$context change[ \t]*[0-9]+" };
+    const std::regex send_text_regex{ "\\$\\$([\\s\\S]*)" };
     bool monitor = false;
     int64_t group_context = 0;
-    const cq::Target creator{ utility::creator_id };
+    const cq::Target creator{ utility::developer_id };
     bool check_context() const { return group_context != 0i64; }
     Result list_commands(const std::string& message) const;
     Result list_funcs(const std::string& message) const;

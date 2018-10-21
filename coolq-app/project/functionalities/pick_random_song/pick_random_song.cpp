@@ -4,14 +4,9 @@
 #include "../../utility/utility.h"
 #include "../../../safety_check/logging.h"
 
-std::regex PickRandomSong::special_characters;
-std::regex PickRandomSong::main_matcher_regex;
-
 PickRandomSong::PickRandomSong() :MessageReceived(0, 60, 45)
 {
     separate_cool_down = false;
-    main_matcher_regex = std::regex(u8"[ \t]*(?:(?:帮|给)我)?抽(?:一)?(?:首|个)[ \t]*(.*?)[ \t]*的(.*?)(?:曲(?:子)?|歌|谱(?:面)?)[ \t]*");
-    special_characters = std::regex(R"([-[\]{}()*+?.,\^$|#])");
     load_data();
 }
 
@@ -93,7 +88,7 @@ Result PickRandomSong::process(const cq::Target& current_target, const std::stri
 {
     std::smatch pattern_match;
     bool matched = std::regex_match(message, pattern_match, main_matcher_regex);
-    if (!matched) return Result();
+    if (!matched) return Result{};
     const int game_count = games.size();
     // Search in every game
     for (int i = 0; i < game_count; i++)
@@ -106,7 +101,7 @@ Result PickRandomSong::process(const cq::Target& current_target, const std::stri
         if (!matched)
         {
             if (check_updated_timer(current_target) == 1) send_message(current_target, u8"我不太明白你想要什么样的歌……");
-            return Result(true);
+            return Result{ true };
         }
         int difficulty = -1;
         std::string min_level, max_level;
@@ -120,7 +115,7 @@ Result PickRandomSong::process(const cq::Target& current_target, const std::stri
                 if (difficulty != -1)
                 {
                     if (check_updated_timer(current_target) == 1) send_message(current_target, u8"多个难度限制是什么鬼啦");
-                    return Result(true);
+                    return Result{ true };
                 }
                 else
                     for (int j = 0; j < games[i].difficulty_regexs.size(); j++)
@@ -138,12 +133,12 @@ Result PickRandomSong::process(const cq::Target& current_target, const std::stri
                     if (!min_level.empty())
                     {
                         if (check_updated_timer(current_target) == 1) send_message(current_target, u8"我觉得没必要限定多个难度下限的吧");
-                        return Result(true);
+                        return Result{ true };
                     }
                     if (!max_level.empty())
                     {
                         if (check_updated_timer(current_target) == 1) send_message(current_target, u8"我觉得没必要限定多个难度上限的吧");
-                        return Result(true);
+                        return Result{ true };
                     }
                     min_level = max_level = element.str(2);
                     include_min = include_max = true;
@@ -153,7 +148,7 @@ Result PickRandomSong::process(const cq::Target& current_target, const std::stri
                     if (!min_level.empty())
                     {
                         if (check_updated_timer(current_target) == 1) send_message(current_target, u8"我觉得没必要限定多个难度下限的吧");
-                        return Result(true);
+                        return Result{ true };
                     }
                     min_level = element.str(2);
                     include_min = element.str(3) == u8"及";
@@ -163,7 +158,7 @@ Result PickRandomSong::process(const cq::Target& current_target, const std::stri
                     if (!max_level.empty())
                     {
                         if (check_updated_timer(current_target) == 1) send_message(current_target, u8"我觉得没必要限定多个难度上限的吧");
-                        return Result(true);
+                        return Result{ true };
                     }
                     max_level = element.str(2);
                     include_max = element.str(3) == u8"及";
@@ -175,15 +170,16 @@ Result PickRandomSong::process(const cq::Target& current_target, const std::stri
         if (result_count == 0)
         {
             if (check_updated_timer(current_target) == 1) send_message(current_target, u8"对不起，我没有找到符合你要求的歌");
-            return Result(true);
+            return Result{ true };
         }
         random_number_generator.set_size(result_songs.size());
         if (check_updated_timer(current_target) == 1)
             send_message(current_target, std::string(u8"你选到的谱面是：") + result_songs[random_number_generator.get_next()]);
-        return Result(true, true);
+        return Result{ true, true };
     }
-    if (check_updated_timer(current_target) == 1) send_message(current_target, u8"我的曲库里没有" + pattern_match.str(1) + u8"这个游戏呢……");
-    return Result(true);
+    if (check_updated_timer(current_target) == 1) 
+        send_message(current_target, u8"我的曲库里没有" + pattern_match.str(1) + u8"这个游戏呢……");
+    return Result{ true };
 }
 
 Result PickRandomSong::process_creator(const std::string& message)
@@ -192,15 +188,15 @@ Result PickRandomSong::process_creator(const std::string& message)
     {
         set_active(true);
         utility::private_send_creator(u8"好吧，不过抽到奇怪的歌可不要怪我~");
-        return Result(true, true);
+        return Result{ true, true };
     }
     if (message == "$deactivate pick song")
     {
         set_active(false);
         utility::private_send_creator(u8"又有人在刷屏抽歌了吗？要不先冷静一下吧。");
-        return Result(true, true);
+        return Result{ true, true };
     }
-    return Result();
+    return Result{};
 }
 
 bool PickRandomSong::cooling_down_action(const cq::Target& current_target, const int times)

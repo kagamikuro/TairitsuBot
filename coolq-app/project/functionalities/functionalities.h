@@ -12,7 +12,7 @@
 #include "subjective_repeat.h"
 #include "passive_repeat/passive_repeat.h"
 #include "creator_commands.h"
-#include "uno/uno.h"
+#include "uno/uno_game.h"
 #include "passive_unban_creator.h"
 #include "othello/play_othello.h"
 #include "othello/othello_game.h"

@@ -1,5 +1,4 @@
 ﻿#include <sstream>
-#include <regex>
 #include <thread>
 #include <chrono>
 
@@ -37,12 +36,11 @@ void MeetingOn7th::remove_leader(const int64_t user_id)
 
 Result MeetingOn7th::process(const cq::Target& current_target, const std::string& message)
 {
-    if (!current_target.group_id.has_value()) return Result();
+    if (!current_target.group_id.has_value()) return Result{};
     std::smatch match;
-    const std::regex regex("\\[CQ:at,[ \t]*qq[ \t]*=[ \t]*([0-9]+)\\]");
     std::string::const_iterator begin = message.begin();
     const std::string::const_iterator end = message.end();
-    while (std::regex_search(begin, end, match, regex))
+    while (std::regex_search(begin, end, match, at_message_regex))
     {
         const int64_t user_id = std::stoll(match.str(1));
         for (const LeaderData& leader : leaders)
@@ -55,11 +53,11 @@ Result MeetingOn7th::process(const cq::Target& current_target, const std::string
                 send_message(current_target, u8"你自己心里没点数？");
                 std::this_thread::sleep_for(std::chrono::duration<int>(3));
                 send_message(current_target, u8"请各位群员以后注意自己的身份和说话方式@全体成员", false);
-                return Result(true, true);
+                return Result{ true, true };
             }
         begin = match[0].second;
     }
-    return Result();
+    return Result{};
 }
 
 Result MeetingOn7th::process_creator(const std::string& message)
@@ -68,38 +66,37 @@ Result MeetingOn7th::process_creator(const std::string& message)
     {
         set_active(true);
         utility::private_send_creator(u8"请某些群成员认清自己的身份");
-        return Result(true, true);
+        return Result{ true, true };
     }
     if (message == "$deactivate meeting")
     {
         set_active(false);
         utility::private_send_creator(u8"玩梗要适度，我知道了！");
-        return Result(true, true);
+        return Result{ true, true };
     }
     if (message == "$list leader")
     {
         list_leaders();
-        return Result(true, true);
+        return Result{ true, true };
     }
     if (message == "$clear leader")
     {
         clear_leaders();
-        return Result(true, true);
+        return Result{ true, true };
     }
-    if (std::regex_match(message, std::regex("\\$remove leader[ \t]+[0-9]+")))
+    if (std::regex_match(message, remove_leader_regex))
     {
         const int64_t user_id = utility::get_first_id_in_string(message);
         remove_leader(user_id);
-        return Result(true, true);
+        return Result{ true, true };
     }
-    const std::regex regex("\\$add leader[ \t]+[0-9]+ +([^ ]+) +([^ ]+)");
     std::smatch match;
-    if (std::regex_match(message, match, regex))
+    if (std::regex_match(message, match, add_leader_regex))
     {
         const int64_t user_id = utility::get_first_id_in_string(message);
         leaders.emplace_back(user_id, match.str(1), match.str(2));
         utility::private_send_creator(u8"好了，已经把这个用户添加到名单里了！");
-        return Result(true, true);
+        return Result{ true, true };
     }
-    return Result();
+    return Result{};
 }

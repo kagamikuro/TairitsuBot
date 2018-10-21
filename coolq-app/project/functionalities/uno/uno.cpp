@@ -1,474 +1,227 @@
 ﻿#include <sstream>
-#include <set>
-#include <regex>
-#include <thread>
-#include <chrono>
 
 #include "uno.h"
+#include "../../utility/rng.h"
 
-int Uno::find_player_in_game(const int64_t user_id) const
+bool Uno::is_required_card(const UnoCard& card) const
 {
-    const int game_count = games.size();
-    for (int result = 0; result < game_count; result++)
+    if (required_card == UnoCard::None) return true;
+    if (required_card == UnoCard::DrawTwo || required_card == UnoCard::DrawFour || required_card == UnoCard::Skip)
     {
-        if (games[result].ended) continue;
-        const std::vector<std::pair<int64_t, std::string>>& players = games[result].get_players();
-        for (const std::pair<int64_t, std::string>& pair : players)
-            if (pair.first == user_id)
-                return result;
+        if (card.number == required_card)
+            return true;
+        return required_card == UnoCard::Skip && card.number == UnoCard::Reverse && get_current_player_count() == 2;
     }
-    return -1;
+    return false;
 }
 
-int Uno::get_player_id(const int game_id, const int64_t user_id) const
+Uno::Uno(const std::vector<std::pair<int64_t, std::string>>& players)
 {
-    const std::vector<std::pair<int64_t, std::string>>& players = games[game_id].get_players();
-    for (int i = 0; i < players.size(); i++)
-        if (players[i].first == user_id)
-            return i;
-    return -1;
+    const int player_count = players.size();
+    ended = false;
+    draw_amount = 1;
+    clockwise = true;
+    required_card = UnoCard::None;
+    this->players = players;
+    player_cards.resize(player_count);
+    false_uno_state.resize(player_count);
+    challenge_state.resize(player_count);
+    last_card = UnoCard(UnoCard::WildCard, UnoCard::Wild);
+    std::random_device device;
+    generator = std::mt19937(device());
+    card_stack = UnoCard::get_all_cards();
+    shuffle_cards(card_stack);
+    for (int i = 0; i < 7; i++)
+        for (int j = 0; j < player_count; j++)
+        {
+            const UnoCard& top_card = card_stack.back();
+            player_cards[j].insert(top_card);
+            card_stack.pop_back();
+        }
+    RNG random_number_generator;
+    random_number_generator.set_size(players.size());
+    last_player = -1;
+    current_player = random_number_generator.get_next();
+    while (true)
+    {
+        const UnoCard& top_card = card_stack.back();
+        card_stack.pop_back();
+        last_card = top_card;
+        set_required_card(last_card);
+        disposed_stack.push_back(top_card);
+        if (top_card.color != UnoCard::WildCard) break;
+    }
 }
 
-void Uno::send_other_players(const int game_id, const int player_id, const std::string& message) const
+void Uno::set_required_card(const UnoCard& card)
 {
-    const std::vector<std::pair<int64_t, std::string>>& players = games[game_id].get_players();
-    for (int i = 0; i < players.size(); i++)
-        if (i != player_id)
-            utility::private_send(players[i].first, message);
-}
-
-void Uno::draw_card(const int game_id, const int player_id, const int draw_amount)
-{
-    send_other_players(game_id, player_id, games[game_id].draw_cards(draw_amount, player_id));
-    send_self(game_id, player_id, show_cards(game_id, player_id));
-}
-
-std::string Uno::show_cards(const int game_id, const int player_id, const bool just_show) const
-{
-    const std::multiset<UnoCard>& cards = games[game_id].get_player_cards(player_id);
-    std::ostringstream result;
-    result << u8"你现有的牌是：\n";
-    for (const UnoCard& card : cards)
-        if (!just_show && games[game_id].can_play(card))
-            result << '[' << card.to_string() << "] ";
+    if (card.number >= 0 && card.number <= 9 || card.number == UnoCard::Wild)
+    {
+        required_card = UnoCard::None;
+        return;
+    }
+    if (card.number == UnoCard::Reverse)
+    {
+        if (get_current_player_count() == 2)
+            required_card = UnoCard::Skip;
         else
-            result << card.to_string() << ' ';
-    return result.str();
-}
-
-void Uno::notice_player(const int game_id) const
-{
-    send_self(game_id, games[game_id].get_current_player(), u8"轮到你出牌了哦！" + show_cards(game_id, games[game_id].get_current_player(), false));
-}
-
-void Uno::start_game(const int game_id)
-{
-    send_other_players(game_id, -1, u8"好了，那么现在游戏就要开始了，如果不熟悉操作的话可以先看一下指令帮助，给我发送“-h”就可以了哦！请先等我稍稍准备一下，等下游戏就会开始！");
-    std::this_thread::sleep_for(std::chrono::duration<int>(5));
-    const UnoGame& game = games[game_id];
-    const int player_count = game.get_current_player_count();
-    for (int i = 0; i < player_count; i++) send_self(game_id, i, show_cards(game_id, i));
-    send_other_players(game_id, -1, u8"牌已经发好了，请各位稍安勿躁，游戏马上就会正式开始。下面由我来抽第一张牌并且决定第一个出牌人：");
-    std::ostringstream result;
-    result << "第一张牌是：" << game.get_last_card().to_string() << "\n第一个出牌人是："
-        << game.get_players()[game.get_current_player()].second << "\n那么，请开始出牌吧！";
-    send_other_players(game_id, -1, result.str());
-}
-
-void Uno::end_game(const int game_id, const bool forced)
-{
-    UnoGame& game = games[game_id];
-    std::string loser_name;
-    const std::vector<std::pair<int64_t, std::string>>& players = game.get_players();
-    if (!forced)
-    {
-        const int player_count = players.size();
-        for (int i = 0; i < player_count; i++)
-            if (!game.get_player_cards(i).empty())
-            {
-                loser_name = players[i].second;
-                break;
-            }
-        std::ostringstream result;
-        result << "游戏结束了！\n最后" << loser_name << "同学还是没能出完手中的牌……下次再接再厉吧（笑\n我们下次再见吧！";
-        send_other_players(game_id, -1, result.str());
+            required_card = UnoCard::None;
+        return;
     }
-    else
-        send_other_players(game_id, -1, u8"因为目前只有一个人在游戏中，所以游戏自动终止……\n我们下次再见吧！");
-    for (const std::pair<int64_t, std::string>& pair : players) playing.get_value(pair.first) = false;
-    game.ended = true;
+    required_card = card.number;
 }
 
-Result Uno::prepare_game(const cq::Target& current_target, const std::string& message)
+int Uno::get_current_player_count() const
 {
-    if (!std::regex_match(message, std::regex(u8"[ \t]*来打[Uu][Nn][Oo]吧(?:(?:！|!| |\t))*"))) return Result();
-    const int64_t group_id = *current_target.group_id, user_id = *current_target.user_id;
-    if (players.contains(group_id) && players.get_value(group_id).first)
-    {
-        send_message(current_target, u8"我知道啦，不用重复说了……");
-        return Result(true);
-    }
-    if (playing.contains(user_id))
-    {
-        bool& value = playing.get_value(user_id);
-        if (value)
-        {
-            send_message(current_target, u8"可是你已经加入一场游戏了……");
-            return Result(true);
-        }
-        value = true;
-    }
-    else
-        playing.insert(user_id, true);
-    if (players.contains(group_id))
-    {
-        std::pair<bool, std::vector<int64_t>>& pair = players.get_value(group_id);
-        pair.first = true;
-        pair.second.clear();
-        pair.second.push_back(*current_target.user_id);
-    }
-    else
-        players.insert(group_id, std::pair<bool, std::vector<int64_t>>(true, std::vector<int64_t>{ *current_target.user_id }));
-    utility::group_send(group_id, u8"那好的，要玩的在下面扣个1，我统计一下");
-    return Result(true, true);
+    int player_count = 0;
+    for (const std::multiset<UnoCard>& player : player_cards) player_count += !player.empty();
+    return player_count;
 }
 
-Result Uno::join_game(const cq::Target& current_target, const std::string& message)
+bool Uno::can_play(const UnoCard& card) const
 {
-    const int64_t group_id = *current_target.group_id, user_id = *current_target.user_id;
-    if (!players.contains(group_id)) return Result();
-    if (message != "1") return Result();
-    std::pair<bool, std::vector<int64_t>>& pair = players.get_value(group_id);
-    if (!pair.first) return Result();
-    if (playing.contains(user_id))
-    {
-        bool& value = playing.get_value(user_id);
-        if (value)
-        {
-            send_message(current_target, u8"可是你已经加入一场游戏了……");
-            return Result(true);
-        }
-        value = true;
-    }
-    else
-        playing.insert(user_id, true);
-    bool found = false;
-    for (const int64_t value : pair.second)
-        if (value == user_id)
-        {
-            found = true;
-            break;
-        }
-    if (found)
-        send_message(current_target, u8"好啦我知道你想玩了，不用重复说了……");
-    else
-        pair.second.push_back(user_id);
-    return Result(true, true);
+    if (last_card.number == UnoCard::None) return true;
+    if (card.number == UnoCard::None) return true;
+    UnoCard augmented_last = last_card;
+    UnoCard augmented_card = card;
+    if (card.number == UnoCard::DrawFour || card.number == UnoCard::Wild) augmented_card.color = UnoCard::WildCard;
+    if (get_current_player_count() == 2 && card.number == UnoCard::Reverse) augmented_card.number = UnoCard::Skip;
+    if (get_current_player_count() == 2 && last_card.number == UnoCard::Reverse) augmented_last.number = UnoCard::Skip;
+    return augmented_card.can_use_after(augmented_last) && is_required_card(augmented_card);
 }
 
-Result Uno::game_ready(const cq::Target& current_target, const std::string& message)
+bool Uno::has_card(const UnoCard& card) const
 {
-    const int64_t group_id = *current_target.group_id;
-    if (!players.contains(group_id)) return Result();
-    if (!std::regex_match(message, std::regex(u8"[ \t]*那就开始吧(?:(?:！|!| |\t))*"))) return Result();
-    std::pair<bool, std::vector<int64_t>>& pair = players.get_value(group_id);
-    if (!pair.first) return Result();
-    if (pair.second.size() < 2)
-    {
-        send_message(current_target, u8"人数不够，玩不起来啊……那以后有人玩了再说吧");
-        pair.first = false;
-        for (const int64_t value : pair.second) playing.get_value(value) = false;
-        pair.second.clear();
-        return Result(true);
-    }
-    if (pair.second.size() > 10)
-    {
-        send_message(current_target, u8"人太多了，没法玩啊……");
-        pair.first = false;
-        for (const int64_t value : pair.second) playing.get_value(value) = false;
-        pair.second.clear();
-        return Result(true);
-    }
-    pair.first = false;
-    std::ostringstream result;
-    result << u8"那就开始了！参加这局游戏的人分别是：\n";
-    std::vector<std::pair<int64_t, std::string>> players;
-    for (const int64_t value : pair.second)
-    {
-        result << utility::group_at(value) << '\n';
-        const cq::GroupMember current_user = cqc::api::get_group_member_info(group_id, value);
-        std::ostringstream player_info;
-        player_info << current_user.card << " (" << current_user.nickname << ") ID：" << current_user.user_id;
-        players.emplace_back(value, player_info.str());
-    }
-    result << u8"请注意私聊！祝你们玩得愉快！";
-    utility::group_send(group_id, result.str());
-    int game_id;
-    for (game_id = 0; game_id < games.size(); game_id++)
-        if (games[game_id].ended)
-        {
-            games[game_id] = UnoGame(players);
-            break;
-        }
-    if (game_id == games.size()) games.emplace_back(players);
-    start_game(game_id);
-    return Result(true, true);
+    if (card.number == UnoCard::None) return true;
+    UnoCard wild = card;
+    if (card.number == UnoCard::DrawFour || card.number == UnoCard::Wild) wild.color = UnoCard::WildCard;
+    const std::multiset<UnoCard>& cards = player_cards[current_player];
+    return cards.find(wild) != cards.end();
 }
 
-Result Uno::check_help(const cq::Target& current_target, const std::string& message) const
+bool Uno::challenge()
 {
-    if (message != "-h") return Result();
-    send_message(current_target, u8R"(好，那下面我来讲解一下进行游戏时可以发送的指令：
-就如你刚刚用的“-h”一样，游戏中所有的指令都需要以“-”开头，不然我可是不认的。
-你可以使用“--”开头，后面写上你想说的话，这样我就会把这句话发给参与这局游戏的其他玩家，起到聊天的效果。
-出牌的指令是这样构成的：“-[颜色][牌面数字][是否喊出UNO]”
-其中颜色是UNO牌上四种颜色的一种，使用该颜色英文的首字母代表该颜色；
-牌面数字可以是0~9，也可以是r（代表Reverse即转向），t（代表draw Two即+2），s（代表Skip即跳过下家），w（代表Wild即变色牌）以及f（代表draw Four即+4）这五个小写字母中的一个；
-若要喊出UNO，就在最后加一个小写u就好了。不过如果你想摸牌的话可以不喊（笑
-另外，黑牌也需要你指定颜色，指定的方法跟普通牌的一样。
-举个例子吧，比如你想出一张+4，转为红色并且喊出UNO，这个指令就是“-rfu”。怎么样，其实比看起来要简单不是吗（笑
-如果无牌可出的话，要跳过这轮出牌，使用指令“-p”（代表Pass）。
-当然，你也可以提出质疑。质疑分两种，一种是质疑对方喊UNO的时候还剩不止1张牌，或者他已经只剩1张牌却没有喊UNO，你可以使用“-?u”来提出质疑；
-同样的，如果你觉得你的上家明明有其他牌可以出，却出了一张+4，你也可以用“-?f”来质疑他。注意这里请打英文的半角问号（?）不要用中文的全角问号（？）。
-如果想再让我列出你当前的手牌的话，请使用“-l”（代表List）；如果想要更多信息（包含当前手牌，上一次出的牌以及目前轮到谁出牌），请使用“-m”（代表More）。
-若想要中途放弃游戏，请用“-g”（代表Give up），你的牌会被丢进弃牌堆，但是你仍会接收到游戏的信息，并且在这场游戏结束前你也不能加入其它游戏。
-规则就这些了，祝你玩得开心！)");
-    return Result(true, true);
-}
-
-Result Uno::check_list(const cq::Target& current_target, const std::string& message) const
-{
-    if (message != "-l") return Result();
-    const int64_t user_id = *current_target.user_id;
-    const int game_id = find_player_in_game(user_id);
-    const int player_id = get_player_id(game_id, user_id);
-    send_self(game_id, player_id, show_cards(game_id, player_id));
-    return Result(true, true);
-}
-
-Result Uno::check_more(const cq::Target& current_target, const std::string& message) const
-{
-    if (message != "-m") return Result();
-    const int64_t user_id = *current_target.user_id;
-    const int game_id = find_player_in_game(user_id);
-    const int player_id = get_player_id(game_id, user_id);
-    const UnoGame& game = games[game_id];
-    std::ostringstream result;
-    result << u8"上一张牌是：" << game.get_last_card().to_string() << '\n';
-    result << u8"现在轮到" << game.get_players()[game.get_current_player()].second << u8"出牌\n";
-    result << show_cards(game_id, player_id);
-    send_self(game_id, player_id, result.str());
-    return Result(true, true);
-}
-
-Result Uno::check_give_up(const cq::Target& current_target, const std::string& message)
-{
-    if (message != "-g") return Result();
-    const int64_t user_id = *current_target.user_id;
-    const int game_id = find_player_in_game(user_id);
-    const int player_id = get_player_id(game_id, user_id);
-    UnoGame& game = games[game_id];
-    std::ostringstream result;
-    result << u8"玩家" << game.get_players()[player_id].second << u8"退出了这场游戏";
-    send_other_players(game_id, -1, result.str());
-    send_self(game_id, player_id, u8"不过你仍需要等待这场游戏结束才能加入其他游戏，抱歉……");
-    game.dispose_of_cards(player_id);
-    if (game.get_current_player_count() == 1) end_game(game_id, true);
-    return Result(true, true);
-}
-
-Result Uno::check_send_message(const cq::Target& current_target, const std::string& message) const
-{
-    const int64_t user_id = *current_target.user_id;
-    if (message.length() < 2 || message[1] != '-') return Result();
-    const int game_id = find_player_in_game(user_id);
-    std::string result;
-    const std::vector<std::pair<int64_t, std::string>>& players = games[game_id].get_players();
-    for (const std::pair<int64_t, std::string>& pair : players)
-        if (pair.first == user_id)
-        {
-            result = pair.second + u8"说：\n" + message.substr(2);
-            break;
-        }
-    send_other_players(game_id, user_id, result);
-    return Result(true, true);
-}
-
-Result Uno::check_play(const cq::Target& current_target, const std::string& message)
-{
-    const int64_t user_id = *current_target.user_id;
-    const int game_id = find_player_in_game(user_id);
-    UnoGame& game = games[game_id];
-    const std::vector<std::pair<int64_t, std::string>>& players = game.get_players();
-    const int player_id = get_player_id(game_id, user_id);
-    if (message.length() > 1)
-    {
-        if (message[1] == '?')
-        {
-            if (message == "-?u")
-            {
-                const int last_player = game.get_last_player();
-                std::ostringstream result;
-                if (last_player >= 0)
-                    result << players[player_id].second << u8"向" << players[last_player].second << "发出UNO质疑，";
-                else
-                    result << players[player_id].second << u8"向上家发出UNO质疑，但并没有这个上家，";
-                std::string draw_card_message;
-                int draw_card_player;
-                if (game.false_uno())
-                {
-                    result << u8"质疑成功，" << players[last_player].second << "被罚摸2张牌";
-                    draw_card_player = last_player;
-                }
-                else
-                {
-                    result << u8"质疑失败，" << players[player_id].second << "被罚摸2张牌";
-                    draw_card_player = player_id;
-                }
-                send_other_players(game_id, -1, result.str());
-                draw_card(game_id, draw_card_player, 2);
-                return Result(true, true);
-            }
-            if (message == "-?f")
-            {
-                const int last_player = game.get_last_player();
-                std::ostringstream result;
-                if (last_player >= 0)
-                    result << players[player_id].second << u8"向" << players[last_player].second << "发出+4质疑，";
-                else
-                    result << players[player_id].second << u8"向上家发出+4质疑，但并没有这个上家，";
-                std::string draw_card_message;
-                int draw_card_player;
-                int draw_card_amount;
-                if (game.challenge())
-                {
-                    result << u8"质疑成功，" << players[last_player].second << "被罚摸4张牌";
-                    draw_card_player = last_player;
-                    draw_card_amount = 4;
-                }
-                else
-                {
-                    result << u8"质疑失败，" << players[player_id].second << "被罚摸6张牌";
-                    draw_card_player = player_id;
-                    draw_card_amount = 6;
-                }
-                send_other_players(game_id, -1, result.str());
-                draw_card(game_id, draw_card_player, draw_card_amount);
-                return Result(true, true);
-            }
-            return Result(false, false);
-        }
-        if (games[game_id].get_current_player() != player_id)
-        {
-            send_self(game_id, player_id, u8"你想干什么啊，现在还没有轮到你出牌呢……");
-            return Result(true, false);
-        }
-        bool skip = false;
-        UnoCard card(UnoCard::WildCard, UnoCard::None);
-        switch (message[1])
-        {
-        case 'p': skip = true; break;
-        case 'r': card.color = UnoCard::Red; break;
-        case 'g': card.color = UnoCard::Green; break;
-        case 'b': card.color = UnoCard::Blue; break;
-        case 'y': card.color = UnoCard::Yellow; break;
-        default: break;
-        }
-        if (skip ^ (card.color == UnoCard::WildCard))
-        {
-            send_self(game_id, player_id, u8"我不太清楚你是什么意思……");
-            return Result(true, false);
-        }
-        if (message.length() > 2)
-        {
-            if (message[2] >= '0' && message[2] <= '9')
-                card.number = UnoCard::Number(message[2] - '0');
-            else switch (message[2])
-            {
-            case 'r': card.number = UnoCard::Reverse; break;
-            case 't': card.number = UnoCard::DrawTwo; break;
-            case 's': card.number = UnoCard::Skip; break;
-            case 'w': card.number = UnoCard::Wild; break;
-            case 'f': card.number = UnoCard::DrawFour; break;
-            default: break;
-            }
-        }
-        if (skip ^ (card.number == UnoCard::None))
-        {
-            send_self(game_id, player_id, u8"我不太清楚你是什么意思……");
-            return Result(true, false);
-        }
-        const bool uno = message.length() == 4 && message[3] == 'u';
-        if (message.length() > 3 && !uno)
-        {
-            send_self(game_id, player_id, u8"我不太清楚你是什么意思……");
-            return Result(true, false);
-        }
-        if (!game.has_card(card))
-        {
-            send_self(game_id, player_id, u8"你没有要出的这张牌啊");
-            return Result(true, false);
-        }
-        if (!game.can_play(card))
-        {
-            send_self(game_id, player_id, u8"你现在不能出这张牌");
-            return Result(true, false);
-        }
-        send_other_players(game_id, -1, game.play(card, uno));
-        game.set_required_card(card);
-        game.to_next_player();
-        if (game.get_current_player_count() == 1)
-            end_game(game_id);
-        else
-            notice_player(game_id);
-        return Result(true, true);
-    }
-    return Result();
-}
-
-Result Uno::process(const cq::Target& current_target, const std::string& message)
-{
-    Result result;
-    if (current_target.group_id.has_value())
-    {
-        result = prepare_game(current_target, message);
-        if (result.matched) return result;
-        result = join_game(current_target, message);
-        if (result.matched) return result;
-        result = game_ready(current_target, message);
-        if (result.matched) return result;
-        return result;
-    }
-    if (find_player_in_game(*current_target.user_id) == -1) return Result();
-    if (message.length() < 1 || message[0] != '-') return Result();
-    result = check_help(current_target, message);
-    if (result.matched) return result;
-    result = check_list(current_target, message);
-    if (result.matched) return result;
-    result = check_more(current_target, message);
-    if (result.matched) return result;
-    result = check_give_up(current_target, message);
-    if (result.matched) return result;
-    result = check_send_message(current_target, message);
-    if (result.matched) return result;
-    result = check_play(current_target, message);
-    if (result.matched) return result;
+    if (last_player == -1) return false;
+    const bool result = challenge_state[last_player];
+    challenge_state[last_player] = false;
     return result;
 }
 
-Result Uno::process_creator(const std::string& message)
+bool Uno::false_uno()
 {
-    if (message == "$activate uno")
+    if (last_player == -1) return false;
+    const bool result = false_uno_state[last_player];
+    false_uno_state[last_player] = false;
+    return result;
+}
+
+void Uno::to_next_player()
+{
+    const int player_count = player_cards.size();
+    last_player = current_player;
+    do
     {
-        set_active(true);
-        utility::private_send_creator(u8"所以，有人要打UNO吗？");
-        return Result(true, true);
-    }
-    if (message == "$deactivate uno")
+        current_player += clockwise ? 1 : -1;
+        current_player = (current_player + player_count) % player_count;
+    } while (player_cards[current_player].empty());
+}
+
+std::string Uno::draw_cards(const int count, const int player)
+{
+    bool inadequate = false;
+    int final_draw_count = 0;
+    if (card_stack.size() < count)
     {
-        set_active(false);
-        utility::private_send_creator(u8"没什么人玩不起来啊……");
-        return Result(true, true);
+        inadequate = true;
+        card_stack.insert(card_stack.end(), disposed_stack.begin(), disposed_stack.end());
+        disposed_stack.clear();
+        shuffle_cards(card_stack);
     }
-    return Result();
+    for (; final_draw_count < count; final_draw_count++)
+    {
+        if (card_stack.empty()) break;
+        const UnoCard& card = card_stack.back();
+        player_cards[player].insert(card);
+        card_stack.pop_back();
+    }
+    std::ostringstream result;
+    if (count == 0)
+        result << players[player].second << u8"跳过了此轮出牌";
+    else if (final_draw_count == count)
+    {
+        result << players[player].second << u8"抽了" << count << u8"张牌";
+        if (inadequate) result << u8"，但是牌堆里的牌已经不够抽的了，所以我把已经出过的牌都放回到牌堆里了……放心，我认真洗过牌的（笑";
+    }
+    else
+    {
+        result << players[player].second << u8"本应抽" << count << u8"张牌，但是";
+        if (final_draw_count == 0)
+            result << u8"牌堆和弃牌堆都已经空了……没办法，这次就先不用抽了……";
+        else
+            result << u8"但是牌堆里的牌加上现在弃牌堆的牌都不够抽的啊……只能把剩下的" << final_draw_count << u8"张都抽走了……";
+    }
+    return result.str();
+}
+
+std::string Uno::play(const UnoCard& card, const bool uno)
+{
+    challenge_state[current_player] = false;
+    if (card.number == UnoCard::None)
+    {
+        false_uno_state[current_player] = false;
+        std::string result = draw_cards(draw_amount, current_player);
+        draw_amount = 1;
+        return result;
+    }
+    UnoCard wild = card;
+    if (card.number == UnoCard::DrawFour || card.number == UnoCard::Wild) wild.color = UnoCard::WildCard;
+    player_cards[current_player].erase(player_cards[current_player].find(wild));
+    disposed_stack.push_back(wild);
+    if (card.number == UnoCard::DrawTwo)
+        draw_amount = (draw_amount == 1) ? 2 : draw_amount + 2;
+    else if (card.number == UnoCard::DrawFour)
+    {
+        for (const UnoCard& value : player_cards[current_player])
+            if (value.can_use_after(last_card) && value.color != UnoCard::WildCard && last_card.number != UnoCard::DrawFour)
+            {
+                challenge_state[current_player] = true;
+                break;
+            }
+        draw_amount = (draw_amount == 1) ? 4 : draw_amount + 4;
+    }
+    else if (card.number == UnoCard::Skip)
+        draw_amount = 0;
+    else
+        draw_amount = 1;
+    if (card.number == UnoCard::Reverse)
+    {
+        clockwise = !clockwise;
+        if (get_current_player_count() == 2) draw_amount = 0;
+    }
+    last_card = card;
+    false_uno_state[current_player] = (player_cards[current_player].size() == 1) ^ uno;
+    std::ostringstream result;
+    if (card.number != UnoCard::Wild && card.number != UnoCard::DrawFour)
+        result << players[current_player].second << u8"\n打出了" << card.to_string();
+    else
+    {
+        if (card.number == UnoCard::Wild)
+            result << players[current_player].second << u8"\n打出了变色牌并指定下家出牌颜色为";
+        else
+            result << players[current_player].second << u8"\n打出了+4并指定下家出牌颜色为";
+        switch (card.color)
+        {
+        case UnoCard::Red: result << u8"红色"; break;
+        case UnoCard::Green: result << u8"绿色"; break;
+        case UnoCard::Blue: result << u8"蓝色"; break;
+        case UnoCard::Yellow: result << u8"黄色"; break;
+        default: break;
+        }
+    }
+    if (uno) result << u8"，并且喊了“UNO”";
+    if (!player_cards[current_player].empty())
+        result << u8"\n这位玩家现在还有" << player_cards[current_player].size() << u8"张牌";
+    else
+        result << u8"\n这位玩家所有的牌都出完了";
+    return result.str();
 }

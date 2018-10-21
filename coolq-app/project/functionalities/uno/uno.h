@@ -1,44 +1,53 @@
 #pragma once
 
 #include <vector>
+#include <set>
+#include <string>
+#include <random>
 #include <utility>
+#include <algorithm>
 
-#include "uno_game.h"
-#include "../../processing/message_received.h"
-#include "../../utility/hash_dictionary.h"
-#include "../../utility/utility.h"
+#include "uno_card.h"
 
-class Uno final : public MessageReceived
+class Uno final
 {
 private:
-    std::vector<UnoGame> games;
-    HashDictionary<std::pair<bool, std::vector<int64_t>>> players;
-    HashDictionary<bool> playing;
-    int find_player_in_game(int64_t user_id) const;
-    int get_player_id(int game_id, int64_t user_id) const;
-    void send_other_players(int game_id, int player_id, const std::string& message) const;
-    void send_self(const int game_id, const int player_id, const std::string& message) const
-    {
-        utility::private_send(games[game_id].get_players()[player_id].first, message);
-    }
-    void draw_card(int game_id, int player_id, int draw_amount);
-    std::string show_cards(int game_id, int player_id, bool just_show = true) const;
-    void notice_player(int game_id) const;
-    void start_game(int game_id);
-    void end_game(int game_id, bool forced = false);
-    Result prepare_game(const cq::Target& current_target, const std::string& message);
-    Result join_game(const cq::Target& current_target, const std::string& message);
-    Result game_ready(const cq::Target& current_target, const std::string& message);
-    Result check_help(const cq::Target& current_target, const std::string& message) const;
-    Result check_list(const cq::Target& current_target, const std::string& message) const;
-    Result check_more(const cq::Target& current_target, const std::string& message) const;
-    Result check_give_up(const cq::Target& current_target, const std::string& message);
-    Result check_send_message(const cq::Target& current_target, const std::string& message) const;
-    Result check_play(const cq::Target& current_target, const std::string& message);
-protected:
-    Result process(const cq::Target& current_target, const std::string& message) override;
-    Result process_creator(const std::string& message) override;
+    std::mt19937 generator;
+    int last_player{ };
+    int current_player{ };
+    bool clockwise{ };
+    int draw_amount = 1;
+    UnoCard::Number required_card;
+    std::vector<std::pair<int64_t, std::string>> players;
+    std::vector<UnoCard> card_stack;
+    std::vector<UnoCard> disposed_stack;
+    std::vector<std::multiset<UnoCard>> player_cards;
+    std::vector<bool> false_uno_state;
+    std::vector<bool> challenge_state;
+    UnoCard last_card;
+    void shuffle_cards(std::vector<UnoCard>& cards) { std::shuffle(cards.begin(), cards.end(), generator); }
+    bool is_required_card(const UnoCard& card) const;
 public:
-    Uno() :players(499), playing(499) {}
-    ~Uno() override = default;
+    explicit Uno(const std::vector<std::pair<int64_t, std::string>>& players);
+    bool ended = false;
+    void set_required_card(const UnoCard& card);
+    int get_current_player_count() const;
+    bool can_play(const UnoCard& card) const;
+    bool has_card(const UnoCard& card) const;
+    const UnoCard& get_last_card() const { return last_card; }
+    const std::multiset<UnoCard>& get_player_cards(const int player_id) const { return player_cards[player_id]; }
+    bool challenge();
+    bool false_uno();
+    int get_current_player() const { return current_player; }
+    int get_last_player() const { return last_player; }
+    const std::vector<std::pair<int64_t, std::string>>& get_players() const { return players; }
+    void to_next_player();
+    std::string draw_cards(int count, int player);
+    std::string play(const UnoCard& card, bool uno);
+    void dispose_of_cards(const int player)
+    {
+        for (const UnoCard& card : player_cards[player]) disposed_stack.push_back(card);
+        player_cards[player].clear();
+        if (current_player == player) to_next_player();
+    }
 };

@@ -99,12 +99,6 @@
     <ClCompile Include="project\functionalities\unban_creator.cpp">
       <Filter>project\functionalities</Filter>
     </ClCompile>
-    <ClCompile Include="project\functionalities\uno\uno.cpp">
-      <Filter>project\functionalities\uno</Filter>
-    </ClCompile>
-    <ClCompile Include="project\functionalities\uno\uno_game.cpp">
-      <Filter>project\functionalities\uno</Filter>
-    </ClCompile>
     <ClCompile Include="project\functionalities\pick_random_song\game_data\game_data.cpp">
       <Filter>project\functionalities\pick_random_song\game_data</Filter>
     </ClCompile>
@@ -149,6 +143,12 @@
     </ClCompile>
     <ClCompile Include="project\functionalities\othello\codename_tairitsu.cpp">
       <Filter>project\functionalities\othello</Filter>
+    </ClCompile>
+    <ClCompile Include="project\functionalities\uno\uno.cpp">
+      <Filter>project\functionalities\uno</Filter>
+    </ClCompile>
+    <ClCompile Include="project\functionalities\uno\uno_game.cpp">
+      <Filter>project\functionalities\uno</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -251,13 +251,7 @@
     <ClInclude Include="project\functionalities\unban_creator.h">
       <Filter>project\functionalities</Filter>
     </ClInclude>
-    <ClInclude Include="project\functionalities\uno\uno.h">
-      <Filter>project\functionalities\uno</Filter>
-    </ClInclude>
     <ClInclude Include="project\functionalities\uno\uno_card.h">
-      <Filter>project\functionalities\uno</Filter>
-    </ClInclude>
-    <ClInclude Include="project\functionalities\uno\uno_game.h">
       <Filter>project\functionalities\uno</Filter>
     </ClInclude>
     <ClInclude Include="project\functionalities\pick_random_song\game_data\game_data.h">
@@ -319,6 +313,15 @@
     </ClInclude>
     <ClInclude Include="project\functionalities\othello\codename_tairitsu.h">
       <Filter>project\functionalities\othello</Filter>
+    </ClInclude>
+    <ClInclude Include="project\utility\dictionary.h">
+      <Filter>project\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="project\functionalities\uno\uno.h">
+      <Filter>project\functionalities\uno</Filter>
+    </ClInclude>
+    <ClInclude Include="project\functionalities\uno\uno_game.h">
+      <Filter>project\functionalities\uno</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

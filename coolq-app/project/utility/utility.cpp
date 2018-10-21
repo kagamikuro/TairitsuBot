@@ -20,7 +20,7 @@ namespace utility
                 if (verbose)
                     group_send(group_id, u8"笨蛋，我怎么能烟自己嘛");
             }
-            else if (user_id == creator_id && duration != 0)
+            else if (user_id == developer_id && duration != 0)
             {
                 if (verbose)
                     group_send(group_id, u8"这不行的……因为他是我的那个……最重要的人……");

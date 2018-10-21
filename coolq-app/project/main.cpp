@@ -25,7 +25,7 @@ void initialize()
     creator_commands = std::make_unique<CreatorCommands>();
     message_actions.push_back(std::make_unique<PickRandomSong>());
     message_actions.push_back(std::make_unique<ReportMessage>());
-    message_actions.push_back(std::make_unique<Uno>());
+    message_actions.push_back(std::make_unique<UnoGame>());
     group_actions.push_back(std::make_unique<AtReplies>());
     group_actions.push_back(std::make_unique<BanUnbanMembers>());
     group_actions.push_back(std::make_unique<BanUnbanGroup>());
@@ -84,7 +84,7 @@ CQ_MAIN
         const std::string message = std::to_string(e.message);
         try
         {
-            if (e.user_id == utility::creator_id)
+            if (e.user_id == utility::developer_id)
             {
                 if (creator_commands->receive(target, message).matched) return;
                 for (const std::unique_ptr<MessageReceived>& task : group_actions)
