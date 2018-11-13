@@ -32,6 +32,7 @@ void initialize()
     group_actions.push_back(std::make_unique<PassiveUnbanCreator>());
     group_actions.push_back(std::make_unique<PlayOthello>());
     group_actions.push_back(std::make_unique<OthelloGame>());
+    group_actions.push_back(std::make_unique<TicTacToeGame>());
     group_actions.push_back(std::make_unique<SubjectiveRepeat>());
     group_actions.push_back(std::make_unique<PassiveRepeat>());
     group_actions.push_back(std::make_unique<MeetingOn7th>());
@@ -47,12 +48,10 @@ void clean_up()
         for (std::unique_ptr<MessageReceived>& task : group_actions) task.reset();
         for (std::unique_ptr<MessageReceived>& task : private_actions) task.reset();
         for (std::unique_ptr<MessageReceived>& task : message_actions) task.reset();
+        for (std::unique_ptr<LoopTask>& task : loop_tasks) task.reset();
         group_actions.clear();
         private_actions.clear();
         message_actions.clear();
-        for (std::unique_ptr<LoopTask>& task : loop_tasks) task->terminate_loop();
-        for (std::unique_ptr<LoopTask>& task : loop_tasks) task->join_thread();
-        for (std::unique_ptr<LoopTask>& task : loop_tasks) task.reset();
         loop_tasks.clear();
     }
 }
@@ -61,7 +60,7 @@ CQ_MAIN
 {
     cq::config.convert_unicode_emoji = true;
 
-    cq::app::on_enable = []()
+    cq::app::on_enable = []
     {
         cqc::app::enabled = true;
         cqc::logging::debug(u8"Starts up", u8"Add-on started");

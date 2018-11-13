@@ -4,7 +4,7 @@
 #include "../../utility/rng.h"
 #include "codename_tairitsu.h"
 
-namespace CodenameTairitsu
+namespace codename_tairitsu
 {
     // private namespace
     namespace
@@ -22,7 +22,7 @@ namespace CodenameTairitsu
         constexpr int end_game_depth = 12;
 
         RNG random;
-        const std::array<std::array<int, 8>, 8> weights
+        constexpr std::array<std::array<int, 8>, 8> weights
         { {
             { 50, -25,  20,  -3,  -3,  20, -25,  50},
             {-25, -50, -15, -10, -10, -15, -50, -25},

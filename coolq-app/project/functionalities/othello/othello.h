@@ -8,7 +8,7 @@ class Othello final
 public:
     using BitBoard = uint64_t;
     struct State { BitBoard black, white; };
-    enum class Result : short
+    enum class Result : signed char
     {
         WhiteWin = -1,
         NotFinished = 0,

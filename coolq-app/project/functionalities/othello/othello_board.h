@@ -17,9 +17,9 @@ class OthelloBoard
     using BitBoard = Othello::BitBoard;
 private:
     const Image board;
-    inline static int grid_size = 30;
-    inline static int disk_radius = 10;
-    inline static int square_half_length = 12;
+    static const int grid_size = 30;
+    static const int disk_radius = 10;
+    static const int square_half_length = 12;
     static bool bit_test(const BitBoard bits, const int row, const int column) { return bits << (row * 8 + column) >> 63; }
     static void draw_disk(Image& image, int row, int column, bool is_black);
     static void draw_previous(Image& image, int row, int column);

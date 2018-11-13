@@ -2,7 +2,7 @@
 
 #include "othello.h"
 
-namespace CodenameTairitsu
+namespace codename_tairitsu
 {
     struct EndGameTriplet
     {

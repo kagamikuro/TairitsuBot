@@ -33,3 +33,9 @@ void LoopTask::start_loop()
     });
     running = true;
 }
+
+LoopTask::~LoopTask()
+{
+    terminate_loop();
+    join_thread();
+}

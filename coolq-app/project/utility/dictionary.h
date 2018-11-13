@@ -7,10 +7,10 @@
 template<typename T>
 class Dictionary
 {
-    using Lock = std::lock_guard<std::mutex>;
+    using Lock = std::lock_guard<std::recursive_mutex>;
 private:
     std::map<int64_t, T> data;
-    std::mutex mutex;
+    mutable std::recursive_mutex mutex;
 public:
     Dictionary() = default;
     bool contains(const int64_t key)

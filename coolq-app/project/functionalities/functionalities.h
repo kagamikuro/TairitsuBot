@@ -16,3 +16,4 @@
 #include "passive_unban_creator.h"
 #include "othello/play_othello.h"
 #include "othello/othello_game.h"
+#include "tic_tac_toe/tic_tac_toe_game.h"

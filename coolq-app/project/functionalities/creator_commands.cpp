@@ -40,6 +40,7 @@ Result CreatorCommands::list_funcs(const std::string& message) const
 meeting：好像可以让群员注意自己的身份和说话方式（？
 othello：黑白棋对弈……等下，快给我更新算法啦！！！
 othello game：据说发图下黑白棋会更好一点？
+tic-tac-toe：井字棋是睿智游戏？大错特错！
 repeat：人类的本质是什么？
 pick song：抽一首对立不会打的歌
 uno：又有人没喊UNO是吗？

@@ -20,5 +20,5 @@ public:
     void terminate_loop() { terminate = true; }
     void join_thread() { loop_thread.join(); }
     bool is_running() const { return running; }
-    virtual ~LoopTask() = default; // BE SURE TO TERMINATE THE THREAD BEFORE RELEASING MEMORY
+    virtual ~LoopTask(); // Join the thread automatically during destruction
 };
