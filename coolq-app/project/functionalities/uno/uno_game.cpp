@@ -1,4 +1,4 @@
-﻿#include <sstream>
+#include <sstream>
 #include <set>
 #include <thread>
 #include <chrono>
@@ -31,9 +31,10 @@ int UnoGame::get_player_id(const int game_id, const int64_t user_id) const
 void UnoGame::send_other_players(const int game_id, const int player_id, const std::string& message) const
 {
     const std::vector<std::pair<int64_t, std::string>>& players = games[game_id].get_players();
-    for (size_t i = 0; i < players.size(); i++)
+    const int size = players.size();
+    for (int i = 0; i < size; i++)
         if (i != player_id)
-            utility::private_send(players[i].first, message);
+            cqc::api::send_private_msg(players[i].first, message);
 }
 
 void UnoGame::draw_card(const int game_id, const int player_id, const int draw_amount)
@@ -130,7 +131,7 @@ Result UnoGame::prepare_game(const cq::Target& current_target, const std::string
     }
     else
         players.set(group_id, std::pair<bool, std::vector<int64_t>>(true, std::vector<int64_t>{ *current_target.user_id }));
-    utility::group_send(group_id, u8"那好的，要玩的在下面扣个1，我统计一下");
+    cqc::api::send_group_msg(group_id, u8"那好的，要玩的在下面扣个1，我统计一下");
     return Result{ true, true };
 }
 
@@ -206,7 +207,7 @@ Result UnoGame::game_ready(const cq::Target& current_target, const std::string& 
             players.emplace_back(value, player_info.str());
         }
         result << u8"请注意私聊！祝你们玩得愉快！";
-        utility::group_send(group_id, result.str());
+        cqc::api::send_group_msg(group_id, result.str());
         size_t game_id;
         for (game_id = 0; game_id < games.size(); game_id++)
             if (games[game_id].ended)

@@ -1,7 +1,6 @@
 #pragma once
 
 #include <map>
-#include <utility>
 #include <mutex>
 
 template<typename T>
@@ -28,8 +27,8 @@ public:
     // Set or insert a value
     // Getter and setter are used instead of the operator[] which returns a reference,
     // since all of the operations should be thread safe. Returning references may lead to
-    // dangling references if used in multithread environment. Since I only use this class
-    // in a multithread environment, an operator[] described above is of no use.
+    // dangling references if used in multi-thread environment. Since I only use this class
+    // in a multi-thread environment, an operator[] described above is of no use.
     void set(const int64_t key, const T& value)
     {
         Lock lock(mutex);
@@ -39,7 +38,7 @@ public:
     void set(const int64_t key, T&& value)
     {
         Lock lock(mutex);
-        data[key] = std::move(value);
+        data[key] = value;
     }
     void remove(const int64_t key)
     {

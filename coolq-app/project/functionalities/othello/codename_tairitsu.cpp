@@ -1,8 +1,8 @@
 #include <vector>
 #include <array>
 
-#include "../../utility/rng.h"
 #include "codename_tairitsu.h"
+#include "../../utility/random.h"
 
 namespace codename_tairitsu
 {
@@ -21,7 +21,6 @@ namespace codename_tairitsu
         constexpr int search_depth = 8;
         constexpr int end_game_depth = 12;
 
-        RNG random;
         constexpr std::array<std::array<int, 8>, 8> weights
         { {
             { 50, -25,  20,  -3,  -3,  20, -25,  50},
@@ -253,7 +252,7 @@ namespace codename_tairitsu
                     }
             if (depth < search_depth) return { -1, value };
             const int action_count = actions.size();
-            const int chosen_action = random.get_random_integer(action_count);
+            const int chosen_action = random::get_uniform_integer(action_count);
             return { actions[chosen_action], value };
         }
 
@@ -307,7 +306,7 @@ namespace codename_tairitsu
                             }
                             else
                             {
-                                if (value > current_value) 
+                                if (value > current_value)
                                 {
                                     value = current_value;
                                     triplets[0] = { -1, max_disk, min_disk };
@@ -332,7 +331,7 @@ namespace codename_tairitsu
                     }
             if (!is_root) return triplets[0];
             const int action_count = triplets.size();
-            const int chosen_action = random.get_random_integer(action_count);
+            const int chosen_action = random::get_uniform_integer(action_count);
             return triplets[chosen_action];
         }
     }

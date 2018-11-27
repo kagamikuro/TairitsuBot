@@ -1,9 +1,10 @@
-﻿#include <fstream>
+#include <fstream>
 #include <sstream>
 #include <memory>
 #include <vector>
 
 #include "../cqsdk/cqsdk.h"
+#include "../safety_check/logging.h"
 #include "utility/utility.h"
 #include "functionalities/functionalities.h"
 

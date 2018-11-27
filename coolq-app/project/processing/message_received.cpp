@@ -14,10 +14,10 @@ void MessageReceived::send_message(const cq::Target& current_target, const std::
         if (reply && current_target.user_id.has_value())
             utility::group_reply(*current_target.group_id, *current_target.user_id, message);
         else
-            utility::group_send(*current_target.group_id, message);
+            cqc::api::send_group_msg(*current_target.group_id, message);
     }
     else
-        utility::private_send(*current_target.user_id, message);
+        cqc::api::send_private_msg(*current_target.user_id, message);
 }
 
 TimerPair MessageReceived::update_pair(TimerPair& pair, const Type type) const

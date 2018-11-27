@@ -1,7 +1,6 @@
-﻿#include "subjective_repeat.h"
+#include "subjective_repeat.h"
 #include "../utility/utility.h"
-
-SubjectiveRepeat::SubjectiveRepeat() { random_number_generator.set_size(15); }
+#include "../utility/random.h"
 
 Result SubjectiveRepeat::process(const cq::Target& current_target, const std::string& message)
 {
@@ -10,7 +9,7 @@ Result SubjectiveRepeat::process(const cq::Target& current_target, const std::st
         && message.find(u8"喜欢我") == std::string::npos && message.find(u8"爱我") == std::string::npos
         && message.find(u8"自我") == std::string::npos)
     {
-        if (random_number_generator.get_next() == 0)
+        if (random::get_uniform_integer(15) == 0)
         {
             std::string content = std::regex_replace(message, you_regex, u8"他");
             content = std::regex_replace(content, polite_you_regex, u8"他");

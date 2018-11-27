@@ -6,14 +6,14 @@
 
 #include "../processing/message_received.h"
 #include "../utility/utility.h"
-#include "../utility/rng.h"
 
 class AtReplies final : public MessageReceived
 {
 private:
     const std::regex at_self_regex{ utility::at_self_regex_string };
+    const std::regex tips_regex{ utility::at_self_regex_string + "[ \t]*(?:C\\+\\+|CPP|cpp|c\\+\\+)(?: [Tt]ips)?[ \t]*" };
     std::vector<std::string> reply_strings;
-    RNG random_number_generator;
+    std::vector<std::string> tips_strings;
 protected:
     Result process(const cq::Target& current_target, const std::string& message) override;
     Result process_creator(const std::string& message) override;

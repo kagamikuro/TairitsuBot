@@ -1,7 +1,16 @@
-﻿#include "utility.h"
+#include <random>
+#include <mutex>
+
+#include "utility.h"
 
 namespace utility
 {
+    namespace
+    {
+        std::mt19937 random_generator{ std::random_device{}() };
+        std::mutex random_mutex;
+    }
+
     int64_t get_first_id_in_string(const std::string& string)
     {
         char* end;
@@ -11,19 +20,20 @@ namespace utility
         return strtoll(c_str + i, &end, 10);
     }
 
-    bool ban_group_member(const int64_t group_id, const int64_t user_id, const int duration, const bool verbose, const std::string& custom_message)
+    bool ban_group_member(const int64_t group_id, const int64_t user_id, const int duration,
+        const bool verbose, const std::string& custom_message)
     {
         try
         {
             if (user_id == self_id && duration != 0)
             {
                 if (verbose)
-                    group_send(group_id, u8"笨蛋，我怎么能烟自己嘛");
+                    cqc::api::send_group_msg(group_id, u8"笨蛋，我怎么能烟自己嘛");
             }
             else if (user_id == developer_id && duration != 0)
             {
                 if (verbose)
-                    group_send(group_id, u8"这不行的……因为他是我的那个……最重要的人……");
+                    cqc::api::send_group_msg(group_id, u8"这不行的……因为他是我的那个……最重要的人……");
             }
             else
             {
@@ -31,17 +41,17 @@ namespace utility
                     if (is_admin(group_id, user_id))
                     {
                         if (verbose)
-                            group_send(group_id, u8"可是这位也是管理员啊……你这样不怕被报复吗……");
+                            cqc::api::send_group_msg(group_id, u8"可是这位也是管理员啊……你这样不怕被报复吗……");
                     }
                     else
                     {
                         if (verbose)
-                            group_send(group_id, custom_message);
+                            cqc::api::send_group_msg(group_id, custom_message);
                         cqc::api::set_group_ban(group_id, user_id, duration);
                         return true;
                     }
                 else
-                    if (verbose) group_send(group_id, u8"emmmm……先给人家一个管理嘛");
+                    if (verbose) cqc::api::send_group_msg(group_id, u8"emmmm……先给人家一个管理嘛");
             }
         }
         catch (const std::exception& exc)
@@ -58,7 +68,7 @@ namespace utility
             if (is_admin(group_id, self_id))
             {
                 cqc::api::set_group_whole_ban(group_id, true);
-                if (verbose) group_send(group_id, custom_message);
+                if (verbose) cqc::api::send_group_msg(group_id, custom_message);
                 return true;
             }
         }
@@ -73,7 +83,7 @@ namespace utility
             if (is_admin(group_id, self_id))
             {
                 cqc::api::set_group_whole_ban(group_id, false);
-                if (verbose) group_send(group_id, custom_message);
+                if (verbose) cqc::api::send_group_msg(group_id, custom_message);
                 return true;
             }
         }

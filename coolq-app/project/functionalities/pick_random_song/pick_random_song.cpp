@@ -1,7 +1,8 @@
-﻿#include <fstream>
+#include <fstream>
 
 #include "pick_random_song.h"
 #include "../../utility/utility.h"
+#include "../../utility/random.h"
 #include "../../../safety_check/logging.h"
 
 PickRandomSong::PickRandomSong() :MessageReceived(0, 60, 45)
@@ -172,12 +173,12 @@ Result PickRandomSong::process(const cq::Target& current_target, const std::stri
             if (check_updated_timer(current_target) == 1) send_message(current_target, u8"对不起，我没有找到符合你要求的歌");
             return Result{ true };
         }
-        random_number_generator.set_size(result_songs.size());
         if (check_updated_timer(current_target) == 1)
-            send_message(current_target, std::string(u8"你选到的谱面是：") + result_songs[random_number_generator.get_next()]);
+            send_message(current_target, std::string(u8"你选到的谱面是：") +
+                result_songs[random::get_uniform_integer(result_songs.size())]);
         return Result{ true, true };
     }
-    if (check_updated_timer(current_target) == 1) 
+    if (check_updated_timer(current_target) == 1)
         send_message(current_target, u8"我的曲库里没有" + pattern_match.str(1) + u8"这个游戏呢……");
     return Result{ true };
 }

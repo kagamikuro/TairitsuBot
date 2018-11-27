@@ -23,7 +23,7 @@ private:
     const Image x_large;
     const Image draw;
     inline static const Color white{ {255, 255, 255, 0} };
-    inline static const float opacity = 0.1f;
+    inline static const float opacity = 0.125f;
     inline static const int grid_size = 30;
     inline static const int offset = 16;
     inline static const int rect_small = 27;

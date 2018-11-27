@@ -1,7 +1,8 @@
-﻿#include <sstream>
+#include <sstream>
 
 #include "uno.h"
-#include "../../utility/rng.h"
+#include "../../utility/utility.h"
+#include "../../utility/random.h"
 
 bool Uno::is_required_card(const UnoCard& card) const
 {
@@ -38,10 +39,8 @@ Uno::Uno(const std::vector<std::pair<int64_t, std::string>>& players)
             player_cards[j].insert(top_card);
             card_stack.pop_back();
         }
-    RNG random_number_generator;
-    random_number_generator.set_size(players.size());
     last_player = -1;
-    current_player = random_number_generator.get_next();
+    current_player = random::get_uniform_integer(players.size());
     while (true)
     {
         const UnoCard& top_card = card_stack.back();
@@ -130,7 +129,7 @@ std::string Uno::draw_cards(const int count, const int player)
 {
     bool inadequate = false;
     int final_draw_count = 0;
-    if (card_stack.size() < count)
+    if (int(card_stack.size()) < count)
     {
         inadequate = true;
         card_stack.insert(card_stack.end(), disposed_stack.begin(), disposed_stack.end());

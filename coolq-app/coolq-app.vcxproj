@@ -194,6 +194,7 @@ copy me.cqp.chlorie.tairitsu_bot.json D:\CoolQPro\app\</Command>
     <ClCompile Include="project\processing\two_player_game.cpp" />
     <ClCompile Include="project\processing\loop_task.cpp" />
     <ClCompile Include="project\processing\message_received.cpp" />
+    <ClCompile Include="project\utility\random.cpp" />
     <ClCompile Include="project\utility\synchronizer.cpp" />
     <ClCompile Include="project\utility\utility.cpp" />
   </ItemGroup>
@@ -251,9 +252,9 @@ copy me.cqp.chlorie.tairitsu_bot.json D:\CoolQPro\app\</Command>
     <ClInclude Include="project\processing\loop_task.h" />
     <ClInclude Include="project\processing\message_received.h" />
     <ClInclude Include="project\processing\result.h" />
+    <ClInclude Include="project\utility\random.h" />
     <ClInclude Include="project\utility\synchronizer.h" />
     <ClInclude Include="project\utility\dictionary.h" />
-    <ClInclude Include="project\utility\rng.h" />
     <ClInclude Include="project\utility\utility.h" />
     <ClInclude Include="safety_check\api.h" />
     <ClInclude Include="safety_check\app.h" />

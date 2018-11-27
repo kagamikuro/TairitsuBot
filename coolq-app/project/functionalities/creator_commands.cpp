@@ -1,4 +1,4 @@
-﻿// ReSharper disable CppMemberFunctionMayBeStatic
+// ReSharper disable CppMemberFunctionMayBeStatic
 
 #include <vector>
 #include <sstream>
@@ -125,7 +125,7 @@ Result CreatorCommands::indirectly_send_message(const std::string& message) cons
         utility::private_send_creator(u8"当前的上下文好像不在我加过的群里……");
         return Result{ true };
     }
-    utility::group_send(group_context, std::regex_replace(match.str(1), std::regex("@([0-9]+)"), "[CQ:at,qq=$1]"));
+    cqc::api::send_group_msg(group_context, std::regex_replace(match.str(1), std::regex("@([0-9]+)"), "[CQ:at,qq=$1]"));
     utility::private_send_creator(u8"处理好了！");
     return Result{ true, true };
 }

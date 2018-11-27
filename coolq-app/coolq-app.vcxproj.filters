@@ -168,6 +168,9 @@
     <ClCompile Include="project\functionalities\tic_tac_toe\tic_tac_toe_game.cpp">
       <Filter>project\functionalities\tic_tac_toe</Filter>
     </ClCompile>
+    <ClCompile Include="project\utility\random.cpp">
+      <Filter>project\utility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cqsdk\api.h">
@@ -302,9 +305,6 @@
     <ClInclude Include="project\processing\result.h">
       <Filter>project\processing</Filter>
     </ClInclude>
-    <ClInclude Include="project\utility\rng.h">
-      <Filter>project\utility</Filter>
-    </ClInclude>
     <ClInclude Include="project\utility\utility.h">
       <Filter>project\utility</Filter>
     </ClInclude>
@@ -355,6 +355,9 @@
     </ClInclude>
     <ClInclude Include="project\functionalities\tic_tac_toe\tic_tac_toe_game.h">
       <Filter>project\functionalities\tic_tac_toe</Filter>
+    </ClInclude>
+    <ClInclude Include="project\utility\random.h">
+      <Filter>project\utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

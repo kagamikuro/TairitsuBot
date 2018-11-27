@@ -10,9 +10,9 @@ std::vector<std::string> GameData::get_songs_in_range(const std::string& min_lev
     if (max == -2) max = 32767;
     for (SongData song : songs)
         if (difficulty == -1)
-            for (size_t i = 0; i < difficulty_count; i++)
+            for (int i = 0; i < difficulty_count; i++)
             {
-                if (i >= song.levels.size()) continue;
+                if (i >= int(song.levels.size())) continue;
                 const std::string level = song.levels[i];
                 const int level_index = get_level_index(level);
                 if ((level_index > min || (level_index == min && include_min)) && (level_index < max || (level_index == max && include_max)))
@@ -20,7 +20,7 @@ std::vector<std::string> GameData::get_songs_in_range(const std::string& min_lev
             }
         else
         {
-            if (difficulty >= song.levels.size()) continue;
+            if (difficulty >= int(song.levels.size())) continue;
             const std::string level = song.levels[difficulty];
             const int level_index = get_level_index(level);
             if ((level_index > min || (level_index == min && include_min)) && (level_index < max || (level_index == max && include_max)))
