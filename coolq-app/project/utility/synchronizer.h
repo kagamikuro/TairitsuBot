@@ -20,16 +20,16 @@ class Synchronizer
         Terminated
     };
 private:
-    std::recursive_mutex mutex;
-    std::thread worker_thread;
-    std::condition_variable_any condition_variable;
-    std::queue<Task> queue;
-    std::atomic_bool terminating = false;
+    std::recursive_mutex mutex_;
+    std::thread worker_thread_;
+    std::condition_variable_any condition_variable_;
+    std::queue<Task> queue_;
+    std::atomic_bool terminating_ = false;
     Status consume();
     void start();
     void terminate();
 public:
-    Synchronizer() = default;
+    Synchronizer() { start(); }
     ~Synchronizer() { terminate(); }
     Synchronizer(Synchronizer&) = delete;
     Synchronizer& operator= (const Synchronizer&) = delete;

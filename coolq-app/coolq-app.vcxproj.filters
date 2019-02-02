@@ -49,6 +49,9 @@
     <Filter Include="project\functionalities\tic_tac_toe">
       <UniqueIdentifier>{a30da533-02d3-4de2-be6b-2027f9ce259b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="project\functionalities\sudoku_solver">
+      <UniqueIdentifier>{b3bda459-3b27-44fb-a4c6-4ae1e487ebc1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cqsdk\api.cpp">
@@ -171,6 +174,10 @@
     <ClCompile Include="project\utility\random.cpp">
       <Filter>project\utility</Filter>
     </ClCompile>
+    <ClCompile Include="project\functionalities\sudoku_solver\sudoku_solver.cpp">
+      <Filter>project\functionalities\sudoku_solver</Filter>
+    </ClCompile>
+    <ClCompile Include="project\functionalities\user_scores\user_scores.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cqsdk\api.h">
@@ -359,6 +366,10 @@
     <ClInclude Include="project\utility\random.h">
       <Filter>project\utility</Filter>
     </ClInclude>
+    <ClInclude Include="project\functionalities\sudoku_solver\sudoku_solver.h">
+      <Filter>project\functionalities\sudoku_solver</Filter>
+    </ClInclude>
+    <ClInclude Include="project\functionalities\user_scores\user_scores.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cqsdk\utils\emoji_data.inc">

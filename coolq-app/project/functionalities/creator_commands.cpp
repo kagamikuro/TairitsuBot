@@ -5,6 +5,7 @@
 #include <regex>
 
 #include "creator_commands.h"
+#include "user_scores/user_scores.h"
 #include "../globals.h"
 #include "../utility/utility.h"
 
@@ -24,6 +25,9 @@ $ban group：他们都疯了！！碹镑铱鸹！！！
 $unban group：封印解除！！！
 $activate all：激活所有功能
 $deactivate all：关闭所有功能
+$save all：保存所有用户数据
+
+$check score：查看某用户当前的用户分数
 
 $add leader [id][name][title]：加入某个不能随便at的成员
 $remove leader [id]：好像有人下岗了？
@@ -78,22 +82,22 @@ Result CreatorCommands::reload_all_data(const std::string& message) const
 Result CreatorCommands::start_monitor(const std::string& message)
 {
     if (message != "$start monitor") return Result{};
-    monitor = true;
-    utility::private_send_creator(std::string(u8"好的，开始监控群") + std::to_string(group_context));
+    monitor_ = true;
+    utility::private_send_creator(std::string(u8"好的，开始监控群") + std::to_string(group_context_));
     return Result{ true, true };
 }
 
 Result CreatorCommands::end_monitor(const std::string& message)
 {
     if (message != "$end monitor") return Result{};
-    monitor = false;
-    utility::private_send_creator(std::string(u8"好的，结束监控群") + std::to_string(group_context));
+    monitor_ = false;
+    utility::private_send_creator(std::string(u8"好的，结束监控群") + std::to_string(group_context_));
     return Result{ true, true };
 }
 
 Result CreatorCommands::change_context(const std::string& message)
 {
-    if (!std::regex_match(message, context_change_regex)) return Result{};
+    if (!std::regex_match(message, context_change_regex_)) return Result{};
     const int64_t group_id = utility::get_first_id_in_string(message);
     std::vector<cq::Group> group_list = cqc::api::get_group_list();
     bool found = false;
@@ -107,7 +111,7 @@ Result CreatorCommands::change_context(const std::string& message)
         }
     if (found)
     {
-        group_context = group_id;
+        group_context_ = group_id;
         utility::private_send_creator(std::string(u8"好的，现在已切换至群 ") + group_name + " (" + std::to_string(group_id) + ')');
         return Result{ true, true };
     }
@@ -118,14 +122,14 @@ Result CreatorCommands::change_context(const std::string& message)
 Result CreatorCommands::indirectly_send_message(const std::string& message) const
 {
     std::smatch match;
-    const bool result = std::regex_match(message, match, send_text_regex);
+    const bool result = std::regex_match(message, match, send_text_regex_);
     if (!result) return Result{};
     if (!check_context())
     {
         utility::private_send_creator(u8"当前的上下文好像不在我加过的群里……");
         return Result{ true };
     }
-    cqc::api::send_group_msg(group_context, std::regex_replace(match.str(1), std::regex("@([0-9]+)"), "[CQ:at,qq=$1]"));
+    cqc::api::send_group_msg(group_context_, std::regex_replace(match.str(1), std::regex("@([0-9]+)"), "[CQ:at,qq=$1]"));
     utility::private_send_creator(u8"处理好了！");
     return Result{ true, true };
 }
@@ -133,7 +137,7 @@ Result CreatorCommands::indirectly_send_message(const std::string& message) cons
 Result CreatorCommands::ban_group(const std::string& message) const
 {
     if (message != "$ban group") return Result{};
-    if (utility::ban_whole_group(group_context, true))
+    if (utility::ban_whole_group(group_context_, true))
     {
         utility::private_send_creator(u8"处理好了！");
         return Result{ true, true };
@@ -145,7 +149,7 @@ Result CreatorCommands::ban_group(const std::string& message) const
 Result CreatorCommands::unban_group(const std::string& message) const
 {
     if (message != "$unban group") return Result{};
-    if (utility::unban_whole_group(group_context, true))
+    if (utility::unban_whole_group(group_context_, true))
     {
         utility::private_send_creator(u8"处理好了！");
         return Result{ true, true };
@@ -174,10 +178,27 @@ Result CreatorCommands::deactivate_all(const std::string& message) const
     return Result{ true, true };
 }
 
+Result CreatorCommands::save_all(const std::string& message) const
+{
+    if (message != "$save all") return Result{};
+    UserScores::instance().save_data();
+    utility::private_send_creator(u8"用户数据已保存完毕！");
+    return Result{ true, true };
+}
+
+Result CreatorCommands::check_score(const std::string& message) const
+{
+    if (!std::regex_match(message, check_score_regex_)) return Result{};
+    const int64_t user_id = utility::get_first_id_in_string(message);
+    const float score = UserScores::instance().score_of(user_id);
+    utility::private_send_creator(std::string(u8"用户 ") + std::to_string(user_id) + u8" 目前的分数是 " + std::to_string(score));
+    return Result{ true };
+}
+
 Result CreatorCommands::process(const cq::Target& current_target, const std::string& message)
 {
-    if (!monitor) return Result{};
-    if (*current_target.group_id != group_context) return Result{};
+    if (!monitor_) return Result{};
+    if (*current_target.group_id != group_context_) return Result{};
     std::ostringstream stream;
     const cq::GroupMember current_user = cqc::api::get_group_member_info(*current_target.group_id, *current_target.user_id);
     stream << current_user.card << " (" << current_user.nickname << ") ID：" << current_user.user_id << "\n" << message;
@@ -211,5 +232,9 @@ Result CreatorCommands::process_creator(const std::string& message)
     result = activate_all(message);
     if (result.matched) return result;
     result = deactivate_all(message);
+    if (result.matched) return result;
+    result = save_all(message);
+    if (result.matched) return result;
+    result = check_score(message);
     return result;
 }

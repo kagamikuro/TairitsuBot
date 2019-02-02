@@ -2,23 +2,23 @@
 
 Synchronizer::Status Synchronizer::consume()
 {
-    UniqueLock lock(mutex);
-    while (queue.empty() && !terminating) condition_variable.wait(lock);
-    if (terminating) return Status::Terminated;
-    Task& task = queue.front();
+    UniqueLock lock(mutex_);
+    while (queue_.empty() && !terminating_) condition_variable_.wait(lock);
+    if (terminating_) return Status::Terminated;
+    Task& task = queue_.front();
     task.second();
     task.first.set_value();
-    queue.pop();
+    queue_.pop();
     return Status::Continue;
 }
 
 void Synchronizer::start()
 {
     {
-        Lock lock(mutex);
-        terminating = false;
+        Lock lock(mutex_);
+        terminating_ = false;
     }
-    worker_thread = std::thread([this]
+    worker_thread_ = std::thread([this]
     {
         Status status = Status::Continue;
         while (status != Status::Terminated) status = consume();
@@ -27,19 +27,19 @@ void Synchronizer::start()
 
 void Synchronizer::terminate()
 {
-    Lock lock(mutex);
-    terminating = true;
-    condition_variable.notify_one();
-    worker_thread.join();
+    Lock lock(mutex_);
+    terminating_ = true;
+    condition_variable_.notify_one();
+    worker_thread_.join();
 }
 
 std::future<void> Synchronizer::produce(const Func& work)
 {
-    Lock lock(mutex);
+    Lock lock(mutex_);
     std::promise<void> promise;
     std::future<void> future = promise.get_future();
-    const bool wake = queue.empty();
-    queue.emplace(std::move(promise), work);
-    if (wake) condition_variable.notify_one();
+    const bool wake = queue_.empty();
+    queue_.emplace(std::move(promise), work);
+    if (wake) condition_variable_.notify_one();
     return future;
 }

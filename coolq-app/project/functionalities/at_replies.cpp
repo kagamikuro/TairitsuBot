@@ -27,6 +27,7 @@ void AtReplies::load_data()
         tips_strings.push_back(line);
     }
     tips_stream.close();
+    utility::private_send_creator(u8"回复内容读取完毕！");
 }
 
 Result AtReplies::process(const cq::Target& current_target, const std::string& message)

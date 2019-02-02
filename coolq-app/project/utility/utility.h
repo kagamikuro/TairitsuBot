@@ -37,4 +37,5 @@ namespace utility
         const std::string& custom_message = u8"剐内镑 Tairitsu 虚启疤碹镑铱鸹");
     bool unban_whole_group(int64_t group_id, bool verbose = true,
         const std::string& custom_message = u8"剐内镑 Tairitsu 镳氲疤碹镑铱鸹");
+    std::string error_string_message(const cq::exception::ApiError& error);
 }

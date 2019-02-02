@@ -8,12 +8,13 @@
 class CreatorCommands final : public MessageReceived
 {
 private:
-    const std::regex context_change_regex{ "\\$context change[ \t]*[0-9]+" };
-    const std::regex send_text_regex{ "\\$\\$([\\s\\S]*)" };
-    bool monitor = false;
-    int64_t group_context = 0;
-    const cq::Target creator{ utility::developer_id };
-    bool check_context() const { return group_context != 0i64; }
+    const std::regex context_change_regex_{ "\\$context change[ \t]*[0-9]+" };
+    const std::regex send_text_regex_{ "\\$\\$([\\s\\S]*)" };
+    const std::regex check_score_regex_{ "\\$check score[ \t]*[0-9]+" };
+    bool monitor_ = false;
+    int64_t group_context_ = 0;
+    const cq::Target creator_{ utility::developer_id };
+    bool check_context() const { return group_context_ != 0i64; }
     Result list_commands(const std::string& message) const;
     Result list_funcs(const std::string& message) const;
     Result list_groups(const std::string& message) const;
@@ -26,6 +27,8 @@ private:
     Result unban_group(const std::string& message) const;
     Result activate_all(const std::string& message) const;
     Result deactivate_all(const std::string& message) const;
+    Result save_all(const std::string& message) const;
+    Result check_score(const std::string& message) const;
 protected:
     Result process(const cq::Target& current_target, const std::string& message) override;
     Result process_creator(const std::string& message) override;

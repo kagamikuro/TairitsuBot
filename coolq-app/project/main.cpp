@@ -7,6 +7,7 @@
 #include "../safety_check/logging.h"
 #include "utility/utility.h"
 #include "functionalities/functionalities.h"
+#include "functionalities/user_scores/user_scores.h"
 
 std::vector<std::unique_ptr<MessageReceived>> group_actions;
 std::vector<std::unique_ptr<MessageReceived>> private_actions;
@@ -22,6 +23,8 @@ void initialize()
     std::ifstream data_path_reader("path.txt");
     std::getline(data_path_reader, utility::data_path);
     data_path_reader.close();
+    // Instantiate singleton class
+    UserScores::instance().load_data();
     // Start all actions
     creator_commands = std::make_unique<CreatorCommands>();
     message_actions.push_back(std::make_unique<PickRandomSong>());
@@ -54,6 +57,7 @@ void clean_up()
         private_actions.clear();
         message_actions.clear();
         loop_tasks.clear();
+        UserScores::instance().terminate();
     }
 }
 
@@ -98,6 +102,13 @@ CQ_MAIN
                 if (task->receive(target, message).matched)
                     return;
         }
+        catch (const cq::exception::ApiError& exc)
+        {
+            std::ostringstream result;
+            result << u8"深刻なエラーが発生しました……\n我在处理由 " << std::to_string(e.user_id) << u8" 发来的内容是\n"
+                << message << u8"\n的私聊消息的时候出了异常 " << utility::error_string_message(exc) << u8"\n助けて……お願い……";
+            utility::private_send_creator(result.str());
+        }
         catch (const std::exception& exc)
         {
             std::ostringstream result;
@@ -122,6 +133,13 @@ CQ_MAIN
             for (const std::unique_ptr<MessageReceived>& task : message_actions)
                 if (task->receive(target, message).matched)
                     return;
+        }
+        catch (const cq::exception::ApiError& exc)
+        {
+            std::ostringstream result;
+            result << u8"深刻なエラーが発生しました……\n我在处理由 " << std::to_string(e.user_id) << u8" 发来的内容是\n"
+                << message << u8"\n的私聊消息的时候出了异常 " << utility::error_string_message(exc) << u8"\n助けて……お願い……";
+            utility::private_send_creator(result.str());
         }
         catch (const std::exception& exc)
         {
