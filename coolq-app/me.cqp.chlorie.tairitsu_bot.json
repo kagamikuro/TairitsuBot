@@ -122,7 +122,7 @@
     // 124, // setGroupAnonymousBan
     // 125, // setGroupAnonymous
     126, // setGroupCard
-    // 127, // setGroupLeave
+    127, // setGroupLeave
     // 128, // setGroupSpecialTitle
     130, // getGroupMemberInfoV2 / getGroupMemberInfo
     131, // getStrangerInfo

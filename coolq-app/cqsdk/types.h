@@ -43,7 +43,7 @@ namespace cq {
     enum class GroupRole { MEMBER = 1, ADMIN = 2, OWNER = 3 };
 
     struct User {
-        const static size_t MIN_SIZE = 18;
+        inline static const size_t MIN_SIZE = 18;
 
         int64_t user_id = 0;
         std::string nickname;
@@ -66,7 +66,7 @@ namespace cq {
     };
 
     struct Group {
-        const static size_t MIN_SIZE = 10;
+        inline static const size_t MIN_SIZE = 10;
 
         int64_t group_id = 0;
         std::string group_name;
@@ -85,7 +85,7 @@ namespace cq {
     };
 
     struct GroupMember : User {
-        const static size_t MIN_SIZE = 58;
+        inline static const size_t MIN_SIZE = 58;
 
         int64_t group_id = 0;
         // int64_t user_id; // from User
@@ -130,7 +130,7 @@ namespace cq {
     };
 
     struct Anonymous {
-        const static size_t MIN_SIZE = 12;
+        inline static const size_t MIN_SIZE = 12;
 
         int64_t id = 0;
         std::string name;

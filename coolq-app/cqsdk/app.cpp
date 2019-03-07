@@ -9,7 +9,7 @@ namespace cq {
 
     namespace app {
         int32_t auth_code = 0;
-        std::string id = "";
+        std::string id;
 
         std::function<void()> on_initialize;
         std::function<void()> on_enable;
@@ -21,9 +21,8 @@ namespace cq {
     } // namespace app
 } // namespace cq
 
-using namespace std;
 using namespace cq;
-using cq::utils::call_if_valid;
+using utils::call_if_valid;
 
 /**
  * Return app info.

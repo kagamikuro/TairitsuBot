@@ -60,9 +60,6 @@
     <ClCompile Include="cqsdk\app.cpp">
       <Filter>cqsdk</Filter>
     </ClCompile>
-    <ClCompile Include="cqsdk\dir.cpp">
-      <Filter>cqsdk</Filter>
-    </ClCompile>
     <ClCompile Include="cqsdk\dllmain.cpp">
       <Filter>cqsdk</Filter>
     </ClCompile>
@@ -81,103 +78,25 @@
     <ClCompile Include="cqsdk\utils\vendor\base64.cpp">
       <Filter>cqsdk\utils\vendor</Filter>
     </ClCompile>
-    <ClCompile Include="project\main.cpp">
-      <Filter>project</Filter>
-    </ClCompile>
-    <ClCompile Include="project\functionalities\at_replies.cpp">
-      <Filter>project\functionalities</Filter>
-    </ClCompile>
-    <ClCompile Include="project\functionalities\ban_unban_group.cpp">
-      <Filter>project\functionalities</Filter>
-    </ClCompile>
-    <ClCompile Include="project\functionalities\ban_unban_members.cpp">
-      <Filter>project\functionalities</Filter>
-    </ClCompile>
-    <ClCompile Include="project\functionalities\creator_commands.cpp">
-      <Filter>project\functionalities</Filter>
-    </ClCompile>
-    <ClCompile Include="project\functionalities\report_message.cpp">
-      <Filter>project\functionalities</Filter>
-    </ClCompile>
-    <ClCompile Include="project\functionalities\subjective_repeat.cpp">
-      <Filter>project\functionalities</Filter>
-    </ClCompile>
-    <ClCompile Include="project\functionalities\unban_creator.cpp">
-      <Filter>project\functionalities</Filter>
-    </ClCompile>
-    <ClCompile Include="project\functionalities\pick_random_song\game_data\game_data.cpp">
-      <Filter>project\functionalities\pick_random_song\game_data</Filter>
-    </ClCompile>
-    <ClCompile Include="project\functionalities\pick_random_song\game_data\song_data.cpp">
-      <Filter>project\functionalities\pick_random_song\game_data</Filter>
-    </ClCompile>
-    <ClCompile Include="project\functionalities\pick_random_song\pick_random_song.cpp">
-      <Filter>project\functionalities\pick_random_song</Filter>
-    </ClCompile>
-    <ClCompile Include="project\functionalities\passive_repeat\passive_repeat.cpp">
-      <Filter>project\functionalities\passive_repeat</Filter>
-    </ClCompile>
-    <ClCompile Include="project\functionalities\passive_repeat\repeat_chain.cpp">
-      <Filter>project\functionalities\passive_repeat</Filter>
-    </ClCompile>
-    <ClCompile Include="project\functionalities\othello\othello.cpp">
-      <Filter>project\functionalities\othello</Filter>
-    </ClCompile>
-    <ClCompile Include="project\functionalities\othello\play_othello.cpp">
-      <Filter>project\functionalities\othello</Filter>
-    </ClCompile>
-    <ClCompile Include="project\processing\loop_task.cpp">
-      <Filter>project\processing</Filter>
-    </ClCompile>
-    <ClCompile Include="project\processing\message_received.cpp">
-      <Filter>project\processing</Filter>
-    </ClCompile>
-    <ClCompile Include="project\utility\utility.cpp">
-      <Filter>project\utility</Filter>
-    </ClCompile>
-    <ClCompile Include="project\functionalities\othello\othello_game.cpp">
-      <Filter>project\functionalities\othello</Filter>
-    </ClCompile>
-    <ClCompile Include="project\functionalities\passive_unban_creator.cpp">
-      <Filter>project\functionalities</Filter>
-    </ClCompile>
-    <ClCompile Include="project\functionalities\meeting_on_7th\meeting_on_7th.cpp">
-      <Filter>project\functionalities\meeting_on_7th</Filter>
-    </ClCompile>
-    <ClCompile Include="project\functionalities\othello\othello_board.cpp">
-      <Filter>project\functionalities\othello</Filter>
-    </ClCompile>
-    <ClCompile Include="project\functionalities\othello\codename_tairitsu.cpp">
-      <Filter>project\functionalities\othello</Filter>
-    </ClCompile>
-    <ClCompile Include="project\functionalities\uno\uno.cpp">
-      <Filter>project\functionalities\uno</Filter>
-    </ClCompile>
-    <ClCompile Include="project\functionalities\uno\uno_game.cpp">
-      <Filter>project\functionalities\uno</Filter>
-    </ClCompile>
-    <ClCompile Include="project\utility\synchronizer.cpp">
-      <Filter>project\utility</Filter>
-    </ClCompile>
-    <ClCompile Include="project\functionalities\tic_tac_toe\tic_tac_toe.cpp">
-      <Filter>project\functionalities\tic_tac_toe</Filter>
-    </ClCompile>
-    <ClCompile Include="project\processing\two_player_game.cpp">
-      <Filter>project\processing</Filter>
-    </ClCompile>
-    <ClCompile Include="project\functionalities\tic_tac_toe\tic_tac_toe_board.cpp">
-      <Filter>project\functionalities\tic_tac_toe</Filter>
-    </ClCompile>
-    <ClCompile Include="project\functionalities\tic_tac_toe\tic_tac_toe_game.cpp">
-      <Filter>project\functionalities\tic_tac_toe</Filter>
-    </ClCompile>
-    <ClCompile Include="project\utility\random.cpp">
-      <Filter>project\utility</Filter>
-    </ClCompile>
-    <ClCompile Include="project\functionalities\sudoku_solver\sudoku_solver.cpp">
-      <Filter>project\functionalities\sudoku_solver</Filter>
-    </ClCompile>
-    <ClCompile Include="project\functionalities\user_scores\user_scores.cpp" />
+    <ClCompile Include="src\utils\utils.cpp" />
+    <ClCompile Include="src\core\task.cpp" />
+    <ClCompile Include="src\core\loop_task.cpp" />
+    <ClCompile Include="src\core\main.cpp" />
+    <ClCompile Include="src\core\app_manager.cpp" />
+    <ClCompile Include="src\utils\random.cpp" />
+    <ClCompile Include="src\tasks\loop_unban_creator.cpp" />
+    <ClCompile Include="src\core\task_manager.cpp" />
+    <ClCompile Include="src\tasks\creator_commands\creator_commands.cpp" />
+    <ClCompile Include="src\tasks\creator_commands\command_view.cpp" />
+    <ClCompile Include="src\tasks\save_load_manager.cpp" />
+    <ClCompile Include="src\tasks\dice_roll.cpp" />
+    <ClCompile Include="src\tasks\report_message.cpp" />
+    <ClCompile Include="src\tasks\ban_group.cpp" />
+    <ClCompile Include="src\tasks\ban_member.cpp" />
+    <ClCompile Include="src\tasks\ridicule.cpp" />
+    <ClCompile Include="src\tasks\random_sample.cpp" />
+    <ClCompile Include="src\tasks\repeat\repeat.cpp" />
+    <ClCompile Include="src\tasks\two_player_game\two_player_game.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cqsdk\api.h">
@@ -196,9 +115,6 @@
       <Filter>cqsdk</Filter>
     </ClInclude>
     <ClInclude Include="cqsdk\def.h">
-      <Filter>cqsdk</Filter>
-    </ClInclude>
-    <ClInclude Include="cqsdk\dir.h">
       <Filter>cqsdk</Filter>
     </ClInclude>
     <ClInclude Include="cqsdk\enums.h">
@@ -246,134 +162,38 @@
     <ClInclude Include="safety_check\api.h">
       <Filter>safety_check</Filter>
     </ClInclude>
-    <ClInclude Include="safety_check\app.h">
-      <Filter>safety_check</Filter>
-    </ClInclude>
     <ClInclude Include="safety_check\logging.h">
       <Filter>safety_check</Filter>
-    </ClInclude>
-    <ClInclude Include="safety_check\safe_call.h">
-      <Filter>safety_check</Filter>
-    </ClInclude>
-    <ClInclude Include="project\functionalities\at_replies.h">
-      <Filter>project\functionalities</Filter>
-    </ClInclude>
-    <ClInclude Include="project\functionalities\ban_unban_group.h">
-      <Filter>project\functionalities</Filter>
-    </ClInclude>
-    <ClInclude Include="project\functionalities\ban_unban_members.h">
-      <Filter>project\functionalities</Filter>
-    </ClInclude>
-    <ClInclude Include="project\functionalities\creator_commands.h">
-      <Filter>project\functionalities</Filter>
-    </ClInclude>
-    <ClInclude Include="project\functionalities\functionalities.h">
-      <Filter>project\functionalities</Filter>
-    </ClInclude>
-    <ClInclude Include="project\functionalities\report_message.h">
-      <Filter>project\functionalities</Filter>
-    </ClInclude>
-    <ClInclude Include="project\functionalities\subjective_repeat.h">
-      <Filter>project\functionalities</Filter>
-    </ClInclude>
-    <ClInclude Include="project\functionalities\unban_creator.h">
-      <Filter>project\functionalities</Filter>
-    </ClInclude>
-    <ClInclude Include="project\functionalities\uno\uno_card.h">
-      <Filter>project\functionalities\uno</Filter>
-    </ClInclude>
-    <ClInclude Include="project\functionalities\pick_random_song\game_data\game_data.h">
-      <Filter>project\functionalities\pick_random_song\game_data</Filter>
-    </ClInclude>
-    <ClInclude Include="project\functionalities\pick_random_song\game_data\song_data.h">
-      <Filter>project\functionalities\pick_random_song\game_data</Filter>
-    </ClInclude>
-    <ClInclude Include="project\functionalities\pick_random_song\pick_random_song.h">
-      <Filter>project\functionalities\pick_random_song</Filter>
-    </ClInclude>
-    <ClInclude Include="project\functionalities\passive_repeat\passive_repeat.h">
-      <Filter>project\functionalities\passive_repeat</Filter>
-    </ClInclude>
-    <ClInclude Include="project\functionalities\passive_repeat\repeat_chain.h">
-      <Filter>project\functionalities\passive_repeat</Filter>
-    </ClInclude>
-    <ClInclude Include="project\functionalities\othello\othello.h">
-      <Filter>project\functionalities\othello</Filter>
-    </ClInclude>
-    <ClInclude Include="project\functionalities\othello\play_othello.h">
-      <Filter>project\functionalities\othello</Filter>
-    </ClInclude>
-    <ClInclude Include="project\processing\loop_task.h">
-      <Filter>project\processing</Filter>
-    </ClInclude>
-    <ClInclude Include="project\processing\message_received.h">
-      <Filter>project\processing</Filter>
-    </ClInclude>
-    <ClInclude Include="project\processing\result.h">
-      <Filter>project\processing</Filter>
-    </ClInclude>
-    <ClInclude Include="project\utility\utility.h">
-      <Filter>project\utility</Filter>
     </ClInclude>
     <ClInclude Include="third_party\CImg.h">
       <Filter>third_party</Filter>
     </ClInclude>
-    <ClInclude Include="project\functionalities\othello\othello_game.h">
-      <Filter>project\functionalities\othello</Filter>
-    </ClInclude>
-    <ClInclude Include="globals.h">
-      <Filter>project</Filter>
-    </ClInclude>
-    <ClInclude Include="project\functionalities\passive_unban_creator.h">
-      <Filter>project\functionalities</Filter>
-    </ClInclude>
-    <ClInclude Include="project\functionalities\meeting_on_7th\leader_data.h">
-      <Filter>project\functionalities\meeting_on_7th</Filter>
-    </ClInclude>
-    <ClInclude Include="project\functionalities\meeting_on_7th\meeting_on_7th.h">
-      <Filter>project\functionalities\meeting_on_7th</Filter>
-    </ClInclude>
-    <ClInclude Include="project\functionalities\othello\othello_board.h">
-      <Filter>project\functionalities\othello</Filter>
-    </ClInclude>
-    <ClInclude Include="project\functionalities\othello\codename_tairitsu.h">
-      <Filter>project\functionalities\othello</Filter>
-    </ClInclude>
-    <ClInclude Include="project\utility\dictionary.h">
-      <Filter>project\utility</Filter>
-    </ClInclude>
-    <ClInclude Include="project\functionalities\uno\uno.h">
-      <Filter>project\functionalities\uno</Filter>
-    </ClInclude>
-    <ClInclude Include="project\functionalities\uno\uno_game.h">
-      <Filter>project\functionalities\uno</Filter>
-    </ClInclude>
-    <ClInclude Include="project\utility\synchronizer.h">
-      <Filter>project\utility</Filter>
-    </ClInclude>
-    <ClInclude Include="project\functionalities\tic_tac_toe\tic_tac_toe.h">
-      <Filter>project\functionalities\tic_tac_toe</Filter>
-    </ClInclude>
-    <ClInclude Include="project\processing\two_player_game.h">
-      <Filter>project\processing</Filter>
-    </ClInclude>
-    <ClInclude Include="project\functionalities\tic_tac_toe\tic_tac_toe_board.h">
-      <Filter>project\functionalities\tic_tac_toe</Filter>
-    </ClInclude>
-    <ClInclude Include="project\functionalities\tic_tac_toe\tic_tac_toe_game.h">
-      <Filter>project\functionalities\tic_tac_toe</Filter>
-    </ClInclude>
-    <ClInclude Include="project\utility\random.h">
-      <Filter>project\utility</Filter>
-    </ClInclude>
-    <ClInclude Include="project\functionalities\sudoku_solver\sudoku_solver.h">
-      <Filter>project\functionalities\sudoku_solver</Filter>
-    </ClInclude>
-    <ClInclude Include="project\functionalities\user_scores\user_scores.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="cqsdk\utils\emoji_data.inc">
-      <Filter>cqsdk\utils</Filter>
-    </None>
+    <ClInclude Include="src\utils\utils.h" />
+    <ClInclude Include="src\core\task.h" />
+    <ClInclude Include="src\core\task_manager.h" />
+    <ClInclude Include="src\core\singleton.h" />
+    <ClInclude Include="src\core\user_data.h" />
+    <ClInclude Include="src\core\loop_task.h" />
+    <ClInclude Include="src\core\app_manager.h" />
+    <ClInclude Include="src\utils\random.h" />
+    <ClInclude Include="src\tasks\tasks.h" />
+    <ClInclude Include="vendor\CImg.h" />
+    <ClInclude Include="src\tasks\loop_unban_creator.h" />
+    <ClInclude Include="src\tasks\creator_commands\creator_commands.h" />
+    <ClInclude Include="src\tasks\creator_commands\command_view.h" />
+    <ClInclude Include="src\tasks\save_load_manager.h" />
+    <ClInclude Include="src\tasks\dice_roll.h" />
+    <ClInclude Include="src\tasks\report_message.h" />
+    <ClInclude Include="src\tasks\ban_group.h" />
+    <ClInclude Include="src\concurrency\guarded_container.h" />
+    <ClInclude Include="src\concurrency\guarded_data.h" />
+    <ClInclude Include="src\concurrency\utils.h" />
+    <ClInclude Include="src\tasks\ban_member.h" />
+    <ClInclude Include="src\utils\binary_io.h" />
+    <ClInclude Include="src\tasks\ridicule.h" />
+    <ClInclude Include="src\tasks\random_sample.h" />
+    <ClInclude Include="src\tasks\repeat\repeat_chain.h" />
+    <ClInclude Include="src\tasks\repeat\repeat.h" />
+    <ClInclude Include="src\tasks\two_player_game\two_player_game.h" />
   </ItemGroup>
 </Project>

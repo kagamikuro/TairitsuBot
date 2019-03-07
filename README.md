@@ -1,6 +1,6 @@
 # Tairitsu bot
 
-Tairitsu Bot是一个QQ群聊机器人，基于酷Q以及richardchien的第三方酷Q C++ SDK。以后可能会包含更多的酷Q Pro才能使用的功能。  
+Tairitsu Bot是一个QQ群聊机器人，基于酷Q以及richardchien的第三方酷Q C++ SDK(https://github.com/richardchien/coolq-cpp-sdk)。以后可能会包含更多的酷Q Pro才能使用的功能。  
 （好像是）采用了音乐游戏Arcaea中対立（Tairitsu）的人物设定，但是会出现各种OOC台词。  
 目前包含UNO，黑白棋AI等功能，以后可能会添加更多。  
 只是个人消遣空闲时间的产物，所以代码可能会很难看，不过也无所谓了。
@@ -10,3 +10,5 @@ Tairitsu Bot是一个QQ群聊机器人，基于酷Q以及richardchien的第三�
 
     对平台 Win32 的 所有配置，在 配置属性->调试 中，修改 命令 一栏为你的酷Q可执行文件的位置。
     对平台 Win32 的 所有配置，在 配置属性->生成事件->生成后事件 中，按照你安装酷Q的实际位置 命令行 中的酷Q App文件夹。
+
+使用的其他第三方库均包含在vendor文件夹下。目前使用的有CImg（负责简单的绘图）以及fmt（优秀的字符串格式化库）。

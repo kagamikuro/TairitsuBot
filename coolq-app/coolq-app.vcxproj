@@ -9,20 +9,14 @@
       <Configuration>Release</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Debug|x64">
-      <Configuration>Debug</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Release|x64">
-      <Configuration>Release</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{EDED9874-EE5F-4DDF-8AA4-446EE66CE139}</ProjectGuid>
     <RootNamespace>coolqapp</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <VcpkgTriplet>x86-windows-static</VcpkgTriplet>
+    <VcpkgEnabled>true</VcpkgEnabled>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -38,19 +32,6 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
-    <CharacterSet>MultiByte</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>MultiByte</CharacterSet>
-  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
@@ -62,20 +43,18 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <TargetExt>.dll</TargetExt>
+    <OutDir>$(SolutionDir)bin\$(Platform)-$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)obj\$(Platform)-$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <TargetExt>.dll</TargetExt>
     <CodeAnalysisRuleSet>NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)bin\$(Platform)-$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)obj\$(Platform)-$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -90,11 +69,12 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <FunctionLevelLinking>true</FunctionLevelLinking>
-      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/utf-8 /experimental:external /external:I "vendor/" %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>vendor;src;.</AdditionalIncludeDirectories>
     </ClCompile>
     <PostBuildEvent>
-      <Command>copy ..\Debug\coolq-app.dll D:\CoolQPro\app\me.cqp.chlorie.tairitsu_bot.dll
-copy me.cqp.chlorie.tairitsu_bot.json D:\CoolQPro\app\</Command>
+      <Command>copy ..\bin\Win32-Debug\coolq-app.dll D:\Applications\CQPro\app\me.cqp.chlorie.tairitsu_bot.dll
+copy me.cqp.chlorie.tairitsu_bot.json D:\Applications\CQPro\app\</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Copy dll file and json file to CoolQ directory</Message>
@@ -106,15 +86,6 @@ copy me.cqp.chlorie.tairitsu_bot.json D:\CoolQPro\app\</Command>
       <ImageHasSafeExceptionHandlers>true</ImageHasSafeExceptionHandlers>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <Optimization>Disabled</Optimization>
-      <SDLCheck>true</SDLCheck>
-      <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
-    </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -128,7 +99,8 @@ copy me.cqp.chlorie.tairitsu_bot.json D:\CoolQPro\app\</Command>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <ObjectFileName>$(IntDir)%(RelativeDir)</ObjectFileName>
       <PreprocessorDefinitions>_WINDLL;_SCL_SECURE_NO_WARNINGS;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/utf-8 /experimental:external /external:I "vendor/" %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>vendor;src;.</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -137,68 +109,39 @@ copy me.cqp.chlorie.tairitsu_bot.json D:\CoolQPro\app\</Command>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>copy ..\Release\coolq-app.dll D:\CoolQPro\app\me.cqp.chlorie.tairitsu_bot.dll</Command>
+      <Command>copy ..\bin\Win32-Release\coolq-app.dll D:\Applications\CQPro\app\me.cqp.chlorie.tairitsu_bot.dll
+copy me.cqp.chlorie.tairitsu_bot.json D:\Applications\CQPro\app\</Command>
       <Message>Copy dll file and json file to CoolQ directory</Message>
     </PostBuildEvent>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <Optimization>MaxSpeed</Optimization>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>true</SDLCheck>
-      <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
-    </ClCompile>
-    <Link>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OptimizeReferences>true</OptimizeReferences>
-    </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="cqsdk\api.cpp" />
     <ClCompile Include="cqsdk\app.cpp" />
-    <ClCompile Include="cqsdk\dir.cpp" />
     <ClCompile Include="cqsdk\dllmain.cpp" />
     <ClCompile Include="cqsdk\event.cpp" />
     <ClCompile Include="cqsdk\message.cpp" />
     <ClCompile Include="cqsdk\utils\base64.cpp" />
     <ClCompile Include="cqsdk\utils\string.cpp" />
     <ClCompile Include="cqsdk\utils\vendor\base64.cpp" />
-    <ClCompile Include="project\functionalities\at_replies.cpp" />
-    <ClCompile Include="project\functionalities\ban_unban_group.cpp" />
-    <ClCompile Include="project\functionalities\ban_unban_members.cpp" />
-    <ClCompile Include="project\functionalities\creator_commands.cpp" />
-    <ClCompile Include="project\functionalities\meeting_on_7th\meeting_on_7th.cpp" />
-    <ClCompile Include="project\functionalities\othello\codename_tairitsu.cpp" />
-    <ClCompile Include="project\functionalities\othello\othello.cpp" />
-    <ClCompile Include="project\functionalities\othello\othello_board.cpp" />
-    <ClCompile Include="project\functionalities\othello\othello_game.cpp" />
-    <ClCompile Include="project\functionalities\othello\play_othello.cpp" />
-    <ClCompile Include="project\functionalities\passive_repeat\passive_repeat.cpp" />
-    <ClCompile Include="project\functionalities\passive_repeat\repeat_chain.cpp" />
-    <ClCompile Include="project\functionalities\passive_unban_creator.cpp" />
-    <ClCompile Include="project\functionalities\pick_random_song\game_data\game_data.cpp" />
-    <ClCompile Include="project\functionalities\pick_random_song\game_data\song_data.cpp" />
-    <ClCompile Include="project\functionalities\pick_random_song\pick_random_song.cpp" />
-    <ClCompile Include="project\functionalities\report_message.cpp" />
-    <ClCompile Include="project\functionalities\subjective_repeat.cpp" />
-    <ClCompile Include="project\functionalities\sudoku_solver\sudoku_solver.cpp" />
-    <ClCompile Include="project\functionalities\tic_tac_toe\tic_tac_toe.cpp" />
-    <ClCompile Include="project\functionalities\tic_tac_toe\tic_tac_toe_board.cpp" />
-    <ClCompile Include="project\functionalities\tic_tac_toe\tic_tac_toe_game.cpp" />
-    <ClCompile Include="project\functionalities\unban_creator.cpp" />
-    <ClCompile Include="project\functionalities\uno\uno_game.cpp" />
-    <ClCompile Include="project\functionalities\uno\uno.cpp" />
-    <ClCompile Include="project\functionalities\user_scores\user_scores.cpp" />
-    <ClCompile Include="project\main.cpp" />
-    <ClCompile Include="project\processing\two_player_game.cpp" />
-    <ClCompile Include="project\processing\loop_task.cpp" />
-    <ClCompile Include="project\processing\message_received.cpp" />
-    <ClCompile Include="project\utility\random.cpp" />
-    <ClCompile Include="project\utility\synchronizer.cpp" />
-    <ClCompile Include="project\utility\utility.cpp" />
+    <ClCompile Include="src\core\app_manager.cpp" />
+    <ClCompile Include="src\core\loop_task.cpp" />
+    <ClCompile Include="src\core\task.cpp" />
+    <ClCompile Include="src\core\main.cpp" />
+    <ClCompile Include="src\core\task_manager.cpp" />
+    <ClCompile Include="src\tasks\ban_group.cpp" />
+    <ClCompile Include="src\tasks\ban_member.cpp" />
+    <ClCompile Include="src\tasks\creator_commands\command_view.cpp" />
+    <ClCompile Include="src\tasks\creator_commands\creator_commands.cpp" />
+    <ClCompile Include="src\tasks\dice_roll.cpp" />
+    <ClCompile Include="src\tasks\loop_unban_creator.cpp" />
+    <ClCompile Include="src\tasks\random_sample.cpp" />
+    <ClCompile Include="src\tasks\repeat\repeat.cpp" />
+    <ClCompile Include="src\tasks\report_message.cpp" />
+    <ClCompile Include="src\tasks\ridicule.cpp" />
+    <ClCompile Include="src\tasks\save_load_manager.cpp" />
+    <ClCompile Include="src\tasks\two_player_game\two_player_game.cpp" />
+    <ClCompile Include="src\utils\random.cpp" />
+    <ClCompile Include="src\utils\utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cqsdk\api.h" />
@@ -207,7 +150,6 @@ copy me.cqp.chlorie.tairitsu_bot.json D:\CoolQPro\app\</Command>
     <ClInclude Include="cqsdk\common.h" />
     <ClInclude Include="cqsdk\cqsdk.h" />
     <ClInclude Include="cqsdk\def.h" />
-    <ClInclude Include="cqsdk\dir.h" />
     <ClInclude Include="cqsdk\enums.h" />
     <ClInclude Include="cqsdk\event.h" />
     <ClInclude Include="cqsdk\exception.h" />
@@ -222,52 +164,36 @@ copy me.cqp.chlorie.tairitsu_bot.json D:\CoolQPro\app\</Command>
     <ClInclude Include="cqsdk\utils\memory.h" />
     <ClInclude Include="cqsdk\utils\string.h" />
     <ClInclude Include="cqsdk\utils\vendor\base64.h" />
-    <ClInclude Include="globals.h" />
-    <ClInclude Include="project\functionalities\at_replies.h" />
-    <ClInclude Include="project\functionalities\ban_unban_group.h" />
-    <ClInclude Include="project\functionalities\ban_unban_members.h" />
-    <ClInclude Include="project\functionalities\creator_commands.h" />
-    <ClInclude Include="project\functionalities\functionalities.h" />
-    <ClInclude Include="project\functionalities\meeting_on_7th\leader_data.h" />
-    <ClInclude Include="project\functionalities\meeting_on_7th\meeting_on_7th.h" />
-    <ClInclude Include="project\functionalities\othello\codename_tairitsu.h" />
-    <ClInclude Include="project\functionalities\othello\othello.h" />
-    <ClInclude Include="project\functionalities\othello\othello_board.h" />
-    <ClInclude Include="project\functionalities\othello\othello_game.h" />
-    <ClInclude Include="project\functionalities\othello\play_othello.h" />
-    <ClInclude Include="project\functionalities\passive_repeat\passive_repeat.h" />
-    <ClInclude Include="project\functionalities\passive_repeat\repeat_chain.h" />
-    <ClInclude Include="project\functionalities\passive_unban_creator.h" />
-    <ClInclude Include="project\functionalities\pick_random_song\game_data\game_data.h" />
-    <ClInclude Include="project\functionalities\pick_random_song\game_data\song_data.h" />
-    <ClInclude Include="project\functionalities\pick_random_song\pick_random_song.h" />
-    <ClInclude Include="project\functionalities\report_message.h" />
-    <ClInclude Include="project\functionalities\subjective_repeat.h" />
-    <ClInclude Include="project\functionalities\sudoku_solver\sudoku_solver.h" />
-    <ClInclude Include="project\functionalities\tic_tac_toe\tic_tac_toe.h" />
-    <ClInclude Include="project\functionalities\tic_tac_toe\tic_tac_toe_board.h" />
-    <ClInclude Include="project\functionalities\tic_tac_toe\tic_tac_toe_game.h" />
-    <ClInclude Include="project\functionalities\unban_creator.h" />
-    <ClInclude Include="project\functionalities\uno\uno_game.h" />
-    <ClInclude Include="project\functionalities\uno\uno_card.h" />
-    <ClInclude Include="project\functionalities\uno\uno.h" />
-    <ClInclude Include="project\functionalities\user_scores\user_scores.h" />
-    <ClInclude Include="project\processing\two_player_game.h" />
-    <ClInclude Include="project\processing\loop_task.h" />
-    <ClInclude Include="project\processing\message_received.h" />
-    <ClInclude Include="project\processing\result.h" />
-    <ClInclude Include="project\utility\random.h" />
-    <ClInclude Include="project\utility\synchronizer.h" />
-    <ClInclude Include="project\utility\dictionary.h" />
-    <ClInclude Include="project\utility\utility.h" />
     <ClInclude Include="safety_check\api.h" />
-    <ClInclude Include="safety_check\app.h" />
     <ClInclude Include="safety_check\logging.h" />
-    <ClInclude Include="safety_check\safe_call.h" />
+    <ClInclude Include="src\concurrency\utils.h" />
+    <ClInclude Include="src\concurrency\guarded_container.h" />
+    <ClInclude Include="src\concurrency\guarded_data.h" />
+    <ClInclude Include="src\core\app_manager.h" />
+    <ClInclude Include="src\core\loop_task.h" />
+    <ClInclude Include="src\core\singleton.h" />
+    <ClInclude Include="src\core\task.h" />
+    <ClInclude Include="src\core\task_manager.h" />
+    <ClInclude Include="src\core\user_data.h" />
+    <ClInclude Include="src\tasks\ban_group.h" />
+    <ClInclude Include="src\tasks\ban_member.h" />
+    <ClInclude Include="src\tasks\creator_commands\command_view.h" />
+    <ClInclude Include="src\tasks\creator_commands\creator_commands.h" />
+    <ClInclude Include="src\tasks\dice_roll.h" />
+    <ClInclude Include="src\tasks\two_player_game\two_player_game.h" />
+    <ClInclude Include="src\tasks\loop_unban_creator.h" />
+    <ClInclude Include="src\tasks\random_sample.h" />
+    <ClInclude Include="src\tasks\repeat\repeat.h" />
+    <ClInclude Include="src\tasks\repeat\repeat_chain.h" />
+    <ClInclude Include="src\tasks\report_message.h" />
+    <ClInclude Include="src\tasks\ridicule.h" />
+    <ClInclude Include="src\tasks\save_load_manager.h" />
+    <ClInclude Include="src\tasks\tasks.h" />
+    <ClInclude Include="src\utils\binary_io.h" />
+    <ClInclude Include="src\utils\random.h" />
+    <ClInclude Include="src\utils\utils.h" />
     <ClInclude Include="third_party\CImg.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="cqsdk\utils\emoji_data.inc" />
+    <ClInclude Include="vendor\CImg.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
