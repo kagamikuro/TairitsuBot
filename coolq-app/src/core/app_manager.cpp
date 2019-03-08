@@ -5,7 +5,6 @@
 #include "utils/utils.h"
 #include "safety_check/logging.h"
 #include "tasks/save_load_manager.h"
-#include "concurrency/utils.h"
 
 void AppManager::initialize()
 {
@@ -32,7 +31,6 @@ void AppManager::initialize()
 
 void AppManager::clean_up()
 {
-    con::this_thread::interrupt();
     cqc::app::enabled = false;
     SaveLoadManager::instance().save_all();
     tm_ptr_->clear_task();

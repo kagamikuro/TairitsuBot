@@ -97,6 +97,9 @@
     <ClCompile Include="src\tasks\random_sample.cpp" />
     <ClCompile Include="src\tasks\repeat\repeat.cpp" />
     <ClCompile Include="src\tasks\two_player_game\two_player_game.cpp" />
+    <ClCompile Include="src\tasks\tic_tac_toe\tic_tac_toe_logic.cpp" />
+    <ClCompile Include="src\tasks\tic_tac_toe\tic_tac_toe_board.cpp" />
+    <ClCompile Include="src\tasks\tic_tac_toe\tic_tac_toe_game.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cqsdk\api.h">
@@ -177,7 +180,6 @@
     <ClInclude Include="src\core\app_manager.h" />
     <ClInclude Include="src\utils\random.h" />
     <ClInclude Include="src\tasks\tasks.h" />
-    <ClInclude Include="vendor\CImg.h" />
     <ClInclude Include="src\tasks\loop_unban_creator.h" />
     <ClInclude Include="src\tasks\creator_commands\creator_commands.h" />
     <ClInclude Include="src\tasks\creator_commands\command_view.h" />
@@ -187,7 +189,6 @@
     <ClInclude Include="src\tasks\ban_group.h" />
     <ClInclude Include="src\concurrency\guarded_container.h" />
     <ClInclude Include="src\concurrency\guarded_data.h" />
-    <ClInclude Include="src\concurrency\utils.h" />
     <ClInclude Include="src\tasks\ban_member.h" />
     <ClInclude Include="src\utils\binary_io.h" />
     <ClInclude Include="src\tasks\ridicule.h" />
@@ -195,5 +196,8 @@
     <ClInclude Include="src\tasks\repeat\repeat_chain.h" />
     <ClInclude Include="src\tasks\repeat\repeat.h" />
     <ClInclude Include="src\tasks\two_player_game\two_player_game.h" />
+    <ClInclude Include="src\tasks\tic_tac_toe\tic_tac_toe_logic.h" />
+    <ClInclude Include="src\tasks\tic_tac_toe\tic_tac_toe_board.h" />
+    <ClInclude Include="src\tasks\tic_tac_toe\tic_tac_toe_game.h" />
   </ItemGroup>
 </Project>
