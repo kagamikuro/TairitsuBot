@@ -4,17 +4,17 @@
 bool TwoPlayerGame::send_challenge(const int64_t group, const int64_t user, const std::string& msg)
 {
     static const boost::regex regex(fmt::format(u8"{}挑战(?:{})?", game_name_, utils::at_regex));
-    boost::smatch match;
-    if (!regex_match(msg, match, regex)) return false;
+    boost::smatch smatch;
+    if (!regex_match(msg, smatch, regex)) return false;
     if (utils::contains(gaming_groups_, group))
     {
         utils::reply_group_member(group, user, u8"本群当前有正在进行中的游戏，等这一局结束再发起挑战吧！");
         return true;
     }
     gaming_groups_->insert(group);
-    if (match[1].matched) // Challenging a specific user
+    if (smatch[1].matched) // Challenging a specific user
     {
-        const int64_t challenged_user = *utils::parse_number<int64_t>(utils::regex_match_to_view(match[1]));
+        const int64_t challenged_user = *utils::parse_number<int64_t>(utils::regex_match_to_view(smatch[1]));
         if (challenged_user == user)
         {
             utils::reply_group_member(group, user, u8"自己挑战自己，你一定很空虚吧");
@@ -30,10 +30,11 @@ bool TwoPlayerGame::send_challenge(const int64_t group, const int64_t user, cons
                 return true;
             }
             utils::reply_group_member(group, user, u8"那我就接受挑战了！");
-            matches_->insert({ group, (utils::random_bernoulli_bool ?
+            const MatchInfo match = utils::random_bernoulli_bool() ?
                 MatchInfo{ user, challenged_user, true } :
-                MatchInfo{ challenged_user, user, true }) });
-            start_game(group);
+                MatchInfo{ challenged_user, user, true };
+            matches_->insert({ group, match });
+            start_game(group, match.first_player, match.second_player);
             return true;
         }
         matches_->insert({ group, { user, challenged_user, false } });
@@ -47,10 +48,11 @@ bool TwoPlayerGame::send_challenge(const int64_t group, const int64_t user, cons
 bool TwoPlayerGame::accept_challenge(const int64_t group, const int64_t user, const std::string& msg)
 {
     if (msg != u8"接受挑战") return false;
+    int64_t first, second;
     {
         const auto matches = matches_.to_write();
         if (!utils::contains(*matches, group)) return false;
-        MatchInfo& match = (*matches)[group];
+        MatchInfo& match = matches[group];
         if (match.game_started) return false;
         if (match.first_player == user)
         {
@@ -62,8 +64,10 @@ bool TwoPlayerGame::accept_challenge(const int64_t group, const int64_t user, co
         match.second_player = user;
         match.game_started = true;
         if (utils::random_bernoulli_bool()) std::swap(match.first_player, match.second_player);
-    } // Release lock here
-    start_game(group);
+        first = match.first_player;
+        second = match.second_player;
+    }
+    start_game(group, first, second);
     return true;
 }
 
@@ -72,7 +76,7 @@ bool TwoPlayerGame::cancel_challenge(const int64_t group, const int64_t user, co
     if (msg != u8"放弃挑战") return false;
     const auto matches = matches_.to_write();
     if (!utils::contains(*matches, group)) return false;
-    MatchInfo& match = (*matches)[group];
+    MatchInfo& match = matches[group];
     if (match.game_started || match.first_player != user && match.second_player != user) return false;
     if (match.first_player == user)
         utils::reply_group_member(group, user, u8"看来这次没找到人呢……下次有机会再说吧！");
@@ -83,11 +87,27 @@ bool TwoPlayerGame::cancel_challenge(const int64_t group, const int64_t user, co
     return true;
 }
 
+bool TwoPlayerGame::give_up(const int64_t group, const int64_t user, const std::string& msg)
+{
+    if (msg != u8"投降" && msg != u8"认输") return false;
+    const auto matches = matches_.to_write();
+    if (!utils::contains(*matches, group)) return false;
+    const MatchInfo& match = matches->at(group);
+    if (!match.game_started) return false;
+    if (match.first_player != user && match.second_player != user) return false;
+    give_up_msg(group, user, match.first_player == user);
+    matches->erase(group);
+    gaming_groups_->erase(group);
+    return true;
+}
+
 bool TwoPlayerGame::on_group_msg(const int64_t group, const int64_t user, const std::string& msg)
 {
     if (send_challenge(group, user, msg)) return true; // NOLINT
     if (accept_challenge(group, user, msg)) return true;
     if (cancel_challenge(group, user, msg)) return true;
+    if (give_up(group, user, msg)) return true;
+    if (process_msg(group, user, msg)) return true;
     return false;
 }
 

@@ -30,7 +30,8 @@ namespace utils
 
     const int64_t creator_id = 1357008522;
     const int64_t self_id = 2718434132;
-    inline std::string data_path;
+    inline std::string data_path; 
+    inline const std::string image_path("data/image/");
 
     inline const std::string at_self_regex(fmt::format(R"( *\[CQ:at,qq={}\] *)", self_id));
     inline const std::string at_regex(R"( *\[CQ:at,qq=(\d*)\] *)");

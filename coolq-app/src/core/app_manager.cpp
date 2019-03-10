@@ -23,6 +23,7 @@ void AppManager::initialize()
     tm.add_task<Repeat>();
     tm.add_task<ReportMessage>();
     tm.add_task<Ridicule>();
+    tm.add_task<TicTacToeGame>();
     tm.add_loop_task<LoopUnbanCreator>();
     tm.add_loop_task<SaveLoadManager>();
     // Load data
