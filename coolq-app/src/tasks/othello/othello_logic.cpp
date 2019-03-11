@@ -1,6 +1,6 @@
-#include "othello.h"
+#include "othello_logic.h"
 
-Othello::Result Othello::get_result() const
+OthelloLogic::Result OthelloLogic::get_result() const
 {
     const int black = get_black_count(), white = get_white_count();
     if (black > white) return Result::BlackWin;
@@ -8,7 +8,7 @@ Othello::Result Othello::get_result() const
     return Result::Draw;
 }
 
-Othello::BitBoard Othello::compute_playable_spots(const State& state, const bool black)
+OthelloLogic::BitBoard OthelloLogic::compute_playable_spots(const State& state, const bool black)
 {
     const BitBoard self = black ? state.black : state.white;
     const BitBoard opponent = black ? state.white : state.black;
@@ -42,10 +42,10 @@ Othello::BitBoard Othello::compute_playable_spots(const State& state, const bool
     return (northwest | southeast | north | south | northeast | southwest | west | east) & empty; // Get the final result
 }
 
-void Othello::reverse(const int row, const int column)
+void OthelloLogic::reverse(const int row, const int column)
 {
-    BitBoard& self = black ? state.black : state.white;
-    BitBoard& opponent = black ? state.white : state.black;
+    BitBoard& self = black_ ? state_.black : state_.white;
+    BitBoard& opponent = black_ ? state_.white : state_.black;
     const BitBoard new_disk = 0x8000000000000000Ui64 >> (row * 8 + column); // Newly placed disk
     // Apply masks to opponent bit board to avoid row wrapping in the left/right shifts
     const BitBoard center = opponent & 0x007e7e7e7e7e7e00Ui64; // Center 6x6
@@ -80,13 +80,13 @@ void Othello::reverse(const int row, const int column)
     self |= flipped; opponent &= ~flipped;
 }
 
-Othello::Result Othello::play(const int row, const int column)
+OthelloLogic::Result OthelloLogic::play(const int row, const int column)
 {
     reverse(row, column);
-    black = !black;
+    black_ = !black_;
     refresh_playable_spots();
-    if (!playable) black = !black;
+    if (!playable_) black_ = !black_;
     refresh_playable_spots();
-    if (!playable) return get_result();
+    if (!playable_) return get_result();
     return Result::NotFinished;
 }

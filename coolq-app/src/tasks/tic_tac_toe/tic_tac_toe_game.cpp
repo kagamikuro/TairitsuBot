@@ -3,10 +3,10 @@
 
 std::string TicTacToeGame::save_board(const int64_t group, const Game& game) const
 {
-    const std::string file_name = "tictactoe" + std::to_string(group) + ".bmp";
+    const std::string file_name = fmt::format("tictactoe{}.bmp", group);
     const std::string file_path = utils::image_path + file_name;
     board_.save_board(file_path, game.game_logic.get_state(), game.game_logic.get_global_state());
-    return "[CQ:image,file=" + file_path + ']';
+    return fmt::format("[CQ:image,file={}]", file_name);
 }
 
 bool TicTacToeGame::check_show_state(const int64_t group, const int64_t user, const std::string& msg) const
@@ -41,11 +41,11 @@ bool TicTacToeGame::check_move(const int64_t group, const int64_t user, const st
     const int column = column_char > 'I' ? column_char - 'a' : column_char - 'A';
     if (!game.game_logic.is_playable(row, column))
     {
-        utils::reply_group_member(group, user, u8"你不能在这个地方落子。");
+        utils::reply_group_member(group, user, u8"你不能在这个位置落子。");
         return true;
     }
     const TicTacToeLogic::Result result = game.game_logic.play(row, column);
-    const std::string file_name = "tictactoe" + std::to_string(group) + ".bmp";
+    const std::string file_name = fmt::format("tictactoe{}.bmp", group);
     const std::string file_path = utils::image_path + file_name;
     board_.save_board(file_path, game.game_logic.get_state(), game.game_logic.get_global_state(),
         row * 9 + column, game.game_logic.get_local());
@@ -65,7 +65,7 @@ bool TicTacToeGame::check_move(const int64_t group, const int64_t user, const st
         result_msg += u8"双方均未在全局棋盘中连成三子，故双方打成平局，本局结束。最终";
         break;
     }
-    result_msg += "的局面如下：\n[CQ:image,file=" + file_name + ']';
+    result_msg += fmt::format("的局面如下：\n[CQ:image,file={}]", file_name);
     cqc::api::send_group_msg(group, result_msg);
     if (result != TicTacToeLogic::Result::NotFinished)
     {
@@ -77,19 +77,16 @@ bool TicTacToeGame::check_move(const int64_t group, const int64_t user, const st
 
 void TicTacToeGame::start_game(const int64_t group, const int64_t first_player, const int64_t second_player)
 {
-    std::string file_string;
+    const std::string file_string = [&]
     {
         const auto games = games_.to_write();
         Game& game = games[group];
         game.first_player = first_player;
         game.second_player = second_player;
-        file_string = save_board(group, game);
-    }
-    const std::string msg = u8"比赛开始！"
-        + utils::at_string(first_player) + u8" 画圈，"
-        + utils::at_string(second_player) + u8" 画叉。目前的局面如下：\n"
-        + file_string;
-    cqc::api::send_group_msg(group, msg);
+        return save_board(group, game);
+    }();
+    cqc::api::send_group_msg(group, fmt::format(u8"比赛开始！{} 画圈，{} 画叉。目前的局面如下：\n{}",
+        utils::at_string(first_player), utils::at_string(second_player), file_string));
 }
 
 bool TicTacToeGame::process_msg(const int64_t group, const int64_t user, const std::string& msg)
@@ -107,7 +104,6 @@ void TicTacToeGame::give_up_msg(const int64_t group, const int64_t user, const b
         file_string = save_board(group, games[group]);
         games->erase(group);
     }
-    const std::string msg = u8"由于"s + (is_first ? u8"画圈一方 " : u8"画叉一方 ")
-        + utils::at_string(user) + u8"认输，本次比赛结束。最终的局面如下：\n" + file_string;
-    cqc::api::send_group_msg(group, msg);
+    cqc::api::send_group_msg(group, fmt::format(u8"由于画{}一方{} 认输，本次比赛结束。最终的局面如下：\n{}",
+        (is_first ? u8"圈" : u8"叉"), utils::at_string(user), file_string));
 }

@@ -100,6 +100,10 @@
     <ClCompile Include="src\tasks\tic_tac_toe\tic_tac_toe_logic.cpp" />
     <ClCompile Include="src\tasks\tic_tac_toe\tic_tac_toe_board.cpp" />
     <ClCompile Include="src\tasks\tic_tac_toe\tic_tac_toe_game.cpp" />
+    <ClCompile Include="src\tasks\othello\othello_logic.cpp" />
+    <ClCompile Include="src\tasks\othello\othello_board.cpp" />
+    <ClCompile Include="src\tasks\othello\othello_game.cpp" />
+    <ClCompile Include="src\tasks\othello\codename_tairitsu.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cqsdk\api.h">
@@ -199,5 +203,9 @@
     <ClInclude Include="src\tasks\tic_tac_toe\tic_tac_toe_logic.h" />
     <ClInclude Include="src\tasks\tic_tac_toe\tic_tac_toe_board.h" />
     <ClInclude Include="src\tasks\tic_tac_toe\tic_tac_toe_game.h" />
+    <ClInclude Include="src\tasks\othello\othello_logic.h" />
+    <ClInclude Include="src\tasks\othello\othello_board.h" />
+    <ClInclude Include="src\tasks\othello\othello_game.h" />
+    <ClInclude Include="src\tasks\othello\codename_tairitsu.h" />
   </ItemGroup>
 </Project>

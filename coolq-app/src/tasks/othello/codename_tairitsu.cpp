@@ -2,15 +2,15 @@
 #include <array>
 
 #include "codename_tairitsu.h"
-#include "../../utility/random.h"
+#include "utils/random.h"
 
 namespace codename_tairitsu
 {
     // private namespace
     namespace
     {
-        using BitBoard = Othello::BitBoard;
-        using State = Othello::State;
+        using BitBoard = OthelloLogic::BitBoard;
+        using State = OthelloLogic::State;
         struct ActionValue
         {
             int action = -1;
@@ -156,7 +156,7 @@ namespace codename_tairitsu
         // Decrease value if mobility for the current player is bad
         int immobility_punish(const State& state, const bool black)
         {
-            const int count = count_bits(Othello::compute_playable_spots(state, black));
+            const int count = count_bits(OthelloLogic::compute_playable_spots(state, black));
             switch (count)
             {
             case 3: return 10;
@@ -195,7 +195,7 @@ namespace codename_tairitsu
             if (depth == 0) return { -1, state_value(state, maximizer) }; // Leaf node
             int value = black == maximizer ? -infinity : infinity; // Initial value
             std::vector<int> actions;
-            Othello game;
+            OthelloLogic game;
             game.force_set_state(state, playable, black);
             for (int i = 0; i < 8; i++)
                 for (int j = 0; j < 8; j++)
@@ -204,17 +204,17 @@ namespace codename_tairitsu
                         int current_value;
                         // Get current value, which includes deeper search
                         {
-                            const Othello::Result result = game.play(i, j);
-                            if (result == Othello::Result::NotFinished)
+                            const OthelloLogic::Result result = game.play(i, j);
+                            if (result == OthelloLogic::Result::NotFinished)
                             {
                                 const State& current_state = game.get_state();
                                 const BitBoard current_playable = game.get_playable_spots();
                                 current_value = weighted_search(current_state, current_playable, game.is_black(), maximizer,
                                     depth - 1, alpha, beta).value;
                             }
-                            else if (result == Othello::Result::BlackWin)
+                            else if (result == OthelloLogic::Result::BlackWin)
                                 current_value = maximizer ? win_value : -win_value;
-                            else if (result == Othello::Result::WhiteWin)
+                            else if (result == OthelloLogic::Result::WhiteWin)
                                 current_value = maximizer ? -win_value : win_value;
                             else
                                 current_value = 0;
@@ -252,18 +252,18 @@ namespace codename_tairitsu
                     }
             if (depth < search_depth) return { -1, value };
             const int action_count = actions.size();
-            const int chosen_action = random::get_uniform_integer(action_count);
+            const int chosen_action = utils::random_uniform_int(0, action_count - 1);
             return { actions[chosen_action], value };
         }
 
         // The same search algorithm with alpha-beta pruning
         // This time the value is disk difference
-        EndGameTriplet exhaustive_search(const State& state, const BitBoard playable, const bool black, const bool maximizer,
+        EndGameResult exhaustive_search(const State& state, const BitBoard playable, const bool black, const bool maximizer,
             const bool is_root, int alpha = -infinity, int beta = infinity)
         {
             int value = black == maximizer ? -infinity : infinity; // Initial value
-            std::vector<EndGameTriplet> triplets(1);
-            Othello game;
+            std::vector<EndGameResult> triplets(1);
+            OthelloLogic game;
             game.force_set_state(state, playable, black);
             for (int i = 0; i < 8; i++)
                 for (int j = 0; j < 8; j++)
@@ -274,11 +274,11 @@ namespace codename_tairitsu
                         // Get current value, which includes deeper search
                         {
                             const State& current_state = game.get_state();
-                            const Othello::Result result = game.play(i, j);
-                            if (result == Othello::Result::NotFinished)
+                            const OthelloLogic::Result result = game.play(i, j);
+                            if (result == OthelloLogic::Result::NotFinished)
                             {
                                 const BitBoard current_playable = game.get_playable_spots();
-                                const EndGameTriplet triplet = exhaustive_search(current_state, current_playable,
+                                const EndGameResult triplet = exhaustive_search(current_state, current_playable,
                                     game.is_black(), maximizer, false, alpha, beta);
                                 max_disk = triplet.maximizer;
                                 min_disk = triplet.minimizer;
@@ -331,22 +331,22 @@ namespace codename_tairitsu
                     }
             if (!is_root) return triplets[0];
             const int action_count = triplets.size();
-            const int chosen_action = random::get_uniform_integer(action_count);
+            const int chosen_action = utils::random_uniform_int(0, action_count - 1);
             return triplets[chosen_action];
         }
     }
 
-    EndGameTriplet perfect_end_game_solution(const State& state, const bool black)
+    EndGameResult perfect_end_game_solution(const State& state, const bool black)
     {
-        if (!is_end_game(state)) return EndGameTriplet();
-        Othello game;
+        if (!is_end_game(state)) return EndGameResult();
+        OthelloLogic game;
         game.set_state(state, black);
         return exhaustive_search(state, game.get_playable_spots(), black, black, true);
     }
 
     int take_action(const State& state, const bool black)
     {
-        Othello game;
+        OthelloLogic game;
         game.set_state(state, black);
         const BitBoard playable = game.get_playable_spots();
         if (!is_end_game(state)) return weighted_search(state, playable, black, black, search_depth).action;

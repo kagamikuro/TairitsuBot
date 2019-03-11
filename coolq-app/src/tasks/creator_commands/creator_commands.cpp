@@ -55,6 +55,7 @@ CreatorCommands：幕后操作？
 BanGroup：都疯了，碹镑铱鸹！
 BanMember：给他上清华！
 DiceRoll：1d100 = 100
+OthelloGame：我们来下一盘黑白棋吧！
 RandomSample：骰子已经不能满足你的需求了吗？
 Repeat：人类的本质是
 ReportMessage：报告！对立她生病了！

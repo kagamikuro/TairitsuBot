@@ -20,7 +20,7 @@ void OthelloBoard::draw_previous(Image& image, const int row, const int column)
 
 void OthelloBoard::display_board(Display& display, const State& state, const int previous_row, int const previous_column) const
 {
-    Image new_board(board);
+    Image new_board(board_);
     if (previous_row != -1) draw_previous(new_board, previous_row, previous_column);
     for (int i = 0; i < 8; i++)
         for (int j = 0; j < 8; j++)
@@ -34,7 +34,7 @@ void OthelloBoard::display_board(Display& display, const State& state, const int
 void OthelloBoard::save_board(const std::string& file_path, const State& state,
     const int previous_row, const int previous_column) const
 {
-    Image new_board(board);
+    Image new_board(board_);
     if (previous_row != -1) draw_previous(new_board, previous_row, previous_column);
     for (int i = 0; i < 8; i++)
         for (int j = 0; j < 8; j++)
