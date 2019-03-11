@@ -1,6 +1,6 @@
 # Tairitsu bot
 
-Tairitsu Bot是一个QQ群聊机器人，基于酷Q以及richardchien的第三方酷Q C++ SDK(https://github.com/richardchien/coolq-cpp-sdk)。以后可能会包含更多的酷Q Pro才能使用的功能。  
+Tairitsu Bot是一个QQ群聊机器人，基于酷Q以及[richardchien的第三方酷Q C++ SDK](https://github.com/richardchien/coolq-cpp-sdk)。以后可能会包含更多的酷Q Pro才能使用的功能。  
 （好像是）采用了音乐游戏Arcaea中対立（Tairitsu）的人物设定，但是会出现各种OOC台词。  
 目前包含UNO，黑白棋AI等功能，以后可能会添加更多。  
 只是个人消遣空闲时间的产物，所以代码可能会很难看，不过也无所谓了。
