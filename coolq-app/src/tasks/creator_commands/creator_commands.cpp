@@ -25,6 +25,10 @@ $blacklist/whitelist ...：对用户黑名单或群白名单进行操作
 $group_info：列出目前已加入群的信息
 $invitation：列出目前收到的未处理的加群邀请
 $leave [id]：退出指定的群
+--消息管理--
+$broadcast：群发通知到所有加过的群
+$current_group [id]：显示当前群的信息，或设定当前群
+$$[msg]：向当前群发消息
 大概就这么多了~)";
         utils::send_creator(help_msg);
         return true;
@@ -56,6 +60,7 @@ BanGroup：都疯了，碹镑铱鸹！
 BanMember：给他上清华！
 DiceRoll：1d100 = 100
 OthelloGame：我们来下一盘黑白棋吧！
+OthelloMarigold：文字下棋的最高（？）境界
 RandomSample：骰子已经不能满足你的需求了吗？
 Repeat：人类的本质是
 ReportMessage：报告！对立她生病了！
@@ -219,6 +224,20 @@ SaveLoadManager：记不清楚的东西用笔记下来比较好
         utils::send_creator(u8"我没加过这个群啊……");
         return true;
     }
+
+    bool broadcast(const CommandView& cmd)
+    {
+        if (cmd[0] != "$broadcast") return false;
+        const std::vector<cq::Group> groups = cqc::api::get_group_list();
+        for (const cq::Group& group : groups)
+        {
+            std::string_view cmd_view = cmd.cmd();
+            cmd_view.remove_prefix(11);
+            cqc::api::send_group_msg(group.group_id, std::string(cmd_view));
+        }
+        utils::send_creator(u8"广播消息发送完毕！");
+        return true;
+    }
 }
 
 bool CreatorCommands::invitation(const CommandView& cmd) const
@@ -234,11 +253,65 @@ bool CreatorCommands::invitation(const CommandView& cmd) const
     return true;
 }
 
+bool CreatorCommands::current_group(const CommandView& cmd)
+{
+    const size_t cmd_size = cmd.size();
+    if ((cmd_size != 1 && cmd_size != 2) || cmd[0] != "$current_group") return false;
+    int64_t group_id;
+    if (cmd_size == 1)
+    {
+        group_id = current_group_context_;
+        if (group_id == 0)
+        {
+            utils::send_creator(fmt::format(u8"你还没有选定任何群呢……"));
+            return true;
+        }
+    }
+    else
+    {
+        const std::optional<int64_t> id = utils::parse_number<int64_t>(cmd[1]);
+        if (!id) return false;
+        group_id = *id;
+    }
+    const std::vector<cq::Group> group_list = cqc::api::get_group_list();
+    const auto iter = std::find_if(group_list.begin(), group_list.end(),
+        [group_id](const cq::Group& group) { return group.group_id == group_id; });
+    if (iter == group_list.end()) utils::send_creator(fmt::format(u8"我没加过群号是{}的群啊……", group_id));
+    if (cmd_size == 1)
+        utils::send_creator(fmt::format(u8"当前选定的群是{} ({})", iter->group_name, iter->group_id));
+    else
+    {
+        current_group_context_ = group_id;
+        utils::send_creator(fmt::format(u8"当前选定的群已切换至{} ({})", iter->group_name, iter->group_id));
+    }
+    return true;
+}
+
+void CreatorCommands::send_msg(const std::string& msg) const
+{
+    const int64_t current = current_group_context_;
+    if (current == 0)
+    {
+        utils::send_creator(u8"你还没有选定任何群呢……");
+        return;
+    }
+    static const boost::regex at_regex("@(\\d+)");
+    const std::string result = regex_replace(msg.substr(2), at_regex, "[CQ:at,qq=$1]");
+    cqc::api::send_group_msg(current, result);
+    utils::send_creator(u8"发送完毕！");
+}
+
 bool CreatorCommands::on_private_msg(const int64_t user, const std::string& msg)
 {
     if (user != utils::creator_id) return false;
     if (msg.empty() || msg[0] != '$') return false;
+    if (msg.size() >= 2 && msg[1] == '$')
+    {
+        send_msg(msg);
+        return true;
+    }
     const CommandView cmd(msg);
+    if (cmd.size() == 0) return false;
     if (help(cmd)) return true; // NOLINT
     if (save(cmd)) return true;
     if (load(cmd)) return true;
@@ -249,5 +322,7 @@ bool CreatorCommands::on_private_msg(const int64_t user, const std::string& msg)
     if (group_info(cmd)) return true;
     if (invitation(cmd)) return true;
     if (leave(cmd)) return true;
+    if (current_group(cmd)) return true;
+    if (broadcast(cmd)) return true;
     return false;
 }

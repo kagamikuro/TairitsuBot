@@ -1,6 +1,6 @@
 #include "command_view.h"
 
-CommandView::CommandView(const std::string& cmd)
+CommandView::CommandView(const std::string& cmd) :cmd_(cmd)
 {
     static const std::string whitespace = " \t\r\n";
     size_t begin = 0;

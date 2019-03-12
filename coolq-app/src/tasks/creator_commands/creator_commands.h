@@ -8,8 +8,11 @@ class CreatorCommands final :
     public Task, public Singleton<CreatorCommands>
 {
 private:
+    std::atomic<int64_t> current_group_context_ = 0;
     con::UnorderedMap<int64_t, std::string> group_invitations_;
     bool invitation(const CommandView& cmd) const;
+    bool current_group(const CommandView& cmd);
+    void send_msg(const std::string& msg) const;
 protected:
     bool on_private_msg(int64_t user, const std::string& msg) override;
 public:

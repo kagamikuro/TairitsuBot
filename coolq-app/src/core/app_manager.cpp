@@ -20,6 +20,7 @@ void AppManager::initialize()
     tm.add_task<BanMember>();
     tm.add_task<DiceRoll>();
     tm.add_task<OthelloGame>();
+    tm.add_task<OthelloMarigold>();
     tm.add_task<RandomSample>();
     tm.add_task<Repeat>();
     tm.add_task<ReportMessage>();

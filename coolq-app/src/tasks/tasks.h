@@ -5,6 +5,7 @@
 #include "ban_member.h"
 #include "dice_roll.h"
 #include "othello/othello_game.h"
+#include "othello/othello_marigold.h"
 #include "random_sample.h"
 #include "repeat/repeat.h"
 #include "report_message.h"

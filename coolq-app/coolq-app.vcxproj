@@ -138,6 +138,7 @@ copy me.cqp.chlorie.tairitsu_bot.json D:\Applications\CQPro\app\</Command>
     <ClCompile Include="src\tasks\othello\othello_board.cpp" />
     <ClCompile Include="src\tasks\othello\othello_game.cpp" />
     <ClCompile Include="src\tasks\othello\othello_logic.cpp" />
+    <ClCompile Include="src\tasks\othello\othello_marigold.cpp" />
     <ClCompile Include="src\tasks\random_sample.cpp" />
     <ClCompile Include="src\tasks\repeat\repeat.cpp" />
     <ClCompile Include="src\tasks\report_message.cpp" />
@@ -190,6 +191,7 @@ copy me.cqp.chlorie.tairitsu_bot.json D:\Applications\CQPro\app\</Command>
     <ClInclude Include="src\tasks\othello\othello_board.h" />
     <ClInclude Include="src\tasks\othello\othello_game.h" />
     <ClInclude Include="src\tasks\othello\othello_logic.h" />
+    <ClInclude Include="src\tasks\othello\othello_marigold.h" />
     <ClInclude Include="src\tasks\tic_tac_toe\tic_tac_toe_board.h" />
     <ClInclude Include="src\tasks\tic_tac_toe\tic_tac_toe_game.h" />
     <ClInclude Include="src\tasks\tic_tac_toe\tic_tac_toe_logic.h" />
