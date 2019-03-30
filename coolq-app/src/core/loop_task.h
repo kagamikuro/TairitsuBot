@@ -12,7 +12,6 @@ private:
     mutable std::mutex mutex_;
     std::condition_variable cv_;
     std::atomic_bool active_ = false;
-    bool terminate_ = false;
     std::chrono::duration<int> loop_period_;
     std::thread worker_thread_;
     void worker_loop();

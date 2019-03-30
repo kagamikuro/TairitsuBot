@@ -91,25 +91,25 @@ namespace utils
         result += fmt::format(u8"出现了CoolQ异常：{}({})……能不能修复一下呢……",
             cq_error_code_to_string(e.code), e.code);
         if (!msg.empty()) result += fmt::format(u8"\n额外信息：\n{}", msg);
-        send_creator(result);
+        nothrow_send_creator(result);
     }
     catch (const std::runtime_error& e)
     {
         Message result;
         result += fmt::format(u8"出现了运行时异常：{}……能不能修复一下呢……", e.what());
         if (!msg.empty()) result += fmt::format(u8"\n额外信息：\n{}", msg);
-        send_creator(result);
+        nothrow_send_creator(result);
     }
     catch (const std::exception& e)
     {
         Message result;
         result += fmt::format(u8"出现了std::exception异常：{}……能不能修复一下呢……", e.what());
         if (!msg.empty()) result += fmt::format(u8"\n额外信息：\n{}", msg);
-        send_creator(result);
+        nothrow_send_creator(result);
     }
     catch (...)
     {
-        send_creator(u8"虽然不知道哪里不对但是我总感觉出了什么问题……");
+        nothrow_send_creator(u8"虽然不知道哪里不对但是我总感觉出了什么问题……");
     }
 
     bool has_substr(const std::string& string, const std::string_view pattern)

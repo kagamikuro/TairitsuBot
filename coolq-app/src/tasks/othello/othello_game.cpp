@@ -1,6 +1,17 @@
 ﻿#include "othello_game.h"
 #include "codename_tairitsu.h"
 
+namespace
+{
+    uint64_t get_hex_bitboard(const char* begin)
+    {
+        const char* end = begin + 16;
+        uint64_t result = 0;
+        std::from_chars(begin, end, result, 16);
+        return result;
+    }
+}
+
 std::string OthelloGame::save_board(const int64_t group, const Game& game) const
 {
     const std::string file_name = fmt::format("othello{}.bmp", group);
@@ -83,23 +94,41 @@ bool OthelloGame::check_show_state(const int64_t group, const int64_t user, cons
 bool OthelloGame::check_solve_endgame(const int64_t group, const int64_t user, const std::string& msg) const
 {
     using codename_tairitsu::EndGameResult;
-    static const boost::regex regex(u8"[ \t]*(?:显示)?(?:完美)?终盘解算[ \t]*");
-    if (!regex_match(msg, regex)) return false;
-    const auto games = games_.to_read();
-    if (!utils::contains(*games, group)) return false;
-
-    const Game& game = games->at(group);
-    const OthelloLogic& game_logic = game.game_logic;
-    if (user != game.first_player && user != game.second_player) return false;
-    const EndGameResult result =
-        codename_tairitsu::perfect_end_game_solution(game_logic.get_state(), game_logic.is_black());
+    static const boost::regex regex(u8" *(?:显示)?(?:完美)?终盘解算(?: +([0-9a-fA-F]{32}))? *");
+    boost::smatch match;
+    if (!regex_match(msg, match, regex)) return false;
+    EndGameResult result;
+    bool is_black;
+    if (!match[1].matched)
+    {
+        const auto games = games_.to_read();
+        if (!utils::contains(*games, group)) return false;
+        const Game& game = games->at(group);
+        const OthelloLogic& game_logic = game.game_logic;
+        if (user != game.first_player && user != game.second_player) return false;
+        result = codename_tairitsu::perfect_end_game_solution(game_logic.get_state(), game_logic.is_black());
+        is_black = game_logic.is_black();
+    }
+    else
+    {
+        const char* ptr = &*match[1].begin();
+        const uint64_t black = get_hex_bitboard(ptr);
+        const uint64_t white = get_hex_bitboard(ptr + 16);
+        if (black & white)
+        {
+            utils::reply_group_member(group, user, u8"你先来教教我怎么让一个棋子既黑又白……");
+            return true;
+        }
+        result = codename_tairitsu::perfect_end_game_solution({ black, white }, true);
+        is_black = true;
+    }
     if (result.action == -1)
         utils::reply_group_member(group, user, u8"ごめんね、目前棋盘上剩余空位还很多，"
             u8"我还没办法很快地计算出来最佳的终盘策略……");
     else
     {
-        const int black = game_logic.is_black() ? result.maximizer : result.minimizer;
-        const int white = game_logic.is_black() ? result.minimizer : result.maximizer;
+        const int black = is_black ? result.maximizer : result.minimizer;
+        const int white = is_black ? result.minimizer : result.maximizer;
         utils::reply_group_member(group, user,
             fmt::format(u8"目前状态的完美终盘结果是，黑棋:白棋={}:{}。", black, white));
     }

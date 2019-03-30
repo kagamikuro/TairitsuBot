@@ -123,6 +123,7 @@ copy me.cqp.chlorie.tairitsu_bot.json D:\Applications\CQPro\app\</Command>
     <ClCompile Include="cqsdk\utils\base64.cpp" />
     <ClCompile Include="cqsdk\utils\string.cpp" />
     <ClCompile Include="cqsdk\utils\vendor\base64.cpp" />
+    <ClCompile Include="src\concurrency\call_scheduler.cpp" />
     <ClCompile Include="src\core\app_manager.cpp" />
     <ClCompile Include="src\core\loop_task.cpp" />
     <ClCompile Include="src\core\task.cpp" />
@@ -174,6 +175,7 @@ copy me.cqp.chlorie.tairitsu_bot.json D:\Applications\CQPro\app\</Command>
     <ClInclude Include="cqsdk\utils\vendor\base64.h" />
     <ClInclude Include="safety_check\api.h" />
     <ClInclude Include="safety_check\logging.h" />
+    <ClInclude Include="src\concurrency\call_scheduler.h" />
     <ClInclude Include="src\concurrency\guarded_container.h" />
     <ClInclude Include="src\concurrency\guarded_data.h" />
     <ClInclude Include="src\core\app_manager.h" />

@@ -30,7 +30,7 @@ namespace utils
 
     const int64_t creator_id = 1357008522;
     const int64_t self_id = 2718434132;
-    inline std::string data_path; 
+    inline std::string data_path;
     inline const std::string image_path("data/image/");
 
     inline const std::string at_self_regex(fmt::format(R"( *\[CQ:at,qq={}\] *)", self_id));
@@ -56,6 +56,12 @@ namespace utils
     {
         cqc::api::send_private_msg(creator_id, std::string{ std::forward<Msg>(msg) });
     }
+    template <typename Msg>
+    void nothrow_send_creator(Msg&& msg) noexcept try
+    {
+        cqc::api::send_private_msg(creator_id, std::string{ std::forward<Msg>(msg) });
+    }
+    catch (...) {}
     void log_exception(const Message& msg = {});
 
     template <typename Container, typename Value>

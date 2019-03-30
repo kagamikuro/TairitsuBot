@@ -24,7 +24,7 @@ void OthelloMarigold::extract_state_and_play(const int64_t group, const std::str
             }
         }
     const int action = codename_tairitsu::take_action(state, is_black_->at(group));
-    cqc::api::send_group_msg(group, std::string{ char(action % 8 + 'a'), char(action / 8 + 1) });
+    cqc::api::send_group_msg(group, std::string{ char(action % 8 + 'a'), char(action / 8 + '1') });
 }
 
 bool OthelloMarigold::check_invitation(const int64_t group, const std::string& msg) const

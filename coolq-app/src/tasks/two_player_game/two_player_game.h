@@ -2,6 +2,7 @@
 
 #include "core/task.h"
 #include "concurrency/guarded_container.h"
+#include "concurrency/call_scheduler.h"
 
 class TwoPlayerGame : public Task
 {
@@ -14,8 +15,10 @@ protected:
     };
 private:
     inline static con::UnorderedSet<int64_t> gaming_groups_;
+    inline static con::CallScheduler call_scheduler_;
     const std::string game_name_;
     const bool has_ai_;
+    void time_out(int64_t group);
     bool send_challenge(int64_t group, int64_t user, const std::string& msg);
     bool accept_challenge(int64_t group, int64_t user, const std::string& msg);
     bool cancel_challenge(int64_t group, int64_t user, const std::string& msg);
@@ -28,6 +31,6 @@ protected:
     virtual void give_up_msg(int64_t group, int64_t user, bool is_first) = 0;
     void end_game(int64_t group);
 public:
-    TwoPlayerGame(const std::string_view game_name, const bool has_ai) :game_name_(game_name), has_ai_(has_ai) {}
+    TwoPlayerGame(std::string_view game_name, bool has_ai);
     ~TwoPlayerGame() override = default;
 };
