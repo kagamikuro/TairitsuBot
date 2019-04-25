@@ -50,10 +50,11 @@ bool TicTacToeGame::check_move(const int64_t group, const int64_t user, const st
     board_.save_board(file_path, game.game_logic.get_state(), game.game_logic.get_global_state(),
         row * 9 + column, game.game_logic.get_local());
     std::string result_msg;
+    const int64_t next_player = game.game_logic.is_o() ? game.first_player : game.second_player;
     switch (result)
     {
     case TicTacToeLogic::Result::NotFinished:
-        result_msg += (is_o ? u8"轮到画圈一方" : u8"轮到画叉一方") + utils::at_string(current_player) + u8" 了。目前";
+        result_msg += (is_o ? u8"轮到画叉一方" : u8"轮到画圈一方") + utils::at_string(next_player) + u8" 了。目前";
         break;
     case TicTacToeLogic::Result::OWin:
         result_msg += u8"全局棋盘中圈号连成三子，故画圈方" + utils::at_string(game.first_player) + u8" 获胜。最终";
