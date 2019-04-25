@@ -1,4 +1,17 @@
 ﻿#include "task.h"
+#include "../tasks/save_load_manager.h"
+
+void Task::load_strings()
+{
+    const nlohmann::json& strings_json = SaveLoadManager::instance().get_strings();
+    if (const auto iter = strings_json.find(task_name()); iter != strings_json.end())
+    {
+        if (const auto desc_iter = iter->find("description"); desc_iter != iter->end())
+            description_ = *desc_iter;
+        if (const auto help_iter = iter->find("help"); help_iter != iter->end())
+            help_string_ = *help_iter;
+    }
+}
 
 bool Task::on_msg_receive(const cq::Target& target, const std::string& msg)
 {

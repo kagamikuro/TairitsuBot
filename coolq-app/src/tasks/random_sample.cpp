@@ -111,7 +111,7 @@ namespace
         boost::smatch match;
         if (!regex_match(dist_str, match, regex)) return std::nullopt;
         const std::optional<float> k = utils::parse_number<float>(utils::regex_match_to_view(match[1]));
-        const std::optional<float> theta = utils::parse_number<float>(utils::regex_match_to_view(match[1]));
+        const std::optional<float> theta = utils::parse_number<float>(utils::regex_match_to_view(match[2]));
         if (!k || !theta) return u8"你给的数据超出我能处理的范围了……";
         if (*k <= 0) return u8"形状参数需要是正数";
         if (*theta <= 0) return u8"尺度参数需要是正数";
@@ -125,7 +125,7 @@ namespace
         boost::smatch match;
         if (!regex_match(dist_str, match, regex)) return std::nullopt;
         const std::optional<float> k = utils::parse_number<float>(utils::regex_match_to_view(match[1]));
-        const std::optional<float> lambda = utils::parse_number<float>(utils::regex_match_to_view(match[1]));
+        const std::optional<float> lambda = utils::parse_number<float>(utils::regex_match_to_view(match[2]));
         if (!k || !lambda) return u8"你给的数据超出我能处理的范围了……";
         if (*k <= 0) return u8"形状参数需要是正数";
         if (*lambda <= 0) return u8"尺度参数需要是正数";
@@ -139,7 +139,7 @@ namespace
         boost::smatch match;
         if (!regex_match(dist_str, match, regex)) return std::nullopt;
         const std::optional<float> mu = utils::parse_number<float>(utils::regex_match_to_view(match[1]));
-        const std::optional<float> sigma = utils::parse_number<float>(utils::regex_match_to_view(match[1]));
+        const std::optional<float> sigma = utils::parse_number<float>(utils::regex_match_to_view(match[2]));
         if (!mu || !sigma) return u8"你给的数据超出我能处理的范围了……";
         if (*sigma <= 0) return u8"尺度参数需要是正数";
         const float sample = utils::random_extreme_value_float(*mu, *sigma);
@@ -190,7 +190,7 @@ namespace
         boost::smatch match;
         if (!regex_match(dist_str, match, regex)) return std::nullopt;
         const std::optional<float> x0 = utils::parse_number<float>(utils::regex_match_to_view(match[1]));
-        const std::optional<float> gamma = utils::parse_number<float>(utils::regex_match_to_view(match[1]));
+        const std::optional<float> gamma = utils::parse_number<float>(utils::regex_match_to_view(match[2]));
         if (!x0 || !gamma) return u8"你给的数据超出我能处理的范围了……";
         if (*gamma <= 0) return u8"尺度参数需要是正数";
         const float sample = utils::random_cauchy_float(*x0, *gamma);
@@ -225,23 +225,24 @@ namespace
 
 std::string RandomSample::check_distribution(const std::string& dist_str)
 {
-    if (const std::optional<std::string> result = check_uniform_int(dist_str); result) return *result;
-    if (const std::optional<std::string> result = check_uniform_float(dist_str); result) return *result;
-    if (const std::optional<std::string> result = check_bernoulli(dist_str); result) return *result;
-    if (const std::optional<std::string> result = check_binomial(dist_str); result) return *result;
-    if (const std::optional<std::string> result = check_negative_binomial(dist_str); result) return *result;
-    if (const std::optional<std::string> result = check_geometric(dist_str); result) return *result;
-    if (const std::optional<std::string> result = check_poisson(dist_str); result) return *result;
-    if (const std::optional<std::string> result = check_exponential(dist_str); result) return *result;
-    if (const std::optional<std::string> result = check_gamma(dist_str); result) return *result;
-    if (const std::optional<std::string> result = check_weibull(dist_str); result) return *result;
-    if (const std::optional<std::string> result = check_extreme_value(dist_str); result) return *result;
-    if (const std::optional<std::string> result = check_normal_float(dist_str); result) return *result;
-    if (const std::optional<std::string> result = check_lognormal_float(dist_str); result) return *result;
-    if (const std::optional<std::string> result = check_chi_squared(dist_str); result) return *result;
-    if (const std::optional<std::string> result = check_cauchy(dist_str); result) return *result;
-    if (const std::optional<std::string> result = check_fisher_f(dist_str); result) return *result;
-    if (const std::optional<std::string> result = check_student_t(dist_str); result) return *result;
+    using OptStr = std::optional<std::string>;
+    if (const OptStr result = check_uniform_int(dist_str); result) return *result;
+    if (const OptStr result = check_uniform_float(dist_str); result) return *result;
+    if (const OptStr result = check_bernoulli(dist_str); result) return *result;
+    if (const OptStr result = check_binomial(dist_str); result) return *result;
+    if (const OptStr result = check_negative_binomial(dist_str); result) return *result;
+    if (const OptStr result = check_geometric(dist_str); result) return *result;
+    if (const OptStr result = check_poisson(dist_str); result) return *result;
+    if (const OptStr result = check_exponential(dist_str); result) return *result;
+    if (const OptStr result = check_gamma(dist_str); result) return *result;
+    if (const OptStr result = check_weibull(dist_str); result) return *result;
+    if (const OptStr result = check_extreme_value(dist_str); result) return *result;
+    if (const OptStr result = check_normal_float(dist_str); result) return *result;
+    if (const OptStr result = check_lognormal_float(dist_str); result) return *result;
+    if (const OptStr result = check_chi_squared(dist_str); result) return *result;
+    if (const OptStr result = check_cauchy(dist_str); result) return *result;
+    if (const OptStr result = check_fisher_f(dist_str); result) return *result;
+    if (const OptStr result = check_student_t(dist_str); result) return *result;
     return u8"我不太懂你说的是什么分布……";
 }
 

@@ -17,6 +17,8 @@ protected:
     bool on_private_msg(int64_t user, const std::string& msg) override;
 public:
     const char* task_name() override { return "CreatorCommands"; }
+    bool is_creator_only() const override { return true; }
+
     void push_group_invitation(const int64_t group, const std::string& flag)
     {
         const auto data = group_invitations_.to_write();

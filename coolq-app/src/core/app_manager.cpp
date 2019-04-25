@@ -16,6 +16,7 @@ void AppManager::initialize()
     tm_ptr_ = std::make_unique<TaskManager>();
     TaskManager& tm = *tm_ptr_;
     tm.add_task<CreatorCommands>();
+    tm.add_task<UserCommands>();
     tm.add_task<BanGroup>();
     tm.add_task<BanMember>();
     tm.add_task<DiceRoll>();

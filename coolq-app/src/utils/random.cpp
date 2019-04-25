@@ -7,7 +7,7 @@ namespace utils
 {
     namespace
     {
-        std::mt19937 gen{ std::random_device{}() };
+        std::mt19937 gen{ std::random_device{ }() };
         std::mutex mutex;
     }
 
@@ -104,7 +104,7 @@ namespace utils
 
     float random_chi_squared_float(const int32_t k)
     {
-        const std::chi_squared_distribution<float> dist(k);
+        const std::chi_squared_distribution<float> dist{ float(k) };
         std::scoped_lock lock(mutex);
         return dist(gen);
     }
@@ -118,7 +118,7 @@ namespace utils
 
     float random_fisher_f_float(const int32_t d1, const int32_t d2)
     {
-        const std::fisher_f_distribution<float> dist(d1, d2);
+        const std::fisher_f_distribution<float> dist{ float(d1), float(d2) };
         std::scoped_lock lock(mutex);
         return dist(gen);
     }

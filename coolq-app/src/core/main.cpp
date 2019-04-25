@@ -1,6 +1,6 @@
 ﻿#include "app_manager.h"
 #include "cqsdk/cqsdk.h"
-#include "tasks/creator_commands/creator_commands.h"
+#include "tasks/commands/creator_commands.h"
 #include "utils/utils.h"
 
 CQ_INITIALIZE("me.cqp.chlorie.tairitsu_bot");

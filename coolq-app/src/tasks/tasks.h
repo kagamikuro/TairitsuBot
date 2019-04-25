@@ -1,6 +1,7 @@
 #pragma once
 
-#include "creator_commands/creator_commands.h"
+#include "commands/creator_commands.h"
+#include "commands/user_commands.h"
 #include "ban_group.h"
 #include "ban_member.h"
 #include "dice_roll.h"

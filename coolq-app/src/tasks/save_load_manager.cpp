@@ -25,14 +25,18 @@ void SaveLoadManager::save_all() const
     });
 }
 
-void SaveLoadManager::load_all() const
+void SaveLoadManager::load_all()
 {
-    TaskManager& tm = TaskManager::instance();
     std::scoped_lock lock(file_io_mutex_);
-    std::ifstream stream(task_status_path_, std::ios::in | std::ios::binary);
-    if (!stream.good()) return;
+    std::ifstream json_fs(strings_path_);
+    json_fs >> strings_json_;
+    TaskManager& tm = TaskManager::instance();
+    tm.for_each_task([](Task& task) { task.load_strings(); });
+    tm.for_each_loop_task([](LoopTask& task) { task.load_description(); });
     tm.for_each_task([](Task& task) { task.load_data(); });
     tm.for_each_loop_task([](LoopTask& task) { task.load_data(); });
+    std::ifstream stream(task_status_path_, std::ios::in | std::ios::binary);
+    if (!stream.good()) return;
     while (true)
     {
         const std::string task_name = utils::read<std::string>(stream);

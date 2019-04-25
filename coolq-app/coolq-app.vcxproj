@@ -28,7 +28,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
@@ -73,8 +73,8 @@
       <AdditionalIncludeDirectories>vendor;src;.</AdditionalIncludeDirectories>
     </ClCompile>
     <PostBuildEvent>
-      <Command>copy ..\bin\Win32-Debug\coolq-app.dll D:\Applications\CQPro\app\me.cqp.chlorie.tairitsu_bot.dll
-copy me.cqp.chlorie.tairitsu_bot.json D:\Applications\CQPro\app\</Command>
+      <Command>copy ..\bin\Win32-Debug\coolq-app.dll C:\UserFiles\Applications\CQP\app\me.cqp.chlorie.tairitsu_bot.dll
+copy me.cqp.chlorie.tairitsu_bot.json C:\UserFiles\Applications\CQP\app\</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Copy dll file and json file to CoolQ directory</Message>
@@ -109,8 +109,8 @@ copy me.cqp.chlorie.tairitsu_bot.json D:\Applications\CQPro\app\</Command>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>copy ..\bin\Win32-Release\coolq-app.dll D:\Applications\CQPro\app\me.cqp.chlorie.tairitsu_bot.dll
-copy me.cqp.chlorie.tairitsu_bot.json D:\Applications\CQPro\app\</Command>
+      <Command>copy ..\bin\Win32-Release\coolq-app.dll C:\UserFiles\Applications\CQP\app\me.cqp.chlorie.tairitsu_bot.dll
+copy me.cqp.chlorie.tairitsu_bot.json C:\UserFiles\Applications\CQP\app\</Command>
       <Message>Copy dll file and json file to CoolQ directory</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -131,8 +131,9 @@ copy me.cqp.chlorie.tairitsu_bot.json D:\Applications\CQPro\app\</Command>
     <ClCompile Include="src\core\task_manager.cpp" />
     <ClCompile Include="src\tasks\ban_group.cpp" />
     <ClCompile Include="src\tasks\ban_member.cpp" />
-    <ClCompile Include="src\tasks\creator_commands\command_view.cpp" />
-    <ClCompile Include="src\tasks\creator_commands\creator_commands.cpp" />
+    <ClCompile Include="src\tasks\commands\user_commands.cpp" />
+    <ClCompile Include="src\tasks\commands\command_view.cpp" />
+    <ClCompile Include="src\tasks\commands\creator_commands.cpp" />
     <ClCompile Include="src\tasks\dice_roll.cpp" />
     <ClCompile Include="src\tasks\loop_unban_creator.cpp" />
     <ClCompile Include="src\tasks\othello\codename_tairitsu.cpp" />
@@ -186,8 +187,9 @@ copy me.cqp.chlorie.tairitsu_bot.json D:\Applications\CQPro\app\</Command>
     <ClInclude Include="src\core\user_data.h" />
     <ClInclude Include="src\tasks\ban_group.h" />
     <ClInclude Include="src\tasks\ban_member.h" />
-    <ClInclude Include="src\tasks\creator_commands\command_view.h" />
-    <ClInclude Include="src\tasks\creator_commands\creator_commands.h" />
+    <ClInclude Include="src\tasks\commands\user_commands.h" />
+    <ClInclude Include="src\tasks\commands\command_view.h" />
+    <ClInclude Include="src\tasks\commands\creator_commands.h" />
     <ClInclude Include="src\tasks\dice_roll.h" />
     <ClInclude Include="src\tasks\othello\codename_tairitsu.h" />
     <ClInclude Include="src\tasks\othello\othello_board.h" />

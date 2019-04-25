@@ -86,8 +86,6 @@
     <ClCompile Include="src\utils\random.cpp" />
     <ClCompile Include="src\tasks\loop_unban_creator.cpp" />
     <ClCompile Include="src\core\task_manager.cpp" />
-    <ClCompile Include="src\tasks\creator_commands\creator_commands.cpp" />
-    <ClCompile Include="src\tasks\creator_commands\command_view.cpp" />
     <ClCompile Include="src\tasks\save_load_manager.cpp" />
     <ClCompile Include="src\tasks\dice_roll.cpp" />
     <ClCompile Include="src\tasks\report_message.cpp" />
@@ -106,6 +104,9 @@
     <ClCompile Include="src\tasks\othello\codename_tairitsu.cpp" />
     <ClCompile Include="src\tasks\othello\othello_marigold.cpp" />
     <ClCompile Include="src\concurrency\call_scheduler.cpp" />
+    <ClCompile Include="src\tasks\commands\command_view.cpp" />
+    <ClCompile Include="src\tasks\commands\creator_commands.cpp" />
+    <ClCompile Include="src\tasks\commands\user_commands.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cqsdk\api.h">
@@ -187,8 +188,6 @@
     <ClInclude Include="src\utils\random.h" />
     <ClInclude Include="src\tasks\tasks.h" />
     <ClInclude Include="src\tasks\loop_unban_creator.h" />
-    <ClInclude Include="src\tasks\creator_commands\creator_commands.h" />
-    <ClInclude Include="src\tasks\creator_commands\command_view.h" />
     <ClInclude Include="src\tasks\save_load_manager.h" />
     <ClInclude Include="src\tasks\dice_roll.h" />
     <ClInclude Include="src\tasks\report_message.h" />
@@ -211,5 +210,8 @@
     <ClInclude Include="src\tasks\othello\codename_tairitsu.h" />
     <ClInclude Include="src\tasks\othello\othello_marigold.h" />
     <ClInclude Include="src\concurrency\call_scheduler.h" />
+    <ClInclude Include="src\tasks\commands\command_view.h" />
+    <ClInclude Include="src\tasks\commands\creator_commands.h" />
+    <ClInclude Include="src\tasks\commands\user_commands.h" />
   </ItemGroup>
 </Project>

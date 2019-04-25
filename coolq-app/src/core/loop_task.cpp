@@ -1,5 +1,6 @@
 ﻿#include "loop_task.h"
 #include "utils/utils.h"
+#include "../tasks/save_load_manager.h"
 
 void LoopTask::worker_loop()
 {
@@ -10,6 +11,16 @@ void LoopTask::worker_loop()
         catch (...) { utils::log_exception(u8"任务"s.append(task_name())); }
     }
     active_ = false;
+}
+
+void LoopTask::load_description()
+{
+    const nlohmann::json& strings_json = SaveLoadManager::instance().get_strings();
+    if (const auto iter = strings_json.find(task_name()); iter != strings_json.end())
+    {
+        if (const auto desc_iter = iter->find("description"); desc_iter != iter->end())
+            description_ = *desc_iter;
+    }
 }
 
 void LoopTask::start_work()

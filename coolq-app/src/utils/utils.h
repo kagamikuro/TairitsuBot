@@ -62,7 +62,7 @@ namespace utils
         cqc::api::send_private_msg(creator_id, std::string{ std::forward<Msg>(msg) });
     }
     catch (...) {}
-    void log_exception(const Message& msg = {});
+    void log_exception(const Message& msg = { });
 
     template <typename Container, typename Value>
     bool contains(const Container& container, const Value& value) { return container.find(value) != container.end(); }
@@ -81,6 +81,8 @@ namespace utils
         return distance;
     }
 
+    std::string read_all_text(const std::string& file_path);
+
     bool has_substr(const std::string& string, std::string_view pattern);
     std::string replace_all(std::string str, std::string_view search, std::string_view replace);
 
@@ -91,8 +93,8 @@ namespace utils
     {
         const char* begin = view.data();
         const char* end = begin + view.size();
-        T result{};
-        auto[ptr, err] = std::from_chars(begin, end, result);
+        T result{ };
+        auto [ptr, err] = std::from_chars(begin, end, result);
         if (err == std::errc::invalid_argument ||
             err == std::errc::result_out_of_range ||
             ptr != end)
