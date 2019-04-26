@@ -41,14 +41,14 @@ bool TwoPlayerGame::send_challenge(const int64_t group, const int64_t user, cons
             }
             utils::reply_group_member(group, user, u8"那我就接受挑战了！");
             const MatchInfo match = utils::random_bernoulli_bool() ?
-                MatchInfo{ user, challenged_user, true } :
-                MatchInfo{ challenged_user, user, true };
+                                        MatchInfo{ user, challenged_user, true } :
+                                        MatchInfo{ challenged_user, user, true };
             matches_->insert({ group, match });
             start_game(group, match.first_player, match.second_player);
             return true;
         }
         matches_->insert({ group, { user, challenged_user, false } });
-        utils::reply_group_member(group, user, u8"你愿意接受挑战吗？回复我接受挑战或者放弃挑战就好了！");
+        utils::reply_group_member(group, challenged_user, u8"你愿意接受挑战吗？回复我接受挑战或者放弃挑战就好了！");
         call_scheduler_.schedule_call(group, [this, group] { time_out(group); }, 60);
         return true;
     }
@@ -136,5 +136,8 @@ TwoPlayerGame::TwoPlayerGame(const std::string_view game_name, const bool has_ai
     game_name_(game_name), has_ai_(has_ai)
 {
     [[maybe_unused]] static int dummy = []
-    { call_scheduler_.start(); return 0; }();
+    {
+        call_scheduler_.start();
+        return 0;
+    }();
 }
