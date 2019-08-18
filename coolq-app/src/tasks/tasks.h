@@ -11,6 +11,7 @@
 #include "repeat/repeat.h"
 #include "report_message.h"
 #include "ridicule.h"
+#include "brainfvck/run_brainfvck.h"
 #include "tic_tac_toe/tic_tac_toe_game.h"
 
 #include "loop_unban_creator.h"

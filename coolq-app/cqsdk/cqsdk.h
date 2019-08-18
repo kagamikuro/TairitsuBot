@@ -4,6 +4,7 @@
 
 #include "./api.h"
 #include "./app.h"
+#include "./dir.h"
 #include "./enums.h"
 #include "./event.h"
 #include "./logging.h"

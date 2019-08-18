@@ -1,5 +1,7 @@
 #pragma once
 
+#undef IGNORE
+
 namespace cq {
     namespace event {
         enum Operation {
@@ -8,6 +10,7 @@ namespace cq {
         };
 
         enum Type {
+            Unknown,
             Message,
             Notice,
             Request,
@@ -16,6 +19,7 @@ namespace cq {
 
     namespace message {
         enum Type {
+            Unknown,
             Private,
             Group,
             Discuss,
@@ -33,6 +37,7 @@ namespace cq {
 
     namespace notice {
         enum Type {
+            Unknown,
             GroupUpload,
             GroupAdmin,
             GroupMemberDecrease,
@@ -59,6 +64,7 @@ namespace cq {
         };
 
         enum Type {
+            Unknown,
             Friend,
             Group,
         };

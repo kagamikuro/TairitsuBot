@@ -1,11 +1,11 @@
 {
   "ret": 1,
   "apiver": 9,
-  "name": "ŒÁ¢bot",
+  "name": "å¯¾ç«‹bot",
   "version": "0.1.0",
   "version_id": 1,
   "author": "Chlorie",
-  "description": "¿ÉÛ¤¤ŒÁ¢¤Á¤ã¤ó",
+  "description": "å¯æ„›ã„å¯¾ç«‹ã¡ã‚ƒã‚“",
   "event": [
     {
       "id": 1003,

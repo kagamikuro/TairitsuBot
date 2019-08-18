@@ -1,5 +1,5 @@
 // We don't use "#pragma once" here, because this file is intended to be included twice,
-// by sdk_class.h and sdk.cpp, respectively to declare and define SDK functions.
+// by api.h and api.cpp, respectively to declare and define SDK functions.
 // Except for the two files mentioned above, no file is allowed to include this.
 
 #ifndef FUNC
@@ -57,6 +57,10 @@ FUNC(const char *, getCookies, int32_t auth_code)
 FUNC(int32_t, getCsrfToken, int32_t auth_code)
 FUNC(const char *, getAppDirectory, int32_t auth_code)
 FUNC(const char *, getRecord, int32_t auth_code, const char *file, const char *out_format)
+FUNC(const char *, getRecordV2, int32_t auth_code, const char *file, const char *out_format)
+FUNC(const char *, getImage, int32_t auth_code, const char *file)
+FUNC(int, canSendImage, int32_t auth_code)
+FUNC(int, canSendRecord, int32_t auth_code)
 
 FUNC(int32_t, addLog, int32_t auth_code, int32_t log_level, const char *category, const char *log_msg)
 FUNC(int32_t, setFatal, int32_t auth_code, const char *error_info)

@@ -1,30 +1,29 @@
 #include "./message.h"
 
 #include <sstream>
-#include <boost/algorithm/string.hpp>
 
 #include "./api.h"
 
-using boost::algorithm::replace_all;
+using namespace std;
 
 namespace cq::message {
-    std::string escape(std::string str, const bool escape_comma) {
-        replace_all(str, "&", "&amp;");
-        replace_all(str, "[", "&#91;");
-        replace_all(str, "]", "&#93;");
-        if (escape_comma) replace_all(str, ",", "&#44;");
+    string escape(string str, const bool escape_comma) {
+        boost::replace_all(str, "&", "&amp;");
+        boost::replace_all(str, "[", "&#91;");
+        boost::replace_all(str, "]", "&#93;");
+        if (escape_comma) boost::replace_all(str, ",", "&#44;");
         return str;
     }
 
-    std::string unescape(std::string str) {
-        replace_all(str, "&#44;", ",");
-        replace_all(str, "&#91;", "[");
-        replace_all(str, "&#93;", "]");
-        replace_all(str, "&amp;", "&");
+    string unescape(string str) {
+        boost::replace_all(str, "&#44;", ",");
+        boost::replace_all(str, "&#91;", "[");
+        boost::replace_all(str, "&#93;", "]");
+        boost::replace_all(str, "&amp;", "&");
         return str;
     }
 
-    Message::Message(const std::string &msg_str) {
+    Message::Message(const string& msg_str) {
         // implement a DFA manually, because the regex lib of VC++ will throw stack overflow in some cases
 
         const static auto TEXT = 0;
@@ -32,7 +31,7 @@ namespace cq::message {
         const static auto PARAMS = 2;
         auto state = TEXT;
         const auto end = msg_str.cend();
-        std::stringstream text_s, function_name_s, params_s;
+        stringstream text_s, function_name_s, params_s;
         auto curr_cq_start = end;
         for (auto it = msg_str.cbegin(); it != end; ++it) {
             const auto curr = *it;
@@ -44,7 +43,8 @@ namespace cq::message {
                     state = FUNCTION_NAME;
                     curr_cq_start = it;
                     it += 3;
-                } else {
+                }
+                else {
                     text_s << curr;
                 }
                 break;
@@ -52,18 +52,21 @@ namespace cq::message {
             case FUNCTION_NAME: {
                 if ((curr >= 'A' && curr <= 'Z') || (curr >= 'a' && curr <= 'z') || (curr >= '0' && curr <= '9')) {
                     function_name_s << curr;
-                } else if (curr == ',') {
+                }
+                else if (curr == ',') {
                     // function name out, params in
                     state = PARAMS;
-                } else if (curr == ']') {
+                }
+                else if (curr == ']') {
                     // CQ code end, with no params
                     goto params;
-                } else {
+                }
+                else {
                     // unrecognized character
-                    text_s << std::string(curr_cq_start, it); // mark as text
+                    text_s << string(curr_cq_start, it); // mark as text
                     curr_cq_start = end;
-                    function_name_s = std::stringstream();
-                    params_s = std::stringstream();
+                    function_name_s = stringstream();
+                    params_s = stringstream();
                     state = TEXT;
                     // because the current char may be '[', we goto text part
                     goto text;
@@ -77,27 +80,31 @@ namespace cq::message {
                     MessageSegment seg;
 
                     seg.type = function_name_s.str();
-                    while (params_s.rdbuf()->in_avail()) {
-                        // split key and value
-                        std::string key, value;
-                        getline(params_s, key, '=');
-                        getline(params_s, value, ',');
-                        seg.data[key] = unescape(value);
+
+                    vector<string> params;
+                    string params_s_str = params_s.str();
+                    split(params, params_s_str, boost::is_any_of(","));
+                    for (const auto& param : params) {
+                        const auto idx = param.find_first_of('=');
+                        if (idx != string::npos) {
+                            seg.data[boost::trim_copy(param.substr(0, idx))] = unescape(param.substr(idx + 1));
+                        }
                     }
 
-                    if (text_s.rdbuf()->in_avail()) {
+                    if (!text_s.str().empty()) {
                         // there is a text segment before this CQ code
-                        this->push_back(MessageSegment{"text", {{"text", unescape(text_s.str())}}});
-                        text_s = std::stringstream();
+                        this->push_back(MessageSegment{ "text", {{"text", unescape(text_s.str())}} });
+                        text_s = stringstream();
                     }
 
                     this->push_back(seg);
                     curr_cq_start = end;
-                    text_s = std::stringstream();
-                    function_name_s = std::stringstream();
-                    params_s = std::stringstream();
+                    text_s = stringstream();
+                    function_name_s = stringstream();
+                    params_s = stringstream();
                     state = TEXT;
-                } else {
+                }
+                else {
                     params_s << curr;
                 }
             }
@@ -111,19 +118,19 @@ namespace cq::message {
         case FUNCTION_NAME:
         case PARAMS:
             // we are in CQ code, but it ended with no ']', so it's a text segment
-            text_s << std::string(curr_cq_start, end);
+            text_s << string(curr_cq_start, end);
             // should fall through
         case TEXT:
-            if (text_s.rdbuf()->in_avail()) {
-                this->push_back(MessageSegment{"text", {{"text", unescape(text_s.str())}}});
+            if (!text_s.str().empty()) {
+                this->push_back(MessageSegment{ "text", {{"text", unescape(text_s.str())}} });
             }
         default:
             break;
         }
     }
 
-    Message::operator std::string() const {
-        std::stringstream ss;
+    Message::operator string() const {
+        stringstream ss;
         for (auto seg : *this) {
             if (seg.type.empty()) {
                 continue;
@@ -132,9 +139,10 @@ namespace cq::message {
                 if (const auto it = seg.data.find("text"); it != seg.data.end()) {
                     ss << escape((*it).second, false);
                 }
-            } else {
+            }
+            else {
                 ss << "[CQ:" << seg.type;
-                for (const auto &item : seg.data) {
+                for (const auto& item : seg.data) {
                     ss << "," << item.first << "=" << escape(item.second, true);
                 }
                 ss << "]";
@@ -143,11 +151,11 @@ namespace cq::message {
         return ss.str();
     }
 
-    int64_t Message::send(const Target &target) const { return api::send_msg(target, *this); }
+    int64_t Message::send(const Target& target) const { return api::send_msg(target, *this); }
 
-    std::string Message::extract_plain_text() const {
-        std::string result;
-        for (const auto &seg : *this) {
+    string Message::extract_plain_text() const {
+        string result;
+        for (const auto& seg : *this) {
             if (seg.type == "text") {
                 result += seg.data.at("text") + " ";
             }
@@ -172,7 +180,8 @@ namespace cq::message {
                 // remove the current element and continue
                 this->erase(it);
                 it = last_seg_it;
-            } else {
+            }
+            else {
                 last_seg_it = it;
             }
         }

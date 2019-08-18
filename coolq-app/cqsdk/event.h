@@ -20,7 +20,8 @@ namespace cq::event {
         message::Type message_type;
         message::SubType sub_type;
         int32_t message_id;
-        std::string message;
+        std::string raw_message;
+        message::Message message;
         int32_t font;
     };
 
@@ -130,14 +131,14 @@ namespace cq::event {
         }
     };
 
-    extern std::function<void(const PrivateMessageEvent&)> on_private_msg;
-    extern std::function<void(const GroupMessageEvent&)> on_group_msg;
-    extern std::function<void(const DiscussMessageEvent&)> on_discuss_msg;
-    extern std::function<void(const GroupUploadEvent&)> on_group_upload;
-    extern std::function<void(const GroupAdminEvent&)> on_group_admin;
-    extern std::function<void(const GroupMemberDecreaseEvent&)> on_group_member_decrease;
-    extern std::function<void(const GroupMemberIncreaseEvent&)> on_group_member_increase;
-    extern std::function<void(const FriendAddEvent&)> on_friend_add;
-    extern std::function<void(const FriendRequestEvent&)> on_friend_request;
-    extern std::function<void(const GroupRequestEvent&)> on_group_request;
+    extern std::function<void(const PrivateMessageEvent &)> on_private_msg;
+    extern std::function<void(const GroupMessageEvent &)> on_group_msg;
+    extern std::function<void(const DiscussMessageEvent &)> on_discuss_msg;
+    extern std::function<void(const GroupUploadEvent &)> on_group_upload;
+    extern std::function<void(const GroupAdminEvent &)> on_group_admin;
+    extern std::function<void(const GroupMemberDecreaseEvent &)> on_group_member_decrease;
+    extern std::function<void(const GroupMemberIncreaseEvent &)> on_group_member_increase;
+    extern std::function<void(const FriendAddEvent &)> on_friend_add;
+    extern std::function<void(const FriendRequestEvent &)> on_friend_request;
+    extern std::function<void(const GroupRequestEvent &)> on_group_request;
 } // namespace cq::event

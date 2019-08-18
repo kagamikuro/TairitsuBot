@@ -2,11 +2,13 @@
 
 #include "./api.h"
 
+#undef ERROR
+
 namespace cq::logging {
     enum Level {
         Debug = 0,
         Info = 10,
-        Infosuccess = 11,
+        InfoSuccess = 11,
         InfoRecv = 12,
         InfoSend = 13,
         Warning = 20,
@@ -23,7 +25,7 @@ namespace cq::logging {
 
     inline void info(const std::string &tag, const std::string &msg) { log(Info, tag, msg); }
 
-    inline void info_success(const std::string &tag, const std::string &msg) { log(Infosuccess, tag, msg); }
+    inline void info_success(const std::string &tag, const std::string &msg) { log(InfoSuccess, tag, msg); }
 
     inline void info_recv(const std::string &tag, const std::string &msg) { log(InfoRecv, tag, msg); }
 

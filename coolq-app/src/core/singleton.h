@@ -7,7 +7,7 @@ class Singleton // Use CTAD pattern
 {
 protected:
     inline static Singleton* instance_ptr_ = nullptr;
-    virtual ~Singleton() = default;
+    virtual ~Singleton() { instance_ptr_ = nullptr; }
 public:
     Singleton()
     {

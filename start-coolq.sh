@@ -1,0 +1,1 @@
+docker run --name=coolq --rm -p 8080:9000 -v /root/coolq-data:/home/user/coolq -e VNC_PASSWD=Tairitsu#1 -e COOLQ_ACCOUNT=2718434132 -e COOLQ_URL=http://dlsec.cqp.me/cqp-tuling coolq/wine-coolq

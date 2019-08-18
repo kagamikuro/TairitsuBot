@@ -33,7 +33,7 @@ namespace utils
     inline std::string data_path;
     inline const std::string image_path("data/image/");
 
-    inline const std::string at_self_regex(fmt::format(R"( *\[CQ:at,qq={}\] *)", self_id));
+    inline const std::string at_self_regex(fmt::format(R"( *(?:\[CQ:at,qq={}\]|@[tT]airitsu) *)", self_id));
     inline const std::string at_regex(R"( *\[CQ:at,qq=(\d*)\] *)");
 
     inline const std::string int_regex(R"((-?\d+))");

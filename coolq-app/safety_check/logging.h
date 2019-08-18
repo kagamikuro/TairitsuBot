@@ -15,7 +15,7 @@ namespace cqc::logging
     inline void info(const std::string &tag, const std::string &msg)
     { logging::log(cq::logging::Level::Info, tag, msg); }
     inline void info_success(const std::string &tag, const std::string &msg)
-    { logging::log(cq::logging::Level::Infosuccess, tag, msg); }
+    { logging::log(cq::logging::Level::InfoSuccess, tag, msg); }
     inline void info_recv(const std::string &tag, const std::string &msg)
     { logging::log(cq::logging::Level::InfoRecv, tag, msg); }
     inline void info_send(const std::string &tag, const std::string &msg)
